@@ -1,0 +1,81 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../node_modules/.prisma/client"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  image         String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sites         Site[]
+  payments      Payment[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Site {
+  id            String    @id @default(cuid())
+  name          String
+  subdomain     String    @unique
+  customDomain  String?   @unique
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  status        SiteStatus @default(ACTIVE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  deployments   Deployment[]
+}
+
+enum SiteStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model Deployment {
+  id            String    @id @default(cuid())
+  siteId        String
+  site          Site      @relation(fields: [siteId], references: [id])
+  status        DeployStatus @default(PENDING)
+  commitHash    String?
+  logs          String?
+  createdAt     DateTime  @default(now())
+}
+
+enum DeployStatus {
+  PENDING
+  BUILDING
+  DEPLOYED
+  FAILED
+}
+
+model Payment {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  amount        Float
+  currency      String    @default("INR")
+  status        PaymentStatus @default(PENDING)
+  razorpayId    String?
+  createdAt     DateTime  @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
