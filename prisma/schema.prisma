@@ -1,10 +1,10 @@
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client"
-  output   = "../node_modules/.prisma/client"
+  provider = "prisma-client-js"
 }
 
 model User {
@@ -19,6 +19,7 @@ model User {
 
   sites         Site[]
   payments      Payment[]
+  subscriptions Subscription[]
 }
 
 enum Role {
@@ -34,10 +35,18 @@ model Site {
   userId        String
   user          User      @relation(fields: [userId], references: [id])
   status        SiteStatus @default(ACTIVE)
+  sslStatus     SslStatus  @default(NONE)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   deployments   Deployment[]
+}
+
+enum SslStatus {
+  NONE
+  PENDING
+  ACTIVE
+  FAILED
 }
 
 enum SiteStatus {
@@ -63,15 +72,55 @@ enum DeployStatus {
   FAILED
 }
 
-model Payment {
+model Plan {
+  id          String   @id @default(cuid())
+  name        String
+  price       Float
+  duration    Int      // Duration in days
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  payments    Payment[]
+  subscriptions Subscription[]
+}
+
+model Subscription {
   id            String    @id @default(cuid())
   userId        String
   user          User      @relation(fields: [userId], references: [id])
-  amount        Float
-  currency      String    @default("INR")
-  status        PaymentStatus @default(PENDING)
-  razorpayId    String?
+  planId        String
+  plan          Plan      @relation(fields: [planId], references: [id])
+  domain        String?   // Domain assigned to this subscription
+  startDate     DateTime
+  endDate       DateTime
+  status        SubscriptionStatus @default(ACTIVE)
   createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model Payment {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id])
+  planId            String?
+  plan              Plan?     @relation(fields: [planId], references: [id])
+  amount            Float
+  currency          String    @default("INR")
+  status            PaymentStatus @default(PENDING)
+  razorpayOrderId   String?   @unique
+  razorpayPaymentId String?   @unique
+  razorpaySignature String?
+  gstNumber         String?   // Optional GST number for invoice
+  gstAmount         Float?    // Optional GST amount
+  createdAt         DateTime  @default(now())
 }
 
 enum PaymentStatus {
