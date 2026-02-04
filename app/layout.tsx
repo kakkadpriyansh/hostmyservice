@@ -1,8 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Unbounded, Manrope } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const unbounded = Unbounded({ 
+  subsets: ["latin"], 
+  variable: "--font-unbounded",
+  display: "swap",
+});
+
+const manrope = Manrope({ 
+  subsets: ["latin"], 
+  variable: "--font-manrope",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "HostMyService",
@@ -16,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${manrope.variable} ${unbounded.variable} antialiased`}>{children}</body>
     </html>
   );
 }
