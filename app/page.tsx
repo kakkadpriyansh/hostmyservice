@@ -15,8 +15,21 @@ export default async function Home() {
     });
   } catch (error) {
     logger.error("Failed to fetch plans from database", { error });
-    // Fallback to empty array or mock data could be added here
-    console.error("Database connection failed. Ensure DATABASE_URL is correct and Postgres is running.");
+    // Fallback to mock data for better UX when DB is not ready or fails
+    plans = [
+        { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+    ];
+  }
+
+  if (plans.length === 0) {
+      // If DB connects but has no plans, show mock plans too
+      plans = [
+        { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+    ];
   }
 
   return (
