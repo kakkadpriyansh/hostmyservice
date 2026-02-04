@@ -70,8 +70,9 @@ export async function togglePlanStatus(id: string, isActive: boolean) {
 
 export async function deletePlan(id: string) {
   try {
-    await prisma.plan.delete({
+    await prisma.plan.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
     revalidatePath("/admin/plans");
     return { success: true };
@@ -84,6 +85,7 @@ export async function deletePlan(id: string) {
 export async function getPlans() {
   try {
     const plans = await prisma.plan.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
     });
     return plans;

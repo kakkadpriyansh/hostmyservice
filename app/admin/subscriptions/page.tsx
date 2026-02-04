@@ -9,7 +9,7 @@ type Subscription = {
   id: string;
   user: { name: string | null; email: string };
   plan: { name: string };
-  domain: string | null;
+  site?: { domain: string } | null;
   startDate: Date;
   endDate: Date;
   status: "ACTIVE" | "EXPIRED" | "CANCELLED";
@@ -88,10 +88,10 @@ export default function SubscriptionsPage() {
                   {sub.plan.name}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
-                  {sub.domain ? (
+                  {sub.site?.domain ? (
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       <Globe className="h-4 w-4" />
-                      {sub.domain}
+                      {sub.site.domain}
                     </div>
                   ) : (
                     <span className="text-sm text-gray-400">-</span>

@@ -22,10 +22,16 @@ export async function createSubscription(data: {
       data: {
         userId: data.userId,
         planId: data.planId,
-        domain: data.domain,
         startDate: data.startDate,
         endDate: data.endDate,
         status: data.status || "ACTIVE",
+        site: data.domain ? {
+          create: {
+            domain: data.domain,
+            userId: data.userId,
+            status: "ACTIVE"
+          }
+        } : undefined
       },
     });
 
@@ -40,10 +46,12 @@ export async function createSubscription(data: {
 export async function getSubscriptions() {
   try {
     const subscriptions = await prisma.subscription.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       include: {
         user: { select: { name: true, email: true } },
         plan: { select: { name: true } },
+        site: { select: { domain: true } }
       },
     });
     return subscriptions;

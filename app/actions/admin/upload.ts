@@ -45,24 +45,35 @@ export async function uploadSiteArchive(formData: FormData) {
     zip.extractAllTo(extractPath, true);
 
     // 6. Validate Structure (Must contain index.html)
-    // We need to check recursively or at least in the root
-    // Let's check if index.html exists in the extracted root or immediate subfolder
-    // AdmZip doesn't easily give a list without reading entries.
     const entries = zip.getEntries();
-    const hasIndexHtml = entries.some((entry) => 
+    const indexHtmlEntries = entries.filter((entry) => 
       entry.entryName.toLowerCase().endsWith("index.html") && !entry.entryName.startsWith("__MACOSX")
     );
 
-    if (!hasIndexHtml) {
+    if (indexHtmlEntries.length === 0) {
       // Cleanup if invalid
       await rm(uploadPath, { recursive: true, force: true });
       return { error: "Invalid archive structure. 'index.html' not found." };
     }
 
+    // Find the best candidate for root (shortest path)
+    // sort by depth (number of slashes)
+    indexHtmlEntries.sort((a, b) => {
+      const depthA = (a.entryName.match(/\//g) || []).length;
+      const depthB = (b.entryName.match(/\//g) || []).length;
+      return depthA - depthB;
+    });
+
+    const rootIndex = indexHtmlEntries[0];
+    const rootDir = rootIndex.entryName.substring(0, rootIndex.entryName.lastIndexOf('/'));
+    
+    // If rootDir is empty string, it means index.html is at root
+    const effectivePath = rootDir ? join(extractPath, rootDir) : extractPath;
+
     return {
       success: true,
       message: "File uploaded and extracted successfully.",
-      path: extractPath,
+      path: effectivePath,
       fileCount: entries.length,
       uploadId: uploadId
     };

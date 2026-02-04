@@ -38,7 +38,7 @@ export async function provisionSSL(siteId: string): Promise<SslResult> {
     return { success: false, error: "Site not found" };
   }
 
-  const rawDomain = site.customDomain || `${site.subdomain}.hostmyservice.com`;
+  const rawDomain = site.domain;
   
   // Validate Domain to prevent shell injection
   const domainResult = domainSchema.safeParse(rawDomain);
@@ -118,8 +118,13 @@ export async function provisionSSL(siteId: string): Promise<SslResult> {
       data: {
         siteId: site.id,
         status: "DEPLOYED",
-        logs: logs.join("\n"),
-        commitHash: "ssl-provision"
+        logs: {
+          create: logs.map(l => ({
+            step: "SSL Provisioning",
+            output: l,
+            status: "SUCCESS"
+          }))
+        }
       }
     });
 
@@ -140,8 +145,13 @@ export async function provisionSSL(siteId: string): Promise<SslResult> {
       data: {
         siteId: site.id,
         status: "FAILED",
-        logs: logs.join("\n"),
-        commitHash: "ssl-provision-failed"
+        logs: {
+          create: logs.map(l => ({
+            step: "SSL Provisioning",
+            output: l,
+            status: "FAILED"
+          }))
+        }
       }
     });
 

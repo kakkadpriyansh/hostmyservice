@@ -20,9 +20,27 @@ export async function deploySite(siteId: string, sourcePath: string): Promise<De
   }
 
   const logs: string[] = [];
-  const log = (msg: string) => {
-    console.log(`[Deploy ${siteId}] ${msg}`);
-    logs.push(`${new Date().toISOString()}: ${msg}`);
+  
+  // Create initial deployment record
+  const deployment = await prisma.deployment.create({
+    data: {
+      siteId: siteId,
+      status: "PENDING",
+    }
+  });
+
+  const logStep = async (step: string, output: string, status: "SUCCESS" | "FAILED" | "PENDING") => {
+    console.log(`[Deploy ${siteId}] ${step}: ${output}`);
+    logs.push(`${new Date().toISOString()}: [${step}] ${output}`);
+    
+    await prisma.deploymentLog.create({
+      data: {
+        deploymentId: deployment.id,
+        step,
+        output,
+        status,
+      }
+    });
   };
 
   const ssh = new SSHClient();
@@ -31,114 +49,99 @@ export async function deploySite(siteId: string, sourcePath: string): Promise<De
     // 1. Fetch Site Details
     const site = await prisma.site.findUnique({
       where: { id: siteId },
-      include: { user: true } // verify ownership/existence
+      include: { user: true }
     });
 
     if (!site) {
+      await logStep("Init", "Site not found", "FAILED");
       return { success: false, error: "Site not found" };
     }
     
-    // Determine primary domain (custom or subdomain)
-    // Assuming customDomain is preferred, fallback to subdomain
-    const rawDomain = site.customDomain || `${site.subdomain}.hostmyservice.com`; 
+    const domain = site.domain;
     
-    // Validate Domain strictly to prevent shell injection
-    const domainResult = domainSchema.safeParse(rawDomain);
+    // Validate Domain strictly
+    const domainResult = domainSchema.safeParse(domain);
     if (!domainResult.success) {
         throw new Error(`Invalid domain format: ${domainResult.error.message}`);
     }
-    const domain = domainResult.data;
 
-    log(`Starting deployment for ${domain}`);
+    await logStep("Init", `Starting deployment for ${domain}`, "SUCCESS");
     
     // 2. Connect to VPS
-    log("Connecting to VPS...");
+    await logStep("SSH", "Connecting to VPS...", "PENDING");
     await ssh.connect();
-    log("Connected to VPS.");
+    await logStep("SSH", "Connected to VPS", "SUCCESS");
 
     // 3. Create Remote Directory
     const remoteDir = `/var/www/${domain}`;
-    log(`Creating remote directory: ${remoteDir}`);
-    // -p ensures it doesn't fail if exists, but we might want to clean it first?
-    // Let's clean it to ensure no stale files, but keep the dir.
-    // await ssh.execCommand(`rm -rf ${remoteDir}/*`); // Dangerous if path is wrong.
-    // Safer: Just overwrite.
+    await logStep("Files", `Creating remote directory: ${remoteDir}`, "PENDING");
+    // Ensure parent dir exists and set permissions
+    await ssh.execCommand(`sudo mkdir -p ${remoteDir}`);
+    await ssh.execCommand(`sudo chown -R $USER:$USER ${remoteDir}`);
+    await logStep("Files", "Remote directory created", "SUCCESS");
     
     // 4. Upload Files
-    log(`Uploading files from ${sourcePath} to ${remoteDir}...`);
+    await logStep("Upload", `Uploading files from ${sourcePath} to ${remoteDir}...`, "PENDING");
     await ssh.uploadDirectory(sourcePath, remoteDir);
-    log("Files uploaded successfully.");
+    await logStep("Upload", "Files uploaded successfully", "SUCCESS");
 
     // 5. Generate and Upload Nginx Config
-    log("Generating Nginx configuration...");
+    await logStep("Nginx", "Generating Nginx configuration...", "PENDING");
     const nginxConfig = generateNginxConfig(domain);
     const configPath = `/etc/nginx/sites-available/${domain}`;
     
-    log(`Uploading Nginx config to ${configPath}...`);
-    // Note: Writing to /etc/nginx usually requires sudo. 
-    // The SSH user must have sudo privileges or permission to write there.
-    // Assuming the SSH user is root or has NOPASSWD sudo for these commands.
-    // If not root, we might need to upload to /tmp and then sudo mv.
-    
-    // Let's try direct upload first (assuming root or proper permissions).
-    // If we are not root, we upload to tmp then move.
+    // Upload to tmp first
     const tmpConfigPath = `/tmp/${domain}.conf`;
     await ssh.uploadString(nginxConfig, tmpConfigPath);
     
     // Move with sudo
-    log("Applying Nginx config...");
+    await logStep("Nginx", "Applying Nginx config...", "PENDING");
     await ssh.execCommand(`sudo mv ${tmpConfigPath} ${configPath}`);
-    await ssh.execCommand(`sudo chown root:root ${configPath}`); // ensure ownership
+    await ssh.execCommand(`sudo chown root:root ${configPath}`); 
+    await logStep("Nginx", "Nginx config applied", "SUCCESS");
 
     // 6. Enable Site (Symlink)
     const enabledPath = `/etc/nginx/sites-enabled/${domain}`;
-    log(`Enabling site (symlinking to ${enabledPath})...`);
+    await logStep("Nginx", `Enabling site (symlinking)...`, "PENDING");
     await ssh.execCommand(`sudo ln -sf ${configPath} ${enabledPath}`);
+    await logStep("Nginx", "Site enabled", "SUCCESS");
 
     // 7. Test Nginx Config
-    log("Testing Nginx configuration...");
+    await logStep("Nginx", "Testing configuration...", "PENDING");
     const testResult = await ssh.execCommand("sudo nginx -t");
     if (testResult.code !== 0) {
       throw new Error(`Nginx test failed: ${testResult.stderr}`);
     }
+    await logStep("Nginx", "Configuration valid", "SUCCESS");
 
     // 8. Reload Nginx
-    log("Reloading Nginx...");
+    await logStep("Nginx", "Reloading Nginx...", "PENDING");
     await ssh.execCommand("sudo systemctl reload nginx");
-    log("Nginx reloaded successfully.");
+    await logStep("Nginx", "Nginx reloaded successfully", "SUCCESS");
 
     // 9. Update Deployment Status in DB
-    // Create a Deployment record
-    await prisma.deployment.create({
-      data: {
-        siteId: site.id,
-        status: "DEPLOYED",
-        logs: logs.join("\n"),
-        commitHash: "manual-upload" // Since it's a zip upload
-      }
+    await prisma.deployment.update({
+      where: { id: deployment.id },
+      data: { status: "DEPLOYED" }
     });
 
-    log("Deployment completed successfully.");
+    await prisma.site.update({
+      where: { id: siteId },
+      data: { serverPath: remoteDir }
+    });
+
+    await logStep("Complete", "Deployment completed successfully", "SUCCESS");
     
     return { success: true, message: "Deployment successful", logs };
 
   } catch (error: any) {
     const errorMsg = error.message || "Unknown error";
-    log(`Deployment failed: ${errorMsg}`);
+    await logStep("Error", `Deployment failed: ${errorMsg}`, "FAILED");
     
-    // Log failure to DB
-    try {
-        await prisma.deployment.create({
-            data: {
-              siteId: siteId,
-              status: "FAILED",
-              logs: logs.join("\n"),
-              commitHash: "manual-upload"
-            }
-          });
-    } catch (dbError) {
-        console.error("Failed to save deployment failure log to DB", dbError);
-    }
+    await prisma.deployment.update({
+      where: { id: deployment.id },
+      data: { status: "FAILED" }
+    });
 
     return { success: false, error: errorMsg, logs };
   } finally {
