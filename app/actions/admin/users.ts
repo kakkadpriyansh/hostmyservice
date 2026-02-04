@@ -49,6 +49,7 @@ export async function createUser(data: {
 export async function getUsers() {
   try {
     const users = await prisma.user.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,

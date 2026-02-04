@@ -18,6 +18,7 @@ export async function getClientSubscriptions(): Promise<SubscriptionWithPlan[]> 
         userId: session.user.id,
       },
       include: {
+        site: true,
         plan: {
           select: {
             name: true,
@@ -30,7 +31,10 @@ export async function getClientSubscriptions(): Promise<SubscriptionWithPlan[]> 
       },
     });
 
-    return subscriptions;
+    return subscriptions.map(sub => ({
+        ...sub,
+        domain: sub.site?.domain || null
+    }));
   } catch (error) {
     console.error("Failed to fetch client subscriptions:", error);
     return [];
