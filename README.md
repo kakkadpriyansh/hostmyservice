@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HostMyService - Static Hosting SaaS
 
-## Getting Started
+A complete SaaS platform for hosting static websites (HTML/CSS/JS) with automated SSL provisioning, VPS deployment, and Razorpay subscription integration.
 
-First, run the development server:
+## 🚀 Features
 
+- **Static Site Hosting**: Drag & drop ZIP upload.
+- **Automated Deployment**: Nginx configuration + File upload to VPS via SSH.
+- **SSL Automation**: Let's Encrypt (Certbot) integration.
+- **Subscription Management**: Razorpay integration for payments (Plans, Orders, Webhooks).
+- **Role-Based Access**: Admin and Client dashboards.
+- **Tech Stack**: Next.js 14, Prisma (PostgreSQL), Tailwind CSS, NextAuth.js.
+
+## 🛠️ Prerequisites
+
+- Node.js 18+
+- PostgreSQL Database
+- VPS (Ubuntu 20.04/22.04) with:
+  - Nginx installed
+  - Certbot installed (`python3-certbot-nginx`)
+  - SSH Access (Key-based auth)
+  - `unzip` installed
+- Razorpay Account (Test Mode)
+
+## 📦 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/hostmyservice.git
+   cd hostmyservice
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Setup**
+   Copy `.env.example` to `.env` and fill in the values.
+   ```bash
+   cp .env.example .env
+   ```
+   *See [Environment Variables](#environment-variables) below.*
+
+4. **Database Setup**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+
+5. **Run Development Server**
+   ```bash
+   npm run dev
+   ```
+
+## 🔑 Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `NEXTAUTH_SECRET` | Random string for session encryption |
+| `NEXTAUTH_URL` | URL of the app (e.g., http://localhost:3000) |
+| `VPS_HOST` | IP Address of the VPS |
+| `VPS_USER` | SSH Username (usually root or ubuntu) |
+| `VPS_PRIVATE_KEY` | Private SSH Key content (Replace newlines with `\n` if needed, or keep formatting) |
+| `RAZORPAY_KEY_ID` | Razorpay Key ID |
+| `RAZORPAY_KEY_SECRET` | Razorpay Key Secret |
+| `ADMIN_EMAIL` | Email used for Let's Encrypt registration |
+
+## 🚢 Deployment Checklist (Production)
+
+### 1. VPS Configuration
+Ensure your VPS is ready:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Update and Install Nginx/Certbot/Unzip
+sudo apt update
+sudo apt install nginx certbot python3-certbot-nginx unzip -y
+
+# Allow Nginx Ports
+sudo ufw allow 'Nginx Full'
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Application Deployment
+You can deploy this Next.js app to Vercel, or on the same VPS using PM2.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Option A: Vercel (Recommended for App)**
+1. Push code to GitHub.
+2. Import project in Vercel.
+3. Add Environment Variables in Vercel Settings.
+4. **Important**: The `VPS_PRIVATE_KEY` must be properly formatted in Vercel env vars.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Option B: VPS (Self-hosted)**
+1. Build the app: `npm run build`
+2. Start with PM2: `pm2 start npm --name "hostmyservice" -- start`
 
-## Learn More
+### 3. DNS Configuration
+- Point `*.hostmyservice.com` (or your domain) to the VPS IP.
+- Point the main app domain (e.g., `app.hostmyservice.com`) to Vercel/VPS IP.
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Post-Deployment Verification
+- [ ] Login as Admin.
+- [ ] Create a Hosting Plan.
+- [ ] Create a Client User.
+- [ ] Test Payment Flow (Razorpay Test Mode).
+- [ ] Upload a ZIP file (contains `index.html`).
+- [ ] Deploy site -> Check if files exist on VPS `/var/www/domain`.
+- [ ] Provision SSL -> Check if HTTPS works.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛡️ Security Notes
+- **Rate Limiting**: Basic in-memory rate limiting is enabled in `middleware.ts`. For scale, switch to Redis.
+- **SSH Keys**: Store `VPS_PRIVATE_KEY` securely. Rotate keys periodically.
+- **Input Validation**: All inputs are validated using Zod schemas in `lib/validations.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+MIT

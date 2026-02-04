@@ -5,3 +5,16 @@ export interface CurrentUser {
   image?: string | null;
   role: 'USER' | 'ADMIN';
 }
+
+export interface SubscriptionWithPlan {
+  id: string;
+  domain: string | null;
+  startDate: Date;
+  endDate: Date;
+  status: "ACTIVE" | "EXPIRED" | "CANCELLED";
+  plan: {
+    name: string;
+    price: number;
+  };
+}
+
