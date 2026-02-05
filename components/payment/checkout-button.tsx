@@ -68,7 +68,7 @@ export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps)
           // contact: user.phone
         },
         theme: {
-          color: "#4f46e5", // Indigo-600
+          color: "#00f0ff", // cyan-500
         },
       };
 
@@ -86,7 +86,7 @@ export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps)
     <button
       onClick={handlePayment}
       disabled={loading}
-      className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      className="w-full rounded-xl bg-[#00f0ff] px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300"
     >
       {loading ? (
         <>

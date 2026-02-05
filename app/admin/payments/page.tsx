@@ -8,26 +8,26 @@ export default async function PaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Payments Management</h1>
+      <h1 className="text-2xl font-bold font-display text-white">Payments Management</h1>
 
-      <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
+      <div className="glass ring-1 ring-white/10 sm:rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-white/5">
+            <thead className="bg-white/5">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   User
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Plan / Amount
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Date
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Gateway ID
                 </th>
                 <th scope="col" className="relative px-6 py-3">
@@ -35,21 +35,21 @@ export default async function PaymentsPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-white/5 bg-transparent">
               {payments?.map((payment: any) => (
-                <tr key={payment.id}>
+                <tr key={payment.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{payment.user?.name || "Unknown"}</div>
-                    <div className="text-sm text-gray-500">{payment.user?.email}</div>
+                    <div className="text-sm font-medium text-white">{payment.user?.name || "Unknown"}</div>
+                    <div className="text-sm text-gray-400">{payment.user?.email}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{payment.plan?.name || "Unknown Plan"}</div>
+                    <div className="text-sm text-gray-300">{payment.plan?.name || "Unknown Plan"}</div>
                     <div className="text-sm text-gray-500">₹{payment.amount}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      payment.status === 'SUCCESS' ? 'bg-green-100 text-green-800' : 
-                      payment.status === 'FAILED' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                      payment.status === 'SUCCESS' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 
+                      payment.status === 'FAILED' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
                     }`}>
                       {payment.status === 'SUCCESS' && <CheckCircle className="h-3 w-3" />}
                       {payment.status === 'PENDING' && <Clock className="h-3 w-3" />}
@@ -57,7 +57,7 @@ export default async function PaymentsPage() {
                       {payment.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                     {format(new Date(payment.createdAt), 'MMM d, yyyy HH:mm')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
@@ -69,7 +69,7 @@ export default async function PaymentsPage() {
                             "use server";
                             await activateSubscription(payment.id);
                         }}>
-                            <button className="text-indigo-600 hover:text-indigo-900 font-medium">
+                            <button className="text-primary hover:text-white font-medium transition-colors">
                                 Force Activate
                             </button>
                         </form>
@@ -81,7 +81,7 @@ export default async function PaymentsPage() {
           </table>
           {payments?.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500">No payments found.</p>
+              <p className="text-gray-400">No payments found.</p>
             </div>
           )}
         </div>

@@ -44,65 +44,65 @@ export default function SubscriptionsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Hosting Assignments</h1>
+        <h1 className="text-2xl font-bold font-display text-white">Hosting Assignments</h1>
         <button
           onClick={() => setIsFormOpen(true)}
-          className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-black transition-all hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)]"
         >
           <Plus className="h-4 w-4" />
           Assign Plan
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="overflow-hidden rounded-2xl border border-white/10 glass">
+        <table className="min-w-full divide-y divide-white/5">
+          <thead className="bg-white/5">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Client
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Plan
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Domain
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Validity
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Status
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="divide-y divide-white/5">
             {subscriptions.map((sub) => (
-              <tr key={sub.id}>
+              <tr key={sub.id} className="hover:bg-white/5 transition-colors">
                 <td className="whitespace-nowrap px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div className="text-sm font-medium text-white">
                     {sub.user.name}
                   </div>
-                  <div className="text-sm text-gray-500">{sub.user.email}</div>
+                  <div className="text-sm text-gray-400">{sub.user.email}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-300">
                   {sub.plan.name}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
                   {sub.site?.domain ? (
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Globe className="h-4 w-4" />
+                    <div className="flex items-center gap-2 text-sm text-gray-300">
+                      <Globe className="h-4 w-4 text-primary" />
                       {sub.site.domain}
                     </div>
                   ) : (
-                    <span className="text-sm text-gray-400">-</span>
+                    <span className="text-sm text-gray-500">-</span>
                   )}
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
                     <Calendar className="h-4 w-4" />
                     <div>
                       <div>{new Date(sub.startDate).toLocaleDateString()}</div>
-                      <div className="text-xs">
+                      <div className="text-xs text-gray-500">
                         to {new Date(sub.endDate).toLocaleDateString()}
                       </div>
                     </div>
@@ -110,12 +110,12 @@ export default function SubscriptionsPage() {
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
                   <span
-                    className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold leading-5 ${
                       sub.status === "ACTIVE"
-                        ? "bg-green-100 text-green-800"
+                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
                         : sub.status === "EXPIRED"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                        ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                        : "bg-red-500/10 text-red-400 border border-red-500/20"
                     }`}
                   >
                     {sub.status}

@@ -33,25 +33,27 @@ export function SiteCard({ sub }: { sub: SubscriptionWithPlan }) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+    <div className="glass rounded-2xl overflow-hidden hover:border-white/20 transition-colors">
       {/* Header */}
-      <div className="border-b border-gray-100 p-6">
+      <div className="border-b border-white/10 bg-white/5 p-6">
         <div className="flex items-start justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-indigo-600" />
-              <h3 className="text-lg font-semibold text-gray-900">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                <Globe className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-white">
                 {sub.domain || "No Domain Assigned"}
               </h3>
             </div>
-            <p className="mt-1 text-sm text-gray-500">{sub.plan.name} Plan</p>
+            <p className="mt-2 text-sm text-gray-400 ml-11">{sub.plan.name} Plan</p>
           </div>
           <span
             className={cn(
-              "rounded-full px-2.5 py-0.5 text-xs font-medium",
+              "rounded-full px-3 py-1 text-xs font-bold border",
               sub.status === "ACTIVE"
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                ? "bg-green-500/10 text-green-400 border-green-500/20"
+                : "bg-red-500/10 text-red-400 border-red-500/20"
             )}
           >
             {sub.status}
@@ -63,117 +65,108 @@ export function SiteCard({ sub }: { sub: SubscriptionWithPlan }) {
       <div className="grid gap-6 p-6 sm:grid-cols-2">
         {/* Server Info */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-900">
+          <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
             Server Information
           </h4>
           
-          <div className="flex items-center justify-between rounded-lg bg-gray-50 p-3">
+          <div className="flex items-center justify-between rounded-xl bg-white/5 border border-white/5 p-3">
             <div className="flex items-center gap-3">
-              <Server className="h-4 w-4 text-gray-500" />
+              <Server className="h-4 w-4 text-gray-400" />
               <div>
                 <p className="text-xs text-gray-500">Server IP</p>
-                <p className="font-mono text-sm font-medium">{SERVER_IP}</p>
+                <p className="font-mono text-sm font-medium text-white">{SERVER_IP}</p>
               </div>
             </div>
             <button
               onClick={copyIp}
-              className="rounded-md p-1.5 hover:bg-gray-200 text-gray-500"
+              className="rounded-lg p-2 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
               title="Copy IP"
             >
               {copied ? (
-                <Check className="h-4 w-4 text-green-600" />
+                <Check className="h-4 w-4 text-green-400" />
               ) : (
                 <Copy className="h-4 w-4" />
               )}
             </button>
           </div>
 
-          <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-            <ShieldCheck className="h-4 w-4 text-green-600" />
+          <div className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/5 p-3">
+            <ShieldCheck className="h-4 w-4 text-green-400" />
             <div>
               <p className="text-xs text-gray-500">SSL Status</p>
-              <p className="text-sm font-medium text-green-700">Secured (Auto-Renew)</p>
+              <p className="text-sm font-medium text-green-400">Secured (Auto-Renew)</p>
             </div>
           </div>
         </div>
 
         {/* Subscription Info */}
         <div className="space-y-4">
-          <h4 className="text-sm font-medium text-gray-900">
-            Subscription Details
-          </h4>
-
-          <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-            <Calendar className="h-4 w-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Valid Until</p>
-              <div className="flex items-baseline gap-2">
-                <p className="text-sm font-medium">
-                  {new Date(sub.endDate).toLocaleDateString()}
-                </p>
-                {sub.status === "ACTIVE" && (
-                  <span className={cn("text-xs", daysLeft < 7 ? "text-red-600" : "text-gray-500")}>
-                    ({daysLeft} days left)
-                  </span>
-                )}
-              </div>
+            <h4 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+                Subscription
+            </h4>
+            
+            <div className="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                        <Calendar className="h-4 w-4" />
+                        <span>Expires</span>
+                    </div>
+                    <span className="text-sm font-medium text-white">
+                        {new Date(sub.endDate).toLocaleDateString()}
+                    </span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                        <CreditCard className="h-4 w-4" />
+                        <span>Days Left</span>
+                    </div>
+                    <span className={cn(
+                        "text-sm font-bold",
+                        daysLeft < 7 ? "text-red-400" : "text-primary"
+                    )}>
+                        {daysLeft} Days
+                    </span>
+                </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 rounded-lg bg-gray-50 p-3">
-            <CreditCard className="h-4 w-4 text-gray-500" />
-            <div>
-              <p className="text-xs text-gray-500">Payment Status</p>
-              <p className="text-sm font-medium text-green-700">Paid</p>
-            </div>
-          </div>
+             <button
+              onClick={() => setShowDns(!showDns)}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 py-2 text-xs font-medium text-gray-300 hover:bg-white/10 hover:text-white transition-colors"
+            >
+              <Info className="h-3 w-3" />
+              {showDns ? "Hide DNS Instructions" : "Show DNS Instructions"}
+            </button>
         </div>
       </div>
 
-      {/* Footer / DNS Instructions */}
-      <div className="bg-gray-50 px-6 py-4 rounded-b-xl">
-        <button
-          onClick={() => setShowDns(!showDns)}
-          className="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700"
-        >
-          <Info className="h-4 w-4" />
-          {showDns ? "Hide DNS Instructions" : "View DNS Instructions"}
-        </button>
-
-        {showDns && (
-          <div className="mt-4 rounded-md bg-yellow-50 p-4 border border-yellow-100">
-            <h5 className="mb-2 text-sm font-semibold text-yellow-800">
-              Point your domain to HostMyService
-            </h5>
-            <p className="mb-3 text-xs text-yellow-700">
-              Add the following A Record to your domain's DNS settings:
-            </p>
-            <div className="overflow-x-auto rounded border border-yellow-200 bg-white">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-gray-50 text-gray-500">
-                  <tr>
-                    <th className="px-3 py-2">Type</th>
-                    <th className="px-3 py-2">Host / Name</th>
-                    <th className="px-3 py-2">Value / Points to</th>
-                    <th className="px-3 py-2">TTL</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  <tr>
-                    <td className="px-3 py-2 font-mono">A</td>
-                    <td className="px-3 py-2 font-mono">@</td>
-                    <td className="px-3 py-2 font-mono">{SERVER_IP}</td>
-                    <td className="px-3 py-2">Auto / 3600</td>
-                  </tr>
-                </tbody>
-              </table>
+       {/* DNS Instructions */}
+       {showDns && (
+        <div className="border-t border-white/10 bg-white/5 p-6 animate-fade-in">
+          <h4 className="mb-3 text-sm font-bold text-white">DNS Configuration</h4>
+          <p className="mb-4 text-xs text-gray-400">
+            Add these records to your domain's DNS settings to connect your domain.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between rounded-lg bg-black/40 p-3 border border-white/10">
+              <div className="flex items-center gap-4">
+                <span className="w-12 text-xs font-bold text-gray-500">A</span>
+                <span className="font-mono text-xs text-primary">@</span>
+              </div>
+              <span className="font-mono text-xs text-white">{SERVER_IP}</span>
             </div>
-            <p className="mt-3 text-xs text-gray-500">
-              Note: DNS propagation may take up to 24-48 hours.
-            </p>
+            <div className="flex items-center justify-between rounded-lg bg-black/40 p-3 border border-white/10">
+              <div className="flex items-center gap-4">
+                <span className="w-12 text-xs font-bold text-gray-500">CNAME</span>
+                <span className="font-mono text-xs text-primary">www</span>
+              </div>
+              <span className="font-mono text-xs text-white">
+                {sub.domain || "yourdomain.com"}
+              </span>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

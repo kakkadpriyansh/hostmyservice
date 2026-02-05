@@ -46,65 +46,65 @@ export default function UsersPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Client Management</h1>
+        <h1 className="text-2xl font-bold font-display text-white">Client Management</h1>
         <button
           onClick={() => setIsFormOpen(true)}
-          className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+          className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-bold text-black transition-all hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)]"
         >
           <Plus className="h-4 w-4" />
           Create Client
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="overflow-hidden rounded-2xl border border-white/10 glass">
+        <table className="min-w-full divide-y divide-white/5">
+          <thead className="bg-white/5">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Role
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Subscriptions
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Joined
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
+          <tbody className="divide-y divide-white/5">
             {users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user.id} className="hover:bg-white/5 transition-colors">
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
-                      <UserIcon className="h-5 w-5 text-gray-500" />
+                    <div className="flex-shrink-0 h-10 w-10 bg-white/10 rounded-full flex items-center justify-center border border-white/10">
+                      <UserIcon className="h-5 w-5 text-primary" />
                     </div>
                     <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-white">
                         {user.name}
                       </div>
-                      <div className="text-sm text-gray-500">{user.email}</div>
+                      <div className="text-sm text-gray-400">{user.email}</div>
                     </div>
                   </div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
                   <span
-                    className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                    className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold leading-5 ${
                       user.role === "ADMIN"
-                        ? "bg-purple-100 text-purple-800"
-                        : "bg-blue-100 text-blue-800"
+                        ? "bg-secondary/20 text-secondary border border-secondary/20"
+                        : "bg-primary/10 text-primary border border-primary/20"
                     }`}
                   >
                     {user.role}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-300">
                   {user._count.subscriptions} active
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-400">
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
               </tr>

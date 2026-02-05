@@ -17,6 +17,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 
 interface SidebarProps {
   role: "USER" | "ADMIN";
@@ -37,10 +38,10 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/admin/users", label: "Users", icon: Users },
     { href: "/admin/subscriptions", label: "Subscriptions", icon: Server },
-    { href: "/admin/sites", label: "All Sites", icon: Globe },
+    { href: "/admin/websites", label: "Websites", icon: Globe },
     { href: "/admin/plans", label: "Plans", icon: Shield },
     { href: "/admin/upload", label: "Upload Test", icon: Upload },
-    { href: "/admin/system", label: "System", icon: Settings },
+    { href: "/admin/deploy", label: "Deployments", icon: Settings },
   ];
 
   const links = role === "ADMIN" ? adminLinks : userLinks;
@@ -50,7 +51,7 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 p-2 rounded-md bg-white shadow-md md:hidden"
+        className="fixed top-4 left-4 z-50 p-2 rounded-xl bg-white/10 text-white backdrop-blur-md border border-white/10 shadow-lg md:hidden hover:bg-white/20 transition-colors"
       >
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
@@ -58,18 +59,25 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Sidebar Container */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 transform bg-white border-r transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:h-screen",
+          "fixed inset-y-0 left-0 z-40 w-72 transform border-r border-white/5 bg-black/40 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center justify-center border-b px-6">
-            <span className="text-xl font-bold">HostMyService</span>
+          <div className="flex h-20 items-center justify-center border-b border-white/5 px-6">
+            <Link href="/" className="flex items-center gap-2 group">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10 group-hover:border-primary/50 transition-colors duration-300">
+                    <Server className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
+                </div>
+                <span className="text-lg font-display font-bold tracking-tight text-white group-hover:text-primary transition-colors">
+                    HostMyService
+                </span>
+            </Link>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-4 py-4">
+          <nav className="flex-1 space-y-2 px-4 py-6">
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.href;
@@ -79,13 +87,16 @@ export function Sidebar({ role }: SidebarProps) {
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 group relative overflow-hidden",
                     isActive
-                      ? "bg-slate-100 text-slate-900"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                      ? "text-white bg-white/5 border border-white/5 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+                      : "text-gray-400 hover:text-white hover:bg-white/5 hover:translate-x-1"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  {isActive && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_#00f0ff]"></div>
+                  )}
+                  <Icon className={cn("h-5 w-5 transition-colors", isActive ? "text-primary" : "text-gray-500 group-hover:text-white")} />
                   {link.label}
                 </Link>
               );
@@ -93,22 +104,17 @@ export function Sidebar({ role }: SidebarProps) {
           </nav>
 
           {/* Footer Actions */}
-          <div className="border-t p-4">
-            <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50">
+          <div className="border-t border-white/5 p-6">
+            <button 
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors border border-transparent hover:border-red-500/20"
+            >
               <LogOut className="h-5 w-5" />
               Sign Out
             </button>
           </div>
         </div>
       </aside>
-      
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
     </>
   );
 }

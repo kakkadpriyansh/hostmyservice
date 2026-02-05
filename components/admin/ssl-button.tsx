@@ -44,7 +44,7 @@ export function SSLButton({ siteId, status }: { siteId: string; status: string }
     <button
       onClick={handleProvision}
       disabled={loading}
-      className="text-indigo-600 hover:text-indigo-900 text-xs font-medium flex items-center gap-1"
+      className="text-primary hover:text-white transition-colors text-xs font-medium flex items-center gap-1"
     >
       {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Shield className="h-3 w-3" />}
       Provision SSL
