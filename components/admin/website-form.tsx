@@ -32,24 +32,24 @@ export function WebsiteForm({ users, plans }: WebsiteFormProps) {
   return (
     <form action={handleSubmit} className="space-y-6 max-w-lg">
       {error && (
-        <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+        <div className="bg-red-500/10 text-red-400 border border-red-500/20 p-3 rounded-lg text-sm">
           {error}
         </div>
       )}
 
       <div>
-        <label htmlFor="userId" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="userId" className="block text-sm font-medium text-gray-300 mb-1">
           User
         </label>
         <select
           name="userId"
           id="userId"
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none"
         >
-          <option value="">Select a user</option>
+          <option value="" className="bg-[#0A0A0A]">Select a user</option>
           {users.map((user) => (
-            <option key={user.id} value={user.id}>
+            <option key={user.id} value={user.id} className="bg-[#0A0A0A]">
               {user.name} ({user.email})
             </option>
           ))}
@@ -57,7 +57,7 @@ export function WebsiteForm({ users, plans }: WebsiteFormProps) {
       </div>
 
       <div>
-        <label htmlFor="domain" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="domain" className="block text-sm font-medium text-gray-300 mb-1">
           Domain
         </label>
         <input
@@ -67,24 +67,24 @@ export function WebsiteForm({ users, plans }: WebsiteFormProps) {
           required
           placeholder="example.com"
           pattern="^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
         />
-        <p className="mt-1 text-xs text-gray-500">Only lowercase domains allowed.</p>
+        <p className="mt-1 text-xs text-gray-400">Only lowercase domains allowed.</p>
       </div>
 
       <div>
-        <label htmlFor="planId" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="planId" className="block text-sm font-medium text-gray-300 mb-1">
           Hosting Plan
         </label>
         <select
           name="planId"
           id="planId"
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none"
         >
-          <option value="">Select a plan</option>
+          <option value="" className="bg-[#0A0A0A]">Select a plan</option>
           {plans.map((plan) => (
-            <option key={plan.id} value={plan.id}>
+            <option key={plan.id} value={plan.id} className="bg-[#0A0A0A]">
               {plan.name} - ₹{plan.price}/{plan.duration} days
             </option>
           ))}
@@ -95,7 +95,7 @@ export function WebsiteForm({ users, plans }: WebsiteFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+          className="inline-flex justify-center rounded-full bg-primary px-6 py-2.5 text-sm font-bold text-black shadow-lg hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50"
         >
           {loading ? "Creating..." : "Create Website"}
         </button>

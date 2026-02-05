@@ -66,13 +66,13 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Assign Hosting Plan</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 shadow-2xl glass">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-xl font-bold font-display text-white">Assign Hosting Plan</h2>
           <button
             onClick={onClose}
-            className="rounded-full p-1 hover:bg-gray-100"
+            className="rounded-full p-2 text-gray-400 hover:bg-white/10 hover:text-white transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -80,20 +80,20 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Client
             </label>
             <select
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none"
               value={formData.userId}
               onChange={(e) =>
                 setFormData({ ...formData, userId: e.target.value })
               }
             >
-              <option value="">Select a client...</option>
+              <option value="" className="bg-[#0A0A0A]">Select a client...</option>
               {users.map((user) => (
-                <option key={user.id} value={user.id}>
+                <option key={user.id} value={user.id} className="bg-[#0A0A0A]">
                   {user.name} ({user.email})
                 </option>
               ))}
@@ -101,20 +101,20 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Plan
             </label>
             <select
               required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all appearance-none"
               value={formData.planId}
               onChange={(e) =>
                 setFormData({ ...formData, planId: e.target.value })
               }
             >
-              <option value="">Select a plan...</option>
+              <option value="" className="bg-[#0A0A0A]">Select a plan...</option>
               {plans.map((plan) => (
-                <option key={plan.id} value={plan.id}>
+                <option key={plan.id} value={plan.id} className="bg-[#0A0A0A]">
                   {plan.name} - ₹{plan.price} / {plan.duration} days
                 </option>
               ))}
@@ -122,13 +122,13 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Domain (Optional)
             </label>
             <input
               type="text"
               placeholder="example.com"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
               value={formData.domain}
               onChange={(e) =>
                 setFormData({ ...formData, domain: e.target.value })
@@ -138,13 +138,13 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Start Date
               </label>
               <input
                 type="date"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]"
                 value={formData.startDate}
                 onChange={(e) =>
                   setFormData({ ...formData, startDate: e.target.value })
@@ -152,13 +152,13 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 End Date
               </label>
               <input
                 type="date"
                 required
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all [color-scheme:dark]"
                 value={formData.endDate}
                 onChange={(e) =>
                   setFormData({ ...formData, endDate: e.target.value })
@@ -167,18 +167,18 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-3 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="rounded-full border border-white/10 px-6 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="rounded-full bg-primary px-6 py-2 text-sm font-bold text-black hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all disabled:opacity-50"
             >
               {loading ? "Assigning..." : "Assign Plan"}
             </button>

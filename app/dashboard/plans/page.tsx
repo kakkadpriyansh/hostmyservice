@@ -14,8 +14,8 @@ export default async function PlansPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Available Hosting Plans</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-3xl font-display font-bold text-white">Available Hosting Plans</h1>
+        <p className="mt-2 text-sm text-gray-400">
           Choose a plan that suits your needs. All plans include free SSL and DDoS protection.
         </p>
       </div>
@@ -24,38 +24,46 @@ export default async function PlansPage() {
         {plans.map((plan: Plan) => (
           <div
             key={plan.id}
-            className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
+            className="group relative flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:border-primary/50 hover:bg-white/10"
           >
-            <div className="mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
-              <p className="mt-2 text-sm text-gray-500">{plan.description}</p>
+             <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-3xl" />
+            
+            <div className="mb-6">
+              <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{plan.name}</h3>
+              <p className="mt-2 text-sm text-gray-400 h-10">{plan.description}</p>
             </div>
             
-            <div className="mb-6 flex items-baseline gap-x-1">
-              <span className="text-4xl font-bold tracking-tight text-gray-900">
+            <div className="mb-8 flex items-baseline gap-x-1">
+              <span className="text-5xl font-display font-bold tracking-tight text-white">
                 ₹{plan.price}
               </span>
-              <span className="text-sm font-semibold text-gray-600">
+              <span className="text-sm font-semibold text-gray-400">
                 / {plan.duration} days
               </span>
             </div>
 
-            <ul role="list" className="mb-8 space-y-3 text-sm leading-6 text-gray-600">
-              <li className="flex gap-x-3">
-                <Check className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+            <ul role="list" className="mb-8 space-y-4 text-sm leading-6 text-gray-300 flex-1">
+              <li className="flex gap-x-3 items-center">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+                </div>
                 Static Website Hosting
               </li>
-              <li className="flex gap-x-3">
-                <Check className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+              <li className="flex gap-x-3 items-center">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+                </div>
                 Free SSL Certificate
               </li>
-              <li className="flex gap-x-3">
-                <Check className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+              <li className="flex gap-x-3 items-center">
+                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+                </div>
                 99.9% Uptime
               </li>
             </ul>
 
-            <div className="mt-auto">
+            <div className="mt-auto pt-6 border-t border-white/10">
               <CheckoutButton 
                 planId={plan.id} 
                 planName={plan.name} 

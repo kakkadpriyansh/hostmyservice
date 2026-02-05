@@ -73,11 +73,11 @@ export function FileUpload() {
     <div className="w-full max-w-xl mx-auto space-y-6">
       <div
         className={cn(
-          "relative border-2 border-dashed rounded-xl p-8 transition-all text-center cursor-pointer",
+          "relative border-2 border-dashed rounded-xl p-8 transition-all text-center cursor-pointer glass",
           isDragging
-            ? "border-indigo-500 bg-indigo-50"
-            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50",
-          file ? "bg-gray-50" : "bg-white"
+            ? "border-primary bg-primary/5"
+            : "border-white/10 hover:border-primary/50 hover:bg-white/5",
+          file ? "bg-white/5" : "bg-transparent"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -95,12 +95,12 @@ export function FileUpload() {
         {file ? (
           <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-indigo-100 rounded-lg">
-                <FileArchive className="h-6 w-6 text-indigo-600" />
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <FileArchive className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left">
-                <p className="font-medium text-gray-900 truncate max-w-[200px]">{file.name}</p>
-                <p className="text-xs text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p className="font-medium text-white truncate max-w-[200px]">{file.name}</p>
+                <p className="text-xs text-gray-400">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
               </div>
             </div>
             <button
@@ -110,19 +110,19 @@ export function FileUpload() {
                 setResult(null);
                 if (fileInputRef.current) fileInputRef.current.value = "";
               }}
-              className="p-1 hover:bg-gray-200 rounded-full"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors"
             >
-              <X className="h-5 w-5 text-gray-500" />
+              <X className="h-5 w-5 text-gray-400 hover:text-white" />
             </button>
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="mx-auto w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center">
-              <Upload className="h-6 w-6 text-indigo-600" />
+            <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Upload className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <p className="text-lg font-medium text-gray-900">Click to upload or drag and drop</p>
-              <p className="text-sm text-gray-500 mt-1">ZIP archive containing your static site (must include index.html)</p>
+              <p className="text-lg font-medium text-white">Click to upload or drag and drop</p>
+              <p className="text-sm text-gray-400 mt-1">ZIP archive containing your static site (must include index.html)</p>
             </div>
           </div>
         )}
@@ -132,7 +132,7 @@ export function FileUpload() {
         <button
           onClick={handleUpload}
           disabled={uploading}
-          className="w-full py-2.5 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full py-3 px-4 bg-primary text-black font-bold rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {uploading ? (
             <>
@@ -148,8 +148,10 @@ export function FileUpload() {
       {result && (
         <div
           className={cn(
-            "p-4 rounded-lg flex items-start gap-3",
-            result.success ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"
+            "p-4 rounded-lg flex items-start gap-3 border",
+            result.success 
+              ? "bg-green-500/10 text-green-400 border-green-500/20" 
+              : "bg-red-500/10 text-red-400 border-red-500/20"
           )}
         >
           {result.success ? (
@@ -161,7 +163,7 @@ export function FileUpload() {
             <p className="font-medium">{result.success ? "Upload Successful" : "Upload Failed"}</p>
             <p className="text-sm mt-1 opacity-90">{result.message || result.error}</p>
             {result.path && (
-              <div className="mt-2 text-xs font-mono bg-white/50 p-2 rounded">
+              <div className="mt-2 text-xs font-mono bg-black/50 p-2 rounded text-gray-300">
                 Path: {result.path}
               </div>
             )}
