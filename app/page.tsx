@@ -3,10 +3,13 @@ import { ArrowRight, Check, Server, Zap, Globe, Lock, Code, Cpu, Shield } from "
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { Plan } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
+  const session = await getServerSession(authOptions);
   let plans: Plan[] = [];
   try {
     plans = await prisma.plan.findMany({
@@ -53,15 +56,26 @@ export default async function Home() {
             <Link href="#pricing" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
               Pricing
             </Link>
-            <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
-              Log in
-            </Link>
-            <Link
-              href="/register"
-              className="relative px-6 py-2.5 text-sm font-semibold text-black bg-primary rounded-full hover:bg-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,240,255,0.5)]"
-            >
-              Get Started
-            </Link>
+            {session ? (
+              <Link
+                href="/dashboard"
+                className="relative px-6 py-2.5 text-sm font-semibold text-black bg-primary rounded-full hover:bg-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,240,255,0.5)]"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="relative px-6 py-2.5 text-sm font-semibold text-black bg-primary rounded-full hover:bg-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,240,255,0.5)]"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
