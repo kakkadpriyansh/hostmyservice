@@ -40,8 +40,17 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
     throw new Error("Plan not found");
   }
 
+  // Calculate price based on duration and optional dynamic pricing
+  let finalPrice = plan.price * durationYears;
+
+  if (durationYears === 2 && plan.price2Years) {
+    finalPrice = plan.price2Years;
+  } else if (durationYears === 3 && plan.price3Years) {
+    finalPrice = plan.price3Years;
+  }
+
   // Amount in paisa
-  const amount = Math.round(plan.price * durationYears * 100);
+  const amount = Math.round(finalPrice * 100);
 
   try {
     const order = await razorpay.orders.create({
@@ -61,7 +70,7 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
       data: {
         userId: session.user.id,
         planId: plan.id,
-        amount: plan.price * durationYears,
+        amount: finalPrice,
         durationYears: durationYears,
         currency: "INR",
         status: "PENDING",

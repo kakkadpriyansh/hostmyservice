@@ -112,6 +112,8 @@ model Plan {
   id          String   @id @default(cuid())
   name        String
   price       Float
+  price2Years Float?   // Optional price for 2 years
+  price3Years Float?   // Optional price for 3 years
   duration    Int      // Duration in days
   description String?
   features    String[]

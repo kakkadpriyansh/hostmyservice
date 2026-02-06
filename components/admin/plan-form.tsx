@@ -9,6 +9,8 @@ interface PlanFormProps {
     id: string;
     name: string;
     price: number;
+    price2Years?: number | null;
+    price3Years?: number | null;
     duration: number;
     description: string | null;
     features?: string[];
@@ -23,7 +25,9 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
   const [formData, setFormData] = useState({
     name: plan?.name || "",
     price: plan?.price || 0,
-    duration: plan?.duration || 30,
+    price2Years: plan?.price2Years || 0,
+    price3Years: plan?.price3Years || 0,
+    duration: plan?.duration || 365,
     description: plan?.description || "",
     features: plan?.features?.join("\n") || "",
     requiresEnv: !!plan?.requiresEnv,
@@ -37,6 +41,9 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
       const dataToSubmit = {
         ...formData,
         features: formData.features.split("\n").filter((f) => f.trim() !== ""),
+        // Ensure we send numbers or undefined if 0/empty
+        price2Years: formData.price2Years > 0 ? formData.price2Years : undefined,
+        price3Years: formData.price3Years > 0 ? formData.price3Years : undefined,
       };
       
       if (plan) {
@@ -86,7 +93,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
-                Price
+                Price (1 Year)
               </label>
               <input
                 type="number"
@@ -111,6 +118,39 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
                 value={formData.duration}
                 onChange={(e) =>
                   setFormData({ ...formData, duration: Number(e.target.value) })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Price (2 Years) - Optional
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                value={formData.price2Years || ""}
+                placeholder="Leave empty to use 2x 1-year price"
+                onChange={(e) =>
+                  setFormData({ ...formData, price2Years: Number(e.target.value) })
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Price (3 Years) - Optional
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                value={formData.price3Years || ""}
+                placeholder="Leave empty to use 3x 1-year price"
+                onChange={(e) =>
+                  setFormData({ ...formData, price3Years: Number(e.target.value) })
                 }
               />
             </div>

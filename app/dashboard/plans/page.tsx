@@ -40,14 +40,17 @@ export default async function PlansPage() {
               <p className="mt-2 text-sm text-gray-400 h-10">{plan.description}</p>
             </div>
             
-            <div className="mb-8 flex items-baseline gap-x-1">
+            <div className="mb-2 flex items-baseline gap-x-1">
               <span className="text-5xl font-display font-bold tracking-tight text-white">
-                ₹{plan.price}
+                ₹{Math.round(plan.price / 12)}
               </span>
               <span className="text-sm font-semibold text-gray-400">
-                / year
+                / month
               </span>
             </div>
+            <p className="mb-8 text-xs text-gray-500">
+              Billed ₹{plan.price} yearly
+            </p>
 
             <ul role="list" className="mb-8 space-y-4 text-sm leading-6 text-gray-300 flex-1">
               {(plan.features && plan.features.length > 0 ? plan.features : [
@@ -70,6 +73,8 @@ export default async function PlansPage() {
                 planId={plan.id} 
                 planName={plan.name} 
                 price={plan.price}
+                price2Years={plan.price2Years}
+                price3Years={plan.price3Years}
                 userProfile={user}
               />
             </div>

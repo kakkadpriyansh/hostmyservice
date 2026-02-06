@@ -31,6 +31,8 @@ export const userSchema = z.object({
 export const planSchema = z.object({
   name: z.string().min(1),
   price: z.number().min(0),
+  price2Years: z.number().min(0).optional(),
+  price3Years: z.number().min(0).optional(),
   duration: z.number().int().min(1),
   description: z.string().optional(),
   features: z.array(z.string()).default([]),

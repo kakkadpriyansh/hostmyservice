@@ -10,6 +10,8 @@ type Plan = {
   id: string;
   name: string;
   price: number;
+  price2Years?: number | null;
+  price3Years?: number | null;
   duration: number;
   description: string | null;
   features?: string[];
