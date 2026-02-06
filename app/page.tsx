@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, Check, Server, Zap, Globe, Lock, Code, Cpu, Shield } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
-import { Plan } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -10,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  let plans: Plan[] = [];
+  let plans: any[] = [];
   try {
     plans = await prisma.plan.findMany({
       where: { isActive: true },
@@ -19,17 +18,17 @@ export default async function Home() {
   } catch (error) {
     logger.error("Failed to fetch plans from database", { error });
     plans = [
-      { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
-      { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
-      { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+      { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
+      { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
+      { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
     ];
   }
 
   if (plans.length === 0) {
       plans = [
-        { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
-        { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
-        { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
+        { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
+        { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
     ];
   }
 
@@ -150,7 +149,7 @@ export default async function Home() {
             </div>
             
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {features.map((feature, idx) => (
+              {features.map((feature: any, idx: number) => (
                 <div 
                   key={feature.name} 
                   className="glass glass-hover p-8 rounded-3xl group"
@@ -213,30 +212,18 @@ export default async function Home() {
                         <span className="text-sm font-semibold leading-6 text-gray-500">/{plan.duration} days</span>
                       </p>
                       <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-300">
-                        <li className="flex gap-x-3">
-                          <Check className={`h-6 w-5 flex-none ${accentColor}`} />
-                          Static Website Hosting
-                        </li>
-                        <li className="flex gap-x-3">
-                          <Check className={`h-6 w-5 flex-none ${accentColor}`} />
-                          Free SSL Certificate
-                        </li>
-                        <li className="flex gap-x-3">
-                          <Check className={`h-6 w-5 flex-none ${accentColor}`} />
-                          DDoS Protection
-                        </li>
-                        {isPro && (
-                           <li className="flex gap-x-3">
-                           <Check className={`h-6 w-5 flex-none ${accentColor}`} />
-                           Priority Support
-                         </li>
-                        )}
-                         {isBusiness && (
-                           <li className="flex gap-x-3">
-                           <Check className={`h-6 w-5 flex-none ${accentColor}`} />
-                           Custom Domains
-                         </li>
-                        )}
+                        {(plan.features && plan.features.length > 0 ? plan.features : [
+                            "Static Website Hosting",
+                            "Free SSL Certificate",
+                            "DDoS Protection",
+                            ...(isPro ? ["Priority Support"] : []),
+                            ...(isBusiness ? ["Custom Domains", "Priority Support"] : [])
+                        ]).map((feature: string, index: number) => (
+                           <li key={index} className="flex gap-x-3">
+                             <Check className={`h-6 w-5 flex-none ${accentColor}`} />
+                             {feature}
+                           </li>
+                        ))}
                       </ul>
                     </div>
                     <Link

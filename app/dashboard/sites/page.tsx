@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getClientSubscriptions } from "@/app/actions/client/dashboard";
-import { SiteCard } from "@/components/dashboard/site-card";
+import { HostingManager } from "@/components/dashboard/hosting-manager";
 import { Server } from "lucide-react";
 import { SubscriptionWithPlan } from "@/types";
 
@@ -35,9 +35,9 @@ export default function MySitesPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-display font-bold text-white">My Hosted Sites</h1>
+        <h1 className="text-3xl font-display font-bold text-white">My Hosting</h1>
         <p className="mt-2 text-sm text-gray-400">
-          Manage your active hosting subscriptions and domain settings.
+          Manage your domains, deployments, and server settings.
         </p>
       </div>
 
@@ -50,13 +50,13 @@ export default function MySitesPage() {
             No active subscriptions
           </h3>
           <p className="mt-2 text-sm text-gray-400 max-w-sm">
-            You haven't subscribed to any hosting plans yet. Choose a plan to start deploying your sites.
+            You haven't subscribed to any hosting plans yet. Buy a plan to start deploying your sites.
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6">
           {subscriptions.map((sub) => (
-            <SiteCard key={sub.id} sub={sub} />
+            <HostingManager key={sub.id} sub={sub} />
           ))}
         </div>
       )}

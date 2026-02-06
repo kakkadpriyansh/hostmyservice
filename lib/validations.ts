@@ -33,6 +33,9 @@ export const planSchema = z.object({
   price: z.number().min(0),
   duration: z.number().int().min(1),
   description: z.string().optional(),
+  features: z.array(z.string()).default([]),
+  requiresEnv: z.boolean().default(false),
+  providesDb: z.boolean().default(false),
 });
 
 export const subscriptionSchema = z.object({

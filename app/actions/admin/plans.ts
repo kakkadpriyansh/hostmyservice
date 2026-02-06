@@ -9,6 +9,9 @@ export async function createPlan(data: {
   price: number;
   duration: number;
   description?: string;
+  features: string[];
+  requiresEnv?: boolean;
+  providesDb?: boolean;
 }) {
   const validation = planSchema.safeParse(data);
   if (!validation.success) {
@@ -22,6 +25,9 @@ export async function createPlan(data: {
         price: data.price,
         duration: data.duration,
         description: data.description,
+        features: data.features,
+        requiresEnv: !!data.requiresEnv,
+        providesDb: !!data.providesDb,
       },
     });
     revalidatePath("/admin/plans");
@@ -39,6 +45,9 @@ export async function updatePlan(
     price?: number;
     duration?: number;
     description?: string;
+    features?: string[];
+    requiresEnv?: boolean;
+    providesDb?: boolean;
   }
 ) {
   try {
@@ -79,6 +88,33 @@ export async function deletePlan(id: string) {
   } catch (error) {
     console.error("Failed to delete plan:", error);
     return { success: false, error: "Failed to delete plan" };
+  }
+}
+
+export async function clonePlan(id: string) {
+  try {
+    const plan = await prisma.plan.findUnique({
+      where: { id },
+    });
+
+    if (!plan) {
+      return { success: false, error: "Plan not found" };
+    }
+
+    const { id: _, createdAt, updatedAt, deletedAt, ...planData } = plan;
+
+    await prisma.plan.create({
+      data: {
+        ...planData,
+        name: `${planData.name} (Copy)`,
+      },
+    });
+
+    revalidatePath("/admin/plans");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to clone plan:", error);
+    return { success: false, error: "Failed to clone plan" };
   }
 }
 

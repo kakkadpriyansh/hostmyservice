@@ -41,6 +41,9 @@ model Site {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime? // Soft delete
+  serverIp      String?   // Assigned by Admin
+  envVars       String?   @db.Text
+  dbConnection  String?
 
   deployments   Deployment[]
 }
@@ -95,7 +98,10 @@ model Plan {
   price       Float
   duration    Int      // Duration in days
   description String?
+  features    String[]
   isActive    Boolean  @default(true)
+  requiresEnv Boolean  @default(false)
+  providesDb  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt     DateTime?

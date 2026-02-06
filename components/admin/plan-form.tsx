@@ -11,6 +11,9 @@ interface PlanFormProps {
     price: number;
     duration: number;
     description: string | null;
+    features?: string[];
+    requiresEnv?: boolean;
+    providesDb?: boolean;
   };
   onClose: () => void;
 }
@@ -22,16 +25,24 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
     price: plan?.price || 0,
     duration: plan?.duration || 30,
     description: plan?.description || "",
+    features: plan?.features?.join("\n") || "",
+    requiresEnv: !!plan?.requiresEnv,
+    providesDb: !!plan?.providesDb,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      const dataToSubmit = {
+        ...formData,
+        features: formData.features.split("\n").filter((f) => f.trim() !== ""),
+      };
+      
       if (plan) {
-        await updatePlan(plan.id, formData);
+        await updatePlan(plan.id, dataToSubmit);
       } else {
-        await createPlan(formData);
+        await createPlan(dataToSubmit);
       }
       onClose();
     } catch (error) {
@@ -117,6 +128,46 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
                 setFormData({ ...formData, description: e.target.value })
               }
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Features (one per line)
+            </label>
+            <textarea
+              className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+              rows={5}
+              placeholder="Static Website Hosting&#10;Free SSL Certificate&#10;DDoS Protection"
+              value={formData.features}
+              onChange={(e) =>
+                setFormData({ ...formData, features: e.target.value })
+              }
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <label className="flex items-center gap-2 text-sm text-gray-300">
+              <input
+                type="checkbox"
+                checked={formData.requiresEnv}
+                onChange={(e) =>
+                  setFormData({ ...formData, requiresEnv: e.target.checked })
+                }
+                className="h-4 w-4 rounded border border-white/20 bg-white/5"
+              />
+              Require .env from user
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-300">
+              <input
+                type="checkbox"
+                checked={formData.providesDb}
+                onChange={(e) =>
+                  setFormData({ ...formData, providesDb: e.target.checked })
+                }
+                className="h-4 w-4 rounded border border-white/20 bg-white/5"
+              />
+              Provide database connection
+            </label>
           </div>
 
           <div className="flex justify-end gap-3 pt-6">
