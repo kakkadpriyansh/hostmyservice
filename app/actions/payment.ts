@@ -14,6 +14,15 @@ export async function createSubscriptionOrder(planId: string) {
     throw new Error("Unauthorized");
   }
 
+  // Verify user exists in database to prevent FK constraint errors
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+  });
+
+  if (!user) {
+    throw new Error("User account not found. Please log out and log in again.");
+  }
+
   const planIdResult = planIdSchema.safeParse(planId);
   if (!planIdResult.success) {
     throw new Error("Invalid Plan ID");
@@ -34,7 +43,8 @@ export async function createSubscriptionOrder(planId: string) {
     const order = await razorpay.orders.create({
       amount: amount,
       currency: "INR",
-      receipt: `receipt_${Date.now()}_${session.user.id}`,
+      // Receipt id must be <= 40 chars
+      receipt: `rcpt_${Date.now()}_${session.user.id.slice(-8)}`,
       notes: {
         userId: session.user.id,
         planId: plan.id,

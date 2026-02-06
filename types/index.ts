@@ -1,3 +1,5 @@
+import { Site } from "@prisma/client";
+
 export interface CurrentUser {
   id: string;
   email: string;
@@ -15,6 +17,8 @@ export interface SubscriptionWithPlan {
   plan: {
     name: string;
     price: number;
+    requiresEnv?: boolean;
+    providesDb?: boolean;
   };
+  site: Site | null;
 }
-

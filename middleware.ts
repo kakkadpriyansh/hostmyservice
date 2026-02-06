@@ -34,7 +34,12 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
+      authorized: ({ token, req }) => {
+        // Public paths that should not require authentication
+        const publicPaths = ["/"];
+        if (publicPaths.includes(req.nextUrl.pathname)) {
+          return true;
+        }
         // Only allow if token exists (user is logged in)
         return !!token;
       },

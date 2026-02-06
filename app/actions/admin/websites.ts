@@ -34,6 +34,32 @@ export async function getWebsites() {
   }
 }
 
+export async function getWebsiteById(id: string) {
+  try {
+    const site = await prisma.site.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        subscription: {
+          include: {
+            plan: true
+          }
+        },
+        deployments: {
+          orderBy: { createdAt: 'desc' },
+          take: 5
+        }
+      }
+    });
+    
+    if (!site) return { success: false, error: "Website not found" };
+    
+    return { success: true, data: site };
+  } catch (error) {
+    return { success: false, error: "Failed to fetch website" };
+  }
+}
+
 export async function createWebsite(formData: FormData) {
   try {
     const rawData = {
@@ -98,5 +124,56 @@ export async function toggleSiteStatus(siteId: string, status: "ACTIVE" | "SUSPE
     return { success: true };
   } catch (error) {
     return { success: false, error: "Failed to update status" };
+  }
+}
+
+export async function updateSiteDetails(formData: FormData) {
+  try {
+    const siteId = formData.get("siteId") as string;
+    const domain = formData.get("domain") as string;
+    const status = formData.get("status") as "ACTIVE" | "SUSPENDED" | "DELETED";
+    const sslStatus = formData.get("sslStatus") as "NONE" | "PENDING" | "ACTIVE" | "FAILED";
+    const serverIp = formData.get("serverIp") as string;
+    const serverPath = formData.get("serverPath") as string;
+    const dbConnection = formData.get("dbConnection") as string;
+
+    await prisma.site.update({
+      where: { id: siteId },
+      data: {
+        domain,
+        status,
+        sslStatus,
+        serverIp: serverIp || null,
+        serverPath: serverPath || null,
+        dbConnection: dbConnection || null,
+      }
+    });
+    
+    revalidatePath("/admin/websites");
+    return { success: true, message: "Site details updated successfully" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Failed to update site details" };
+  }
+}
+
+export async function updateServerIp(siteId: string, serverIp: string | null) {
+  try {
+    // Basic validation for IP (IPv4)
+    const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (serverIp && !ipRegex.test(serverIp)) {
+       return { success: false, error: "Invalid IP address format" };
+    }
+
+    await prisma.site.update({
+      where: { id: siteId },
+      data: { serverIp: serverIp || null } // Allow clearing IP by passing empty string
+    });
+    
+    revalidatePath("/admin/websites");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update server IP:", error);
+    return { success: false, error: "Failed to update server IP" };
   }
 }

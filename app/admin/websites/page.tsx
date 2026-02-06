@@ -1,8 +1,9 @@
 import { getWebsites, toggleSiteStatus } from "@/app/actions/admin/websites";
 import { format } from "date-fns";
-import { Shield, Globe, MoreVertical, Play, Pause, ExternalLink } from "lucide-react";
+import { Shield, Globe, Play, Pause, Settings } from "lucide-react";
 import Link from "next/link";
 import { SSLButton } from "@/components/admin/ssl-button";
+import { ServerIpEditor } from "@/components/admin/server-ip-editor";
 
 export default async function WebsitesPage() {
   const result = await getWebsites();
@@ -33,6 +34,9 @@ export default async function WebsitesPage() {
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   SSL
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  Server IP
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Plan
@@ -79,6 +83,9 @@ export default async function WebsitesPage() {
                         <SSLButton siteId={site.id} status={site.sslStatus} />
                     </div>
                   </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <ServerIpEditor siteId={site.id} initialIp={site.serverIp} />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {site.subscription?.plan?.name || "No Plan"}
                   </td>
@@ -91,22 +98,31 @@ export default async function WebsitesPage() {
                     ) : "Never"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <form action={async () => {
-                      "use server";
-                      await toggleSiteStatus(site.id, site.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE');
-                    }}>
-                      <button className="text-primary hover:text-white flex items-center justify-end gap-2 w-full transition-colors">
-                         {site.status === 'ACTIVE' ? (
-                             <>
-                                <Pause className="h-4 w-4" /> Suspend
-                             </>
-                         ) : (
-                             <>
-                                <Play className="h-4 w-4" /> Enable
-                             </>
-                         )}
-                      </button>
-                    </form>
+                    <div className="flex items-center justify-end gap-4">
+                      <Link
+                        href={`/admin/websites/${site.id}`}
+                        className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-lg"
+                        title="Manage Site Details"
+                      >
+                        <Settings className="h-5 w-5" />
+                      </Link>
+                      <form action={async () => {
+                        "use server";
+                        await toggleSiteStatus(site.id, site.status === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE');
+                      }}>
+                        <button className="text-primary hover:text-white flex items-center justify-end gap-2 transition-colors">
+                          {site.status === 'ACTIVE' ? (
+                              <>
+                                  <Pause className="h-4 w-4" /> Suspend
+                               </>
+                           ) : (
+                               <>
+                                  <Play className="h-4 w-4" /> Enable
+                               </>
+                           )}
+                        </button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}

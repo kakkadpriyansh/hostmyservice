@@ -3,14 +3,16 @@ import { authOptions } from "@/lib/auth";
 import { getClientSubscriptions } from "@/app/actions/client/dashboard";
 import { Server, Globe, CreditCard, Activity, ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
-import { SiteCard } from "@/components/dashboard/site-card";
+import { HostingManager } from "@/components/dashboard/hosting-manager";
 
 export default async function DashboardOverview() {
   const session = await getServerSession(authOptions);
   const subscriptions = await getClientSubscriptions();
 
-  const totalSites = subscriptions.length;
-  const activeSites = subscriptions.filter(s => s.status === 'ACTIVE').length;
+  const totalSubscriptions = subscriptions.length;
+  // Active Deployments: Sites that are set up and have a server IP assigned
+  const activeDeployments = subscriptions.filter(s => (s.site as any)?.serverIp).length;
+  
   // Calculate expiring soon (e.g. within 7 days)
   const expiringSoon = subscriptions.filter(s => {
     const daysLeft = Math.ceil((new Date(s.endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
@@ -19,16 +21,16 @@ export default async function DashboardOverview() {
 
   const stats = [
     {
-      name: "Total Sites",
-      value: totalSites,
-      icon: Server,
+      name: "Total Plans",
+      value: totalSubscriptions,
+      icon: CreditCard,
       color: "text-[#00f0ff]",
       bg: "bg-[#00f0ff]/10",
       border: "border-[#00f0ff]/20"
     },
     {
       name: "Active Deployments",
-      value: activeSites,
+      value: activeDeployments,
       icon: Globe,
       color: "text-[#7000ff]",
       bg: "bg-[#7000ff]/10",
@@ -43,6 +45,7 @@ export default async function DashboardOverview() {
       border: "border-[#ff003c]/20"
     },
   ];
+
 
   return (
     <div className="space-y-8">
@@ -115,9 +118,9 @@ export default async function DashboardOverview() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-6">
             {subscriptions.slice(0, 2).map((sub) => (
-              <SiteCard key={sub.id} sub={sub} />
+              <HostingManager key={sub.id} sub={sub} />
             ))}
           </div>
         )}

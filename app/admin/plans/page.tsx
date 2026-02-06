@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { getPlans, togglePlanStatus } from "@/app/actions/admin/plans";
+import { getPlans, togglePlanStatus, deletePlan, clonePlan } from "@/app/actions/admin/plans";
 import { PlanForm } from "@/components/admin/plan-form";
-import { Plus, Pencil, Power, PowerOff } from "lucide-react";
+import { Plus, Pencil, Power, PowerOff, Trash, Copy } from "lucide-react";
 import { useEffect } from "react";
 
 type Plan = {
@@ -12,7 +12,10 @@ type Plan = {
   price: number;
   duration: number;
   description: string | null;
+  features?: string[];
   isActive: boolean;
+  requiresEnv?: boolean;
+  providesDb?: boolean;
   createdAt: Date;
 };
 
@@ -53,8 +56,32 @@ export default function PlansPage() {
   };
 
   const handleToggleStatus = async (plan: Plan) => {
-    await togglePlanStatus(plan.id, !plan.isActive);
-    loadPlans();
+    try {
+      await togglePlanStatus(plan.id, !plan.isActive);
+      loadPlans();
+    } catch (error) {
+      console.error("Failed to toggle status:", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this plan?")) {
+      try {
+        await deletePlan(id);
+        loadPlans();
+      } catch (error) {
+        console.error("Failed to delete plan:", error);
+      }
+    }
+  };
+
+  const handleClone = async (id: string) => {
+    try {
+      await clonePlan(id);
+      loadPlans();
+    } catch (error) {
+      console.error("Failed to clone plan:", error);
+    }
   };
 
   if (loading) return <div>Loading plans...</div>;
@@ -131,10 +158,17 @@ export default function PlansPage() {
                       <Pencil className="h-5 w-5" />
                     </button>
                     <button
+                      onClick={() => handleClone(plan.id)}
+                      className="text-blue-400 hover:text-blue-300 transition-colors"
+                      title="Clone"
+                    >
+                      <Copy className="h-5 w-5" />
+                    </button>
+                    <button
                       onClick={() => handleToggleStatus(plan)}
                       className={`${
                         plan.isActive
-                          ? "text-red-400 hover:text-red-300"
+                          ? "text-yellow-400 hover:text-yellow-300"
                           : "text-green-400 hover:text-green-300"
                       } transition-colors`}
                       title={plan.isActive ? "Disable" : "Enable"}
@@ -144,6 +178,13 @@ export default function PlansPage() {
                       ) : (
                         <Power className="h-5 w-5" />
                       )}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(plan.id)}
+                      className="text-red-400 hover:text-red-300 transition-colors"
+                      title="Delete"
+                    >
+                      <Trash className="h-5 w-5" />
                     </button>
                   </div>
                 </td>

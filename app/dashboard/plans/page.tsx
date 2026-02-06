@@ -43,24 +43,19 @@ export default async function PlansPage() {
             </div>
 
             <ul role="list" className="mb-8 space-y-4 text-sm leading-6 text-gray-300 flex-1">
-              <li className="flex gap-x-3 items-center">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
-                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
-                </div>
-                Static Website Hosting
-              </li>
-              <li className="flex gap-x-3 items-center">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
-                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
-                </div>
-                Free SSL Certificate
-              </li>
-              <li className="flex gap-x-3 items-center">
-                 <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
-                    <Check className="h-4 w-4 text-primary" aria-hidden="true" />
-                </div>
-                99.9% Uptime
-              </li>
+              {(plan.features && plan.features.length > 0 ? plan.features : [
+                "Static Website Hosting",
+                "Free SSL Certificate", 
+                "DDoS Protection",
+                "Priority Support"
+              ]).map((feature, index) => (
+                <li key={index} className="flex gap-x-3 items-center">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
+                      <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+                  </div>
+                  {feature}
+                </li>
+              ))}
             </ul>
 
             <div className="mt-auto pt-6 border-t border-white/10">
