@@ -21,7 +21,10 @@ export function HostingManager({ sub }: HostingManagerProps) {
   const [domain, setDomain] = useState("");
 
   // Upload State
+  const [deployType, setDeployType] = useState<"ZIP" | "GIT">("ZIP");
   const [file, setFile] = useState<File | null>(null);
+  const [gitRepoUrl, setGitRepoUrl] = useState("");
+  const [gitBranch, setGitBranch] = useState("main");
 
   // Env State
   const [savedEnvContent, setSavedEnvContent] = useState((sub.site as any)?.envVars || "");
@@ -49,15 +52,25 @@ export function HostingManager({ sub }: HostingManagerProps) {
 
   async function handleDeploy(e: React.FormEvent) {
     e.preventDefault();
-    if (!sub.site || !file) return;
+    if (!sub.site) return;
     
+    if (deployType === "ZIP" && !file) return;
+    if (deployType === "GIT" && !gitRepoUrl) return;
+
     setLoading(true);
     setError(null);
     setSuccess(null);
 
     const formData = new FormData();
     formData.append("siteId", sub.site.id);
-    formData.append("file", file);
+    formData.append("type", deployType);
+    
+    if (deployType === "ZIP" && file) {
+      formData.append("file", file);
+    } else if (deployType === "GIT") {
+      formData.append("gitRepoUrl", gitRepoUrl);
+      formData.append("gitBranch", gitBranch);
+    }
 
     try {
       const res = await deploySite(formData);
@@ -66,6 +79,8 @@ export function HostingManager({ sub }: HostingManagerProps) {
       } else {
         setSuccess("Deployment queued! Waiting for admin approval.");
         setFile(null);
+        setGitRepoUrl("");
+        setGitBranch("main");
       }
     } catch (err) {
       setError("Upload failed");
@@ -227,21 +242,77 @@ export function HostingManager({ sub }: HostingManagerProps) {
           </div>
         )}
 
-        {/* Upload Section */}
+        {/* Deployment Section */}
         <div className="rounded-xl border border-white/10 bg-black/20 p-4">
           <h4 className="mb-3 text-sm font-medium text-white flex items-center gap-2">
-            <Upload className="h-4 w-4" /> Upload Content
+            <Upload className="h-4 w-4" /> Deploy Content
           </h4>
-          <form onSubmit={handleDeploy} className="space-y-3">
-            <input
-              type="file"
-              accept=".zip"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-sm text-gray-400 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/20"
-            />
-            <p className="text-xs text-gray-500">
-              Upload a .zip file containing your website (must include index.html).
-            </p>
+          
+          <div className="flex gap-4 mb-4">
+            <button
+              type="button"
+              onClick={() => setDeployType("ZIP")}
+              className={cn(
+                "flex-1 py-2 text-sm font-medium rounded-lg border transition-all",
+                deployType === "ZIP" 
+                  ? "bg-primary/10 border-primary text-primary" 
+                  : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
+              )}
+            >
+              ZIP Upload
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeployType("GIT")}
+              className={cn(
+                "flex-1 py-2 text-sm font-medium rounded-lg border transition-all",
+                deployType === "GIT" 
+                  ? "bg-primary/10 border-primary text-primary" 
+                  : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
+              )}
+            >
+              Git Repository
+            </button>
+          </div>
+
+          <form onSubmit={handleDeploy} className="space-y-4">
+            {deployType === "ZIP" ? (
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="w-full text-sm text-gray-400 file:mr-4 file:rounded-lg file:border-0 file:bg-white/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-white/20"
+                />
+                <p className="text-xs text-gray-500">
+                  Upload a .zip file containing your website.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Git Repository URL</label>
+                  <input
+                    type="url"
+                    required
+                    value={gitRepoUrl}
+                    onChange={(e) => setGitRepoUrl(e.target.value)}
+                    placeholder="https://github.com/username/repo.git"
+                    className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2 text-white focus:border-primary focus:outline-none text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1">Branch</label>
+                  <input
+                    type="text"
+                    value={gitBranch}
+                    onChange={(e) => setGitBranch(e.target.value)}
+                    placeholder="main"
+                    className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2 text-white focus:border-primary focus:outline-none text-sm"
+                  />
+                </div>
+              </div>
+            )}
             
             {error && (
               <div className="text-sm text-red-400 flex items-center gap-2">
@@ -257,10 +328,10 @@ export function HostingManager({ sub }: HostingManagerProps) {
 
             <button
               type="submit"
-              disabled={!file || loading}
+              disabled={(deployType === "ZIP" && !file) || (deployType === "GIT" && !gitRepoUrl) || loading}
               className="w-full rounded-lg bg-white/10 py-2 text-sm font-medium text-white hover:bg-white/20 disabled:opacity-50 transition-colors"
             >
-              {loading ? "Uploading..." : "Upload & Deploy"}
+              {loading ? "Queuing..." : "Queue Deployment"}
             </button>
           </form>
         </div>

@@ -1,19 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createSubscriptionOrder, verifyPayment } from "@/app/actions/payment";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { BillingForm } from "./billing-form";
 
 interface CheckoutButtonProps {
   planId: string;
   planName: string;
   price: number;
+  userProfile?: any; // Using any to avoid complex type imports, but ideally should be User type
 }
 
-export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps) {
+export function CheckoutButton({ planId, planName, price, userProfile }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
+  const [showBillingModal, setShowBillingModal] = useState(false);
+  const [isProfileComplete, setIsProfileComplete] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (userProfile) {
+      const isComplete = 
+        userProfile.phoneNumber &&
+        userProfile.address &&
+        userProfile.city &&
+        userProfile.state &&
+        userProfile.postalCode &&
+        userProfile.country;
+      setIsProfileComplete(!!isComplete);
+    }
+  }, [userProfile]);
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -37,6 +54,10 @@ export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps)
 
       // 1. Create Order
       const order = await createSubscriptionOrder(planId);
+      
+      if (!order || !order.key) {
+         throw new Error("Failed to create order");
+      }
 
       // 2. Initialize Razorpay
       const options = {
@@ -63,9 +84,8 @@ export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps)
           }
         },
         prefill: {
-          // You can prefill user details if you have them in context
-          // email: user.email,
-          // contact: user.phone
+          email: userProfile?.email,
+          contact: userProfile?.phoneNumber
         },
         theme: {
           color: "#00f0ff", // cyan-500
@@ -82,20 +102,51 @@ export function CheckoutButton({ planId, planName, price }: CheckoutButtonProps)
     }
   };
 
+  const handleBuyClick = () => {
+    if (!isProfileComplete) {
+      setShowBillingModal(true);
+    } else {
+      handlePayment();
+    }
+  };
+
   return (
-    <button
-      onClick={handlePayment}
-      disabled={loading}
-      className="w-full rounded-xl bg-[#00f0ff] px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300"
-    >
-      {loading ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Processing...
-        </>
-      ) : (
-        `Buy ${planName} - ₹${price}`
+    <>
+      <button
+        onClick={handleBuyClick}
+        disabled={loading}
+        className="w-full rounded-xl bg-[#00f0ff] px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Processing...
+          </>
+        ) : (
+          `Buy ${planName} - ₹${price}`
+        )}
+      </button>
+
+      {showBillingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0A0A0A] p-6 shadow-2xl">
+            <button
+              onClick={() => setShowBillingModal(false)}
+              className="absolute right-4 top-4 text-gray-400 hover:text-white"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <BillingForm
+              initialData={userProfile}
+              onSuccess={() => {
+                setIsProfileComplete(true);
+                setShowBillingModal(false);
+                handlePayment();
+              }}
+            />
+          </div>
+        </div>
       )}
-    </button>
+    </>
   );
 }
