@@ -17,19 +17,7 @@ export default async function Home() {
     });
   } catch (error) {
     logger.error("Failed to fetch plans from database", { error });
-    plans = [
-      { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-      { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-      { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-    ];
-  }
-
-  if (plans.length === 0) {
-      plans = [
-        { id: "basic", name: "Basic", price: 0, duration: 30, description: "Perfect for personal projects", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-        { id: "pro", name: "Pro", price: 499, duration: 30, description: "For professional developers", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-        { id: "business", name: "Business", price: 999, duration: 30, description: "For high-traffic sites", isActive: true, createdAt: new Date(), updatedAt: new Date(), features: [], requiresEnv: false, providesDb: false } as any,
-    ];
+    plans = [];
   }
 
   return (
@@ -208,8 +196,11 @@ export default async function Home() {
                       </div>
                       <p className="mt-4 text-sm leading-6 text-gray-400">{plan.description}</p>
                       <p className="mt-6 flex items-baseline gap-x-1">
-                        <span className="text-5xl font-display font-bold tracking-tight text-white">₹{plan.price}</span>
-                        <span className="text-sm font-semibold leading-6 text-gray-500">/{plan.duration} days</span>
+                        <span className="text-5xl font-display font-bold tracking-tight text-white">₹{Math.round(plan.price / 12)}</span>
+                        <span className="text-sm font-semibold leading-6 text-gray-500">/ month</span>
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        Billed ₹{plan.price} yearly
                       </p>
                       <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-300">
                         {(plan.features && plan.features.length > 0 ? plan.features : [
