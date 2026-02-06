@@ -165,6 +165,7 @@ model Payment {
   invoiceNumber     String?   @unique
   gstNumber         String?   // Optional GST number for invoice
   gstAmount         Float?    // Optional GST amount
+  durationYears     Int       @default(1) // Duration in years (1, 2, 3)
   createdAt         DateTime  @default(now())
   deletedAt         DateTime?
 }

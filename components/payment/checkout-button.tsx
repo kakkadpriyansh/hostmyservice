@@ -17,6 +17,7 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
   const [loading, setLoading] = useState(false);
   const [showBillingModal, setShowBillingModal] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [durationYears, setDurationYears] = useState(1);
   const router = useRouter();
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
       }
 
       // 1. Create Order
-      const order = await createSubscriptionOrder(planId);
+      const order = await createSubscriptionOrder(planId, durationYears);
       
       if (!order || !order.key) {
          throw new Error("Failed to create order");
@@ -65,7 +66,7 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
         amount: order.amount,
         currency: order.currency,
         name: "HostMyService",
-        description: `Subscription for ${planName}`,
+        description: `Subscription for ${planName} (${durationYears} Year${durationYears > 1 ? 's' : ''})`,
         order_id: order.orderId,
         handler: async function (response: any) {
           try {
@@ -111,11 +112,27 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
   };
 
   return (
-    <>
+    <div className="space-y-4">
+      <div className="flex bg-white/5 rounded-xl p-1 border border-white/10">
+        {[1, 2, 3].map((yr) => (
+          <button
+            key={yr}
+            onClick={() => setDurationYears(yr)}
+            className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all duration-200 ${
+              durationYears === yr 
+                ? "bg-[#00f0ff] text-black shadow-[0_0_15px_rgba(0,240,255,0.3)]" 
+                : "text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            {yr} Yr
+          </button>
+        ))}
+      </div>
+
       <button
         onClick={handleBuyClick}
         disabled={loading}
-        className="w-full rounded-xl bg-[#00f0ff] px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300"
+        className="w-full rounded-xl bg-[#00f0ff] px-4 py-3 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300"
       >
         {loading ? (
           <>
@@ -123,7 +140,7 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
             Processing...
           </>
         ) : (
-          `Buy ${planName} - ₹${price}`
+          `Buy ${planName} - ₹${price * durationYears}`
         )}
       </button>
 
@@ -147,6 +164,6 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
