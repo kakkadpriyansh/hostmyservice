@@ -10,10 +10,12 @@ interface CheckoutButtonProps {
   planId: string;
   planName: string;
   price: number;
+  price2Years?: number | null;
+  price3Years?: number | null;
   userProfile?: any; // Using any to avoid complex type imports, but ideally should be User type
 }
 
-export function CheckoutButton({ planId, planName, price, userProfile }: CheckoutButtonProps) {
+export function CheckoutButton({ planId, planName, price, price2Years, price3Years, userProfile }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const [showBillingModal, setShowBillingModal] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
@@ -32,6 +34,12 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
       setIsProfileComplete(!!isComplete);
     }
   }, [userProfile]);
+
+  const getPrice = (years: number) => {
+    if (years === 2 && price2Years) return price2Years;
+    if (years === 3 && price3Years) return price3Years;
+    return price * years;
+  };
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -140,7 +148,7 @@ export function CheckoutButton({ planId, planName, price, userProfile }: Checkou
             Processing...
           </>
         ) : (
-          `Buy ${planName} - ₹${price * durationYears}`
+          `Buy ${planName} - ₹${getPrice(durationYears)}`
         )}
       </button>
 

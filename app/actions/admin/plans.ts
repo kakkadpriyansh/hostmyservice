@@ -7,6 +7,8 @@ import { planSchema } from "@/lib/validations";
 export async function createPlan(data: {
   name: string;
   price: number;
+  price2Years?: number;
+  price3Years?: number;
   duration: number;
   description?: string;
   features: string[];
@@ -23,6 +25,8 @@ export async function createPlan(data: {
       data: {
         name: data.name,
         price: data.price,
+        price2Years: data.price2Years,
+        price3Years: data.price3Years,
         duration: data.duration,
         description: data.description,
         features: data.features,
@@ -43,6 +47,8 @@ export async function updatePlan(
   data: {
     name?: string;
     price?: number;
+    price2Years?: number;
+    price3Years?: number;
     duration?: number;
     description?: string;
     features?: string[];
