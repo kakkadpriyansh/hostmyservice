@@ -2,10 +2,17 @@ import prisma from "@/lib/prisma";
 import { CheckoutButton } from "@/components/payment/checkout-button";
 import { Check } from "lucide-react";
 import { Plan } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function PlansPage() {
+  const session = await getServerSession(authOptions);
+  const user = session?.user?.id ? await prisma.user.findUnique({
+    where: { id: session.user.id }
+  }) : null;
+
   const plans = await prisma.plan.findMany({
     where: { isActive: true },
     orderBy: { price: "asc" },
@@ -62,7 +69,8 @@ export default async function PlansPage() {
               <CheckoutButton 
                 planId={plan.id} 
                 planName={plan.name} 
-                price={plan.price} 
+                price={plan.price}
+                userProfile={user}
               />
             </div>
           </div>

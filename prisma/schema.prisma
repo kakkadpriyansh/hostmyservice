@@ -13,6 +13,12 @@ model User {
   email         String    @unique
   password      String?
   image         String?
+  phoneNumber   String?
+  address       String?
+  city          String?
+  state         String?
+  postalCode    String?
+  country       String?
   role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -66,6 +72,11 @@ model Deployment {
   siteId        String
   site          Site      @relation(fields: [siteId], references: [id])
   status        DeployStatus @default(PENDING)
+  type          DeploymentType @default(ZIP)
+  uploadPath    String?   // Path to the extracted files
+  archivePath   String?   // Path to the original zip file
+  gitRepoUrl    String?
+  gitBranch     String?
   logs          DeploymentLog[]
   createdAt     DateTime  @default(now())
   // No soft delete needed for logs usually, but BRD said "All tables"
@@ -90,6 +101,11 @@ enum DeployStatus {
   BUILDING
   DEPLOYED
   FAILED
+}
+
+enum DeploymentType {
+  ZIP
+  GIT
 }
 
 model Plan {
