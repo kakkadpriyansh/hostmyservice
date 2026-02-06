@@ -45,7 +45,7 @@ export default async function PlansPage() {
                 ₹{plan.price}
               </span>
               <span className="text-sm font-semibold text-gray-400">
-                / {plan.duration} days
+                / year
               </span>
             </div>
 

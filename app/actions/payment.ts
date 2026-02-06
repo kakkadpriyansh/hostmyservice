@@ -8,10 +8,14 @@ import crypto from "crypto";
 import { env } from "@/lib/env";
 import { planIdSchema, paymentVerificationSchema } from "@/lib/validations";
 
-export async function createSubscriptionOrder(planId: string) {
+export async function createSubscriptionOrder(planId: string, durationYears: number = 1) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
+  }
+
+  if (![1, 2, 3].includes(durationYears)) {
+    throw new Error("Invalid duration. Must be 1, 2, or 3 years.");
   }
 
   // Verify user exists in database to prevent FK constraint errors
@@ -37,7 +41,7 @@ export async function createSubscriptionOrder(planId: string) {
   }
 
   // Amount in paisa
-  const amount = Math.round(plan.price * 100);
+  const amount = Math.round(plan.price * durationYears * 100);
 
   try {
     const order = await razorpay.orders.create({
@@ -48,6 +52,7 @@ export async function createSubscriptionOrder(planId: string) {
       notes: {
         userId: session.user.id,
         planId: plan.id,
+        durationYears,
       },
     });
 
@@ -56,7 +61,8 @@ export async function createSubscriptionOrder(planId: string) {
       data: {
         userId: session.user.id,
         planId: plan.id,
-        amount: plan.price,
+        amount: plan.price * durationYears,
+        durationYears: durationYears,
         currency: "INR",
         status: "PENDING",
         razorpayOrderId: order.id,
@@ -126,7 +132,9 @@ export async function verifyPayment(
   if (payment.plan) {
     const startDate = new Date();
     const endDate = new Date();
-    endDate.setDate(startDate.getDate() + payment.plan.duration);
+    // Use durationYears from payment if available, otherwise default to 1 year
+    const durationYears = payment.durationYears || 1;
+    endDate.setDate(startDate.getDate() + (durationYears * 365));
 
     await prisma.subscription.create({
       data: {
