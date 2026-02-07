@@ -20,6 +20,8 @@ model User {
   postalCode    String?
   country       String?
   role          Role      @default(USER)
+  resetToken    String?
+  resetTokenExpiry DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime? // Soft delete

@@ -41,7 +41,8 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/admin/websites", label: "Websites", icon: Globe },
     { href: "/admin/plans", label: "Plans", icon: Shield },
     { href: "/admin/upload", label: "Upload Test", icon: Upload },
-    { href: "/admin/deploy", label: "Deployments", icon: Settings },
+    { href: "/admin/deploy", label: "Deployments", icon: Server },
+    { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 
   const links = role === "ADMIN" ? adminLinks : userLinks;

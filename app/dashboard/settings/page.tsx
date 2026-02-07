@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { User, Mail, Shield, Key } from "lucide-react";
 
+import { ChangePasswordForm } from "@/components/auth/change-password-form";
+
 export default async function SettingsPage() {
   const session = await getServerSession(authOptions);
 
@@ -74,13 +76,8 @@ export default async function SettingsPage() {
 
           <div className="space-y-4">
              <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-                <h3 className="text-sm font-medium text-white">Password</h3>
-                <p className="mt-1 text-sm text-gray-400">
-                  Last changed: Never
-                </p>
-                <button className="mt-4 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors">
-                  Change Password
-                </button>
+                <h3 className="text-sm font-medium text-white mb-4">Change Password</h3>
+                <ChangePasswordForm />
              </div>
 
              <div className="rounded-xl bg-white/5 border border-white/10 p-4">
