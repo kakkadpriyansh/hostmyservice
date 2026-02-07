@@ -1,18 +1,17 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { User, Mail, Shield, Key } from "lucide-react";
-
 import { ChangePasswordForm } from "@/components/auth/change-password-form";
 
-export default async function SettingsPage() {
+export default async function AdminSettingsPage() {
   const session = await getServerSession(authOptions);
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-display font-bold text-white">Account Settings</h1>
+        <h1 className="text-3xl font-display font-bold text-white">Admin Settings</h1>
         <p className="mt-2 text-sm text-gray-400">
-          Manage your account profile and security preferences.
+          Manage your admin account and security preferences.
         </p>
       </div>
 
@@ -25,7 +24,7 @@ export default async function SettingsPage() {
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Profile Information</h2>
-              <p className="text-sm text-gray-400">Your personal account details</p>
+              <p className="text-sm text-gray-400">Your admin account details</p>
             </div>
           </div>
 
@@ -56,7 +55,7 @@ export default async function SettingsPage() {
               </label>
               <div className="mt-2 flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 p-3 text-white">
                 <Shield className="h-4 w-4 text-gray-500" />
-                <span className="capitalize">{session?.user?.role?.toLowerCase() || "User"}</span>
+                <span className="capitalize">{session?.user?.role?.toLowerCase() || "Admin"}</span>
               </div>
             </div>
           </div>
@@ -78,16 +77,6 @@ export default async function SettingsPage() {
              <div className="rounded-xl bg-white/5 border border-white/10 p-4">
                 <h3 className="text-sm font-medium text-white mb-4">Change Password</h3>
                 <ChangePasswordForm />
-             </div>
-
-             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
-                <h3 className="text-sm font-medium text-white">Two-Factor Authentication</h3>
-                <p className="mt-1 text-sm text-gray-400">
-                  Add an extra layer of security to your account.
-                </p>
-                <button className="mt-4 rounded-lg border border-primary/20 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 transition-colors">
-                  Enable 2FA
-                </button>
              </div>
           </div>
         </div>

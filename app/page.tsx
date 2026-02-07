@@ -11,8 +11,12 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   let plans: any[] = [];
   try {
+    // Filter out deleted plans
     plans = await prisma.plan.findMany({
-      where: { isActive: true },
+      where: { 
+        isActive: true,
+        deletedAt: null 
+      },
       orderBy: { price: "asc" },
     });
   } catch (error) {

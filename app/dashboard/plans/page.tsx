@@ -13,8 +13,12 @@ export default async function PlansPage() {
     where: { id: session.user.id }
   }) : null;
 
+  // Fetch active, non-deleted plans (verified)
   const plans = await prisma.plan.findMany({
-    where: { isActive: true },
+    where: { 
+      isActive: true,
+      deletedAt: null
+    },
     orderBy: { price: "asc" },
   });
 
