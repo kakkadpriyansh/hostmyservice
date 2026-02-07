@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Server, Mail, MapPin, Phone } from "lucide-react";
+import { Server, Mail } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -75,16 +75,8 @@ export function SiteFooter() {
               <li className="flex items-start gap-3 text-sm text-gray-400">
                 <Mail className="h-5 w-5 text-primary shrink-0" />
                 <a href="mailto:hostmyservice@gmail.com" className="hover:text-white transition-colors">
-                  support@hostmyservices.com
+                  hostmyservice@gmail.com
                 </a>
-              </li>
-              <li className="flex items-start gap-3 text-sm text-gray-400">
-                <MapPin className="h-5 w-5 text-primary shrink-0" />
-                <span>
-                  123 Tech Park, Cyber City,<br />
-                  Bangalore, Karnataka 560100<br />
-                  India
-                </span>
               </li>
             </ul>
           </div>
