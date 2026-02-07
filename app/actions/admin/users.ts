@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { userSchema } from "@/lib/validations";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function createUser(data: {
   name: string;
@@ -47,6 +49,12 @@ export async function createUser(data: {
 }
 
 export async function getUsers() {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return [];
+  }
+
   try {
     const users = await prisma.user.findMany({
       where: { deletedAt: null },
@@ -56,6 +64,12 @@ export async function getUsers() {
         name: true,
         email: true,
         role: true,
+        phoneNumber: true,
+        address: true,
+        city: true,
+        state: true,
+        postalCode: true,
+        country: true,
         createdAt: true,
         _count: {
           select: { subscriptions: true, sites: true },

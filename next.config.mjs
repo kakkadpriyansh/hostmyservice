@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ["ssh2", "node-ssh"],
+  experimental: {
+    serverComponentsExternalPackages: ["ssh2", "node-ssh"],
+  },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.node$/,
+      use: "node-loader",
+    });
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -4,6 +4,8 @@ import { SSHClient } from "@/lib/ssh-client";
 import { generateNginxConfig } from "@/lib/nginx-config";
 import prisma from "@/lib/prisma";
 import { siteIdSchema, domainSchema } from "@/lib/validations";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 interface DeployResult {
   success: boolean;
@@ -13,6 +15,12 @@ interface DeployResult {
 }
 
 export async function deploySite(siteId: string, sourcePath: string): Promise<DeployResult> {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized access" };
+  }
+
   // Validate Inputs
   const siteIdResult = siteIdSchema.safeParse(siteId);
   if (!siteIdResult.success) {

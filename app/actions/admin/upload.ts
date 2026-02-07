@@ -5,11 +5,19 @@ import { join } from "path";
 import * as osModule from "os";
 import AdmZip from "adm-zip";
 import { v4 as uuidv4 } from "uuid";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ALLOWED_TYPES = ["application/zip", "application/x-zip-compressed"];
 
 export async function uploadSiteArchive(formData: FormData) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { error: "Unauthorized access" };
+  }
+
   const file = formData.get("file") as File | null;
 
   if (!file) {

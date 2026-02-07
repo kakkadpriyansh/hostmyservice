@@ -10,6 +10,12 @@ type User = {
   name: string | null;
   email: string;
   role: "USER" | "ADMIN";
+  phoneNumber: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  postalCode: string | null;
+  country: string | null;
   createdAt: Date;
   _count: {
     subscriptions: number;
@@ -67,6 +73,12 @@ export default function UsersPage() {
                 Role
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Contact
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Location
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 Subscriptions
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -100,6 +112,19 @@ export default function UsersPage() {
                   >
                     {user.role}
                   </span>
+                </td>
+                <td className="whitespace-nowrap px-6 py-4">
+                  <div className="text-sm text-gray-300">
+                    {user.phoneNumber || "N/A"}
+                  </div>
+                </td>
+                <td className="whitespace-nowrap px-6 py-4">
+                  <div className="text-sm text-gray-300">
+                    {user.city ? `${user.city}, ${user.country}` : "N/A"}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                     {user.address}
+                  </div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-300">
                   {user._count.subscriptions} active
