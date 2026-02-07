@@ -94,8 +94,8 @@ You can deploy this Next.js app to Vercel, or on the same VPS using PM2.
 2. Start with PM2: `pm2 start npm --name "hostmyservice" -- start`
 
 ### 3. DNS Configuration
-- Point `*.hostmyservice.com` (or your domain) to the VPS IP.
-- Point the main app domain (e.g., `app.hostmyservice.com`) to Vercel/VPS IP.
+- Point `*.hostmyservice.in` (or your domain) to the VPS IP.
+- Point the main app domain (e.g., `app.hostmyservice.in`) to Vercel/VPS IP.
 
 ### 4. Post-Deployment Verification
 - [ ] Login as Admin.
