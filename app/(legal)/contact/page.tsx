@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export default function ContactPage() {
   return (
@@ -20,23 +20,8 @@ export default function ContactPage() {
               <h3 className="text-lg font-semibold text-white">Email Us</h3>
               <p className="text-gray-400 text-sm mt-1">For general inquiries and support</p>
               <a href="mailto:hostmyservice@gmail.com" className="text-primary hover:text-primary/80 transition-colors mt-2 block font-medium">
-                support@hostmyservices.com
+                hostmyservice@gmail.com
               </a>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-primary/10 text-primary">
-              <MapPin className="h-6 w-6" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white">Visit Us</h3>
-              <p className="text-gray-400 text-sm mt-1">Our registered office</p>
-              <address className="text-gray-300 not-italic mt-2 text-sm leading-relaxed">
-                123 Tech Park, Cyber City,<br />
-                Bangalore, Karnataka 560100<br />
-                India
-              </address>
             </div>
           </div>
         </div>
