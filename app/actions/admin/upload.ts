@@ -58,6 +58,18 @@ export async function uploadSiteArchive(formData: FormData) {
       entry.entryName.toLowerCase().endsWith("index.html") && !entry.entryName.startsWith("__MACOSX")
     );
 
+    // Security: Check for dangerous file types
+    const dangerousExtensions = [".php", ".phtml", ".php3", ".php4", ".php5", ".phps", ".sh", ".bash", ".exe", ".dll", ".bat", ".cmd", ".msi", ".vbs", ".pl", ".cgi", ".jsp", ".asp", ".aspx", ".py", ".rb"];
+    const hasDangerousFiles = entries.some((entry) => {
+      const lowerName = entry.entryName.toLowerCase();
+      return dangerousExtensions.some((ext) => lowerName.endsWith(ext));
+    });
+
+    if (hasDangerousFiles) {
+      await rm(uploadPath, { recursive: true, force: true });
+      return { error: "Security Alert: Archive contains prohibited file types (e.g., PHP, executables)." };
+    }
+
     if (indexHtmlEntries.length === 0) {
       // Cleanup if invalid
       await rm(uploadPath, { recursive: true, force: true });

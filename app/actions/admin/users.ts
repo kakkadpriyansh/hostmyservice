@@ -38,6 +38,13 @@ export async function createUser(data: {
         password: hashedPassword,
         role: data.role || "USER",
       },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
     });
 
     revalidatePath("/admin/users");
