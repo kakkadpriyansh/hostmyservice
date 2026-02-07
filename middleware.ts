@@ -63,6 +63,6 @@ export const config = {
      * - register (register page)
      * - / (root page)
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|login|register|$).*)",
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|login|register|forgot-password|reset-password|$).*)",
   ],
 };
