@@ -5,6 +5,8 @@ import { logger } from "@/lib/logger";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
+import { SiteFooter } from "@/components/layout/site-footer";
+
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
@@ -244,25 +246,7 @@ export default async function Home() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 bg-black/50 backdrop-blur-lg py-12 relative z-10">
-        <div className="container mx-auto px-6 lg:px-12">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <div className="flex items-center gap-2">
-              <Server className="h-5 w-5 text-gray-500" />
-              <span className="text-lg font-display font-bold text-gray-300">HostMyService</span>
-            </div>
-            <div className="flex gap-8">
-                <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Terms</a>
-                <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Privacy</a>
-                <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Status</a>
-            </div>
-            <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} HostMyService.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
