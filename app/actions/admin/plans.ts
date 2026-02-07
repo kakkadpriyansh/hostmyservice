@@ -4,6 +4,9 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { planSchema } from "@/lib/validations";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+
 export async function createPlan(data: {
   name: string;
   price: number;
@@ -15,6 +18,11 @@ export async function createPlan(data: {
   requiresEnv?: boolean;
   providesDb?: boolean;
 }) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   const validation = planSchema.safeParse(data);
   if (!validation.success) {
     return { success: false, error: validation.error.message };
@@ -56,6 +64,11 @@ export async function updatePlan(
     providesDb?: boolean;
   }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     const plan = await prisma.plan.update({
       where: { id },
@@ -70,6 +83,11 @@ export async function updatePlan(
 }
 
 export async function togglePlanStatus(id: string, isActive: boolean) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     const plan = await prisma.plan.update({
       where: { id },
@@ -84,6 +102,11 @@ export async function togglePlanStatus(id: string, isActive: boolean) {
 }
 
 export async function deletePlan(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     await prisma.plan.update({
       where: { id },
@@ -98,6 +121,11 @@ export async function deletePlan(id: string) {
 }
 
 export async function clonePlan(id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
   try {
     const plan = await prisma.plan.findUnique({
       where: { id },
@@ -125,6 +153,11 @@ export async function clonePlan(id: string) {
 }
 
 export async function getPlans() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return [];
+  }
+
   try {
     const plans = await prisma.plan.findMany({
       where: { deletedAt: null },
