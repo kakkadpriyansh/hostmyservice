@@ -6,17 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { changePasswordSchema } from "@/lib/validations";
 import { changePassword } from "@/app/actions/auth";
 import { z } from "zod";
-import { Loader2, Lock, Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export function ChangePasswordForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -28,142 +26,102 @@ export function ChangePasswordForm() {
   });
 
   const onSubmit = async (data: ChangePasswordFormData) => {
-    setIsSubmitting(true);
-    setError(null);
-    setSuccessMessage(null);
+    setLoading(true);
+    setMessage(null);
 
     try {
       const result = await changePassword(data);
+
       if (result.success) {
-        setSuccessMessage("Password changed successfully");
+        setMessage({ type: "success", text: "Password updated successfully" });
         reset();
+        router.refresh();
       } else {
-        setError(result.error || "Something went wrong");
+        setMessage({ type: "error", text: result.error || "Failed to update password" });
       }
-    } catch (err) {
-      setError("An unexpected error occurred");
+    } catch (error) {
+      setMessage({ type: "error", text: "An unexpected error occurred" });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      {successMessage && (
-        <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-3 text-green-500 animate-fade-in">
-          <CheckCircle className="h-5 w-5 flex-shrink-0" />
-          <p className="text-sm font-medium">{successMessage}</p>
-        </div>
-      )}
-
-      {error && (
-        <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-500 animate-fade-in">
-          <AlertCircle className="h-5 w-5 flex-shrink-0" />
-          <p className="text-sm font-medium">{error}</p>
+    <div className="w-full max-w-md">
+      {message && (
+        <div
+          className={`mb-4 rounded-lg p-3 text-sm ${
+            message.type === "success"
+              ? "bg-green-500/10 text-green-500 border border-green-500/20"
+              : "bg-red-500/10 text-red-500 border border-red-500/20"
+          }`}
+        >
+          {message.text}
         </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1.5">
-            Current Password
-          </label>
-          <div className="relative">
+          <label className="block text-sm font-medium text-gray-200">Current Password</label>
+          <div className="relative mt-1">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <Lock className="h-4 w-4" />
+            </div>
             <input
-              type={showCurrentPassword ? "text" : "password"}
               {...register("currentPassword")}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
+              type="password"
+              className="block w-full rounded-lg border border-white/10 bg-white/5 pl-10 py-2 text-white placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm"
               placeholder="••••••••"
             />
-            <button
-              type="button"
-              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            >
-              {showCurrentPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
           </div>
           {errors.currentPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.currentPassword.message}
-            </p>
+            <p className="mt-1 text-xs text-red-400">{errors.currentPassword.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1.5">
-            New Password
-          </label>
-          <div className="relative">
+          <label className="block text-sm font-medium text-gray-200">New Password</label>
+          <div className="relative mt-1">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <Lock className="h-4 w-4" />
+            </div>
             <input
-              type={showNewPassword ? "text" : "password"}
               {...register("newPassword")}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
+              type="password"
+              className="block w-full rounded-lg border border-white/10 bg-white/5 pl-10 py-2 text-white placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm"
               placeholder="••••••••"
             />
-            <button
-              type="button"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            >
-              {showNewPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
           </div>
           {errors.newPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.newPassword.message}
-            </p>
+            <p className="mt-1 text-xs text-red-400">{errors.newPassword.message}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1.5">
-            Confirm New Password
-          </label>
-          <div className="relative">
+          <label className="block text-sm font-medium text-gray-200">Confirm New Password</label>
+          <div className="relative mt-1">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <Lock className="h-4 w-4" />
+            </div>
             <input
-              type={showConfirmPassword ? "text" : "password"}
               {...register("confirmNewPassword")}
-              className="w-full bg-white/5 border border-white/10 rounded-lg pl-4 pr-10 py-2.5 text-white placeholder:text-gray-600 focus:outline-none focus:border-primary/50 transition-colors"
+              type="password"
+              className="block w-full rounded-lg border border-white/10 bg-white/5 pl-10 py-2 text-white placeholder-gray-400 focus:border-primary focus:ring-1 focus:ring-primary sm:text-sm"
               placeholder="••••••••"
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-            >
-              {showConfirmPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
           </div>
           {errors.confirmNewPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.confirmNewPassword.message}
-            </p>
+            <p className="mt-1 text-xs text-red-400">{errors.confirmNewPassword.message}</p>
           )}
         </div>
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-primary hover:bg-primary/90 text-black font-bold py-2.5 rounded-lg transition-all shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+          className="flex w-full justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
-          {isSubmitting ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            "Update Password"
-          )}
+          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+          Update Password
         </button>
       </form>
     </div>

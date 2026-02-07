@@ -47,7 +47,7 @@ export async function provisionSSL(siteId: string): Promise<SslResult> {
   }
   const domain = domainResult.data;
   
-  const adminEmail = env.ADMIN_EMAIL || "admin@hostmyservice.com";
+  const adminEmail = env.ADMIN_EMAIL || "admin@hostmyservice.in";
 
   try {
     // Update status to PENDING
