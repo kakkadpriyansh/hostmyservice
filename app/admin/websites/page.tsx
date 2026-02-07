@@ -44,6 +44,9 @@ export default async function WebsitesPage() {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                   Deployment
                 </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                  Env Vars
+                </th>
                 <th scope="col" className="relative px-6 py-3">
                   <span className="sr-only">Actions</span>
                 </th>
@@ -96,6 +99,15 @@ export default async function WebsitesPage() {
                             <span className="text-xs text-gray-500">{format(new Date(site.deployments[0].createdAt), 'MMM d, HH:mm')}</span>
                         </div>
                     ) : "Never"}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-300 max-w-xs">
+                    {site.envVars ? (
+                      <div className="max-h-20 overflow-y-auto bg-black/30 p-2 rounded text-xs font-mono whitespace-pre-wrap scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                        {site.envVars}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500 italic">None</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-4">
