@@ -5,8 +5,9 @@ import { ArrowLeft, Globe, User, Shield, Server, Database, Download, GitBranch, 
 import { EditSiteForm } from "./edit-site-form";
 import { format } from "date-fns";
 
-export default async function WebsiteDetailsPage({ params }: { params: { id: string } }) {
-  const result = await getWebsiteById(params.id);
+export default async function WebsiteDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const result = await getWebsiteById(id);
 
   if (!result.success || !result.data) {
     notFound();
