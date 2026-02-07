@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role, SubscriptionStatus, SiteStatus, SslStatus, PaymentStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -7,9 +7,9 @@ async function main() {
 
   // 1. Users
   const users = [
-    { id: 'cml93vukn00003dzfljl7cg0z', name: 'Admin User', email: 'admin@hostmyservice.com', password: '$2b$10$CiIQpvF8UGI8DzLO8jm6DOZLinxKyDTdtl/GoIUpf7BaKLpJAO5hC', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: 'ADMIN', resetToken: null, resetTokenExpiry: null, createdAt: new Date('2026-02-05T06:59:19.559Z'), updatedAt: new Date('2026-02-07T04:53:51.479Z'), deletedAt: null },
-    { id: 'cml927jfq0000l7ghzkfj9vcm', name: 'priyansh', email: 'kakkadpriyansh@gmail.com', password: '$2b$10$nQvXdwJ1ZxNBpud18C6yv./XJhYyiy6G9sqI5IdIM9X11K/bPLqYm', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: 'USER', resetToken: '0cdfa7cf-16ea-4dde-99cd-c0226bd8fabe', resetTokenExpiry: new Date('2026-02-07T06:05:44.136Z'), createdAt: new Date('2026-02-05T06:12:25.767Z'), updatedAt: new Date('2026-02-07T05:05:44.137Z'), deletedAt: null },
-    { id: 'cmlbuvl1h000048kreuc55y6a', name: 'Admin User', email: 'admin@hostmyservice.in', password: '$2b$10$cFCa/hE2FtE0t4Ymehb1..0bIZP2c8M7X1PEqnUcbN6t91Yr50fYm', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: 'ADMIN', resetToken: null, resetTokenExpiry: null, createdAt: new Date('2026-02-07T05:10:29.189Z'), updatedAt: new Date('2026-02-07T05:10:29.189Z'), deletedAt: null }
+    { id: 'cml93vukn00003dzfljl7cg0z', name: 'Admin User', email: 'admin@hostmyservice.com', password: '$2b$10$CiIQpvF8UGI8DzLO8jm6DOZLinxKyDTdtl/GoIUpf7BaKLpJAO5hC', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: Role.ADMIN, resetToken: null, resetTokenExpiry: null, createdAt: new Date('2026-02-05T06:59:19.559Z'), updatedAt: new Date('2026-02-07T04:53:51.479Z'), deletedAt: null },
+    { id: 'cml927jfq0000l7ghzkfj9vcm', name: 'priyansh', email: 'kakkadpriyansh@gmail.com', password: '$2b$10$nQvXdwJ1ZxNBpud18C6yv./XJhYyiy6G9sqI5IdIM9X11K/bPLqYm', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: Role.USER, resetToken: '0cdfa7cf-16ea-4dde-99cd-c0226bd8fabe', resetTokenExpiry: new Date('2026-02-07T06:05:44.136Z'), createdAt: new Date('2026-02-05T06:12:25.767Z'), updatedAt: new Date('2026-02-07T05:05:44.137Z'), deletedAt: null },
+    { id: 'cmlbuvl1h000048kreuc55y6a', name: 'Admin User', email: 'admin@hostmyservice.in', password: '$2b$10$cFCa/hE2FtE0t4Ymehb1..0bIZP2c8M7X1PEqnUcbN6t91Yr50fYm', image: null, phoneNumber: null, address: null, city: null, state: null, postalCode: null, country: null, role: Role.ADMIN, resetToken: null, resetTokenExpiry: null, createdAt: new Date('2026-02-07T05:10:29.189Z'), updatedAt: new Date('2026-02-07T05:10:29.189Z'), deletedAt: null }
   ];
 
   for (const user of users) {
@@ -46,8 +46,8 @@ async function main() {
 
   // 3. Subscriptions
   const subscriptions = [
-    { id: 'cml928vi00004l7gh8qfym403', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', startDate: new Date('2026-02-05T06:13:28.055Z'), endDate: new Date('2026-03-07T06:13:28.055Z'), status: 'ACTIVE', createdAt: new Date('2026-02-05T06:13:28.056Z'), updatedAt: new Date('2026-02-05T06:13:28.056Z'), deletedAt: null },
-    { id: 'cmlap6pmu0005bgooinlp7u1d', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91t86l00003bllf27kwy9z', startDate: new Date('2026-02-06T00:00:00.000Z'), endDate: new Date('2026-03-08T00:00:00.000Z'), status: 'ACTIVE', createdAt: new Date('2026-02-06T09:43:24.486Z'), updatedAt: new Date('2026-02-06T09:43:24.486Z'), deletedAt: null }
+    { id: 'cml928vi00004l7gh8qfym403', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', startDate: new Date('2026-02-05T06:13:28.055Z'), endDate: new Date('2026-03-07T06:13:28.055Z'), status: SubscriptionStatus.ACTIVE, createdAt: new Date('2026-02-05T06:13:28.056Z'), updatedAt: new Date('2026-02-05T06:13:28.056Z'), deletedAt: null },
+    { id: 'cmlap6pmu0005bgooinlp7u1d', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91t86l00003bllf27kwy9z', startDate: new Date('2026-02-06T00:00:00.000Z'), endDate: new Date('2026-03-08T00:00:00.000Z'), status: SubscriptionStatus.ACTIVE, createdAt: new Date('2026-02-06T09:43:24.486Z'), updatedAt: new Date('2026-02-06T09:43:24.486Z'), deletedAt: null }
   ];
 
   for (const sub of subscriptions) {
@@ -61,8 +61,8 @@ async function main() {
 
   // 4. Sites
   const sites = [
-    { id: 'cml92tyim0006l7ghmbu7ue9f', domain: 'hms.in', serverPath: null, userId: 'cml927jfq0000l7ghzkfj9vcm', status: 'ACTIVE', sslStatus: 'PENDING', subscriptionId: 'cml928vi00004l7gh8qfym403', createdAt: new Date('2026-02-05T06:29:51.742Z'), updatedAt: new Date('2026-02-05T07:12:00.270Z'), deletedAt: null, serverIp: '12.3.12.3.12.3', envVars: null, dbConnection: null },
-    { id: 'cmlap6pmv0007bgooiatew8cf', domain: 'hhhms.in', serverPath: null, userId: 'cml927jfq0000l7ghzkfj9vcm', status: 'ACTIVE', sslStatus: 'NONE', subscriptionId: 'cmlap6pmu0005bgooinlp7u1d', createdAt: new Date('2026-02-06T09:43:24.486Z'), updatedAt: new Date('2026-02-06T10:25:29.282Z'), deletedAt: null, serverIp: null, envVars: `ds [ di ioxcjoij\nasfdgogi odpskf`, dbConnection: null }
+    { id: 'cml92tyim0006l7ghmbu7ue9f', domain: 'hms.in', serverPath: null, userId: 'cml927jfq0000l7ghzkfj9vcm', status: SiteStatus.ACTIVE, sslStatus: SslStatus.PENDING, subscriptionId: 'cml928vi00004l7gh8qfym403', createdAt: new Date('2026-02-05T06:29:51.742Z'), updatedAt: new Date('2026-02-05T07:12:00.270Z'), deletedAt: null, serverIp: '12.3.12.3.12.3', envVars: null, dbConnection: null },
+    { id: 'cmlap6pmv0007bgooiatew8cf', domain: 'hhhms.in', serverPath: null, userId: 'cml927jfq0000l7ghzkfj9vcm', status: SiteStatus.ACTIVE, sslStatus: SslStatus.NONE, subscriptionId: 'cmlap6pmu0005bgooinlp7u1d', createdAt: new Date('2026-02-06T09:43:24.486Z'), updatedAt: new Date('2026-02-06T10:25:29.282Z'), deletedAt: null, serverIp: null, envVars: `ds [ di ioxcjoij\nasfdgogi odpskf`, dbConnection: null }
   ];
 
   for (const site of sites) {
@@ -76,8 +76,8 @@ async function main() {
 
   // 5. Payments
   const payments = [
-    { id: 'cml927tf90002l7ght3kvh3qs', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', subscriptionId: null, amount: 119, currency: 'INR', status: 'SUCCESS', razorpayOrderId: 'order_SCMRn9LKzWxbSI', razorpayPaymentId: 'pay_SCMSNEX24DZFLw', razorpaySignature: '1c5b22a4c4c0666aa753457b62209a8e629cf5984ec1af1f1f4f01c000c8af85', invoiceNumber: null, gstNumber: null, gstAmount: null, durationYears: 1, createdAt: new Date('2026-02-05T06:12:38.709Z'), deletedAt: null },
-    { id: 'cmlaqsdy100017t01a2hhm0d9', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', subscriptionId: null, amount: 119, currency: 'INR', status: 'PENDING', razorpayOrderId: 'order_SCpKvGN8AE9Hwe', razorpayPaymentId: null, razorpaySignature: null, invoiceNumber: null, gstNumber: null, gstAmount: null, durationYears: 1, createdAt: new Date('2026-02-06T10:28:15.384Z'), deletedAt: null }
+    { id: 'cml927tf90002l7ght3kvh3qs', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', subscriptionId: null, amount: 119, currency: 'INR', status: PaymentStatus.SUCCESS, razorpayOrderId: 'order_SCMRn9LKzWxbSI', razorpayPaymentId: 'pay_SCMSNEX24DZFLw', razorpaySignature: '1c5b22a4c4c0666aa753457b62209a8e629cf5984ec1af1f1f4f01c000c8af85', invoiceNumber: null, gstNumber: null, gstAmount: null, durationYears: 1, createdAt: new Date('2026-02-05T06:12:38.709Z'), deletedAt: null },
+    { id: 'cmlaqsdy100017t01a2hhm0d9', userId: 'cml927jfq0000l7ghzkfj9vcm', planId: 'cml91b2at0000zf5hu27z9pyy', subscriptionId: null, amount: 119, currency: 'INR', status: PaymentStatus.PENDING, razorpayOrderId: 'order_SCpKvGN8AE9Hwe', razorpayPaymentId: null, razorpaySignature: null, invoiceNumber: null, gstNumber: null, gstAmount: null, durationYears: 1, createdAt: new Date('2026-02-06T10:28:15.384Z'), deletedAt: null }
   ];
 
   for (const payment of payments) {
@@ -90,7 +90,7 @@ async function main() {
   console.log(`Seeded ${payments.length} payments`);
 
   // 6. Deployments
-  const deployments = [
+  const deployments: any[] = [
   ];
 
   for (const deployment of deployments) {
