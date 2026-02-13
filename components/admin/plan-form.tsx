@@ -16,6 +16,8 @@ interface PlanFormProps {
     features?: string[];
     requiresEnv?: boolean;
     providesDb?: boolean;
+    autoRenew?: boolean;
+    autoRenewPlanId?: string | null;
   };
   onClose: () => void;
 }
@@ -32,6 +34,8 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
     features: plan?.features?.join("\n") || "",
     requiresEnv: !!plan?.requiresEnv,
     providesDb: !!plan?.providesDb,
+    autoRenew: !!plan?.autoRenew,
+    autoRenewPlanId: plan?.autoRenewPlanId || "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -208,7 +212,35 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
               />
               Provide database connection
             </label>
+            <label className="flex items-center gap-2 text-sm text-gray-300">
+              <input
+                type="checkbox"
+                checked={formData.autoRenew}
+                onChange={(e) =>
+                  setFormData({ ...formData, autoRenew: e.target.checked })
+                }
+                className="h-4 w-4 rounded border border-white/20 bg-white/5"
+              />
+              Enable Auto-Renew
+            </label>
           </div>
+
+          {formData.autoRenew && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Auto-Renew Plan ID (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="Leave empty to renew same plan"
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                value={formData.autoRenewPlanId}
+                onChange={(e) =>
+                  setFormData({ ...formData, autoRenewPlanId: e.target.value })
+                }
+              />
+            </div>
+          )}
 
           <div className="flex justify-end gap-3 pt-6">
             <button

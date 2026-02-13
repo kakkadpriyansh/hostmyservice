@@ -42,6 +42,8 @@ export async function uploadSiteArchive(formData: FormData) {
   const extractPath = join(uploadPath, "extracted");
 
   try {
+    console.log(`Starting admin upload by user ${session.user.id}`);
+    
     // 3. Create Temp Directory
     await mkdir(uploadPath, { recursive: true });
 

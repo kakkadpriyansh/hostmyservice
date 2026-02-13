@@ -122,6 +122,8 @@ model Plan {
   isActive    Boolean  @default(true)
   requiresEnv Boolean  @default(false)
   providesDb  Boolean  @default(false)
+  autoRenew   Boolean  @default(false)
+  autoRenewPlanId String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt     DateTime?
@@ -138,6 +140,7 @@ model Subscription {
   plan          Plan      @relation(fields: [planId], references: [id])
   startDate     DateTime
   endDate       DateTime
+  autoRenew     Boolean  @default(false)
   status        SubscriptionStatus @default(ACTIVE)
   site          Site?
   payments      Payment[]

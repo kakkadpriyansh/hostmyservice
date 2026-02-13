@@ -38,6 +38,8 @@ export const planSchema = z.object({
   features: z.array(z.string()).default([]),
   requiresEnv: z.boolean().default(false),
   providesDb: z.boolean().default(false),
+  autoRenew: z.boolean().default(false),
+  autoRenewPlanId: z.string().optional().or(z.literal("")),
 });
 
 export const subscriptionSchema = z.object({

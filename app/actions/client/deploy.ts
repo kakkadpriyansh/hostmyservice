@@ -35,6 +35,8 @@ export async function deploySite(formData: FormData) {
   if (site.userId !== session.user.id) return { error: "Unauthorized" };
 
   try {
+    console.log(`Starting deployment for site ${siteId} by user ${session.user.id}`);
+    
     if (deploymentType === "GIT") {
       const gitRepoUrl = formData.get("gitRepoUrl") as string;
       const gitBranch = formData.get("gitBranch") as string || "main";
