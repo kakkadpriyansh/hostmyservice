@@ -28,14 +28,21 @@ const ssh = new NodeSSH();
 
 async function deploy() {
   try {
-    const host = "213.210.36.173";
+    const host = process.env.VPS_HOST;
+    const password = process.env.VPS_PASSWORD;
+    const username = process.env.VPS_USER || "root";
+    
+    if (!host || !password) {
+      console.error("VPS_HOST or VPS_PASSWORD not found in .env");
+      process.exit(1);
+    }
     
     console.log(`Connecting to ${host}...`);
     
     const sshConfig = {
       host: host,
-      username: "root",
-      password: "REMOVED_PASSWORD",
+      username: username,
+      password: password,
     };
 
     console.log("Attempting connection with password...");
