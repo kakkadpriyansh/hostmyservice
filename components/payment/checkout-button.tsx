@@ -69,20 +69,30 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
       }
 
       // 2. Initialize Razorpay
-      const options = {
+      const options: any = {
         key: order.key,
-        amount: order.amount,
-        currency: order.currency,
         name: "HostMyService",
         description: `Subscription for ${planName} (${durationYears} Year${durationYears > 1 ? 's' : ''})`,
-        order_id: order.orderId,
         handler: async function (response: any) {
           try {
             // 3. Verify Payment
+            // For subscriptions, we might need to send different data to verify
+            const verifyData = order.isSubscription 
+              ? {
+                  razorpayOrderId: response.razorpay_subscription_id, // Use subscription ID
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }
+              : {
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                };
+
             await verifyPayment(
-              response.razorpay_order_id,
-              response.razorpay_payment_id,
-              response.razorpay_signature
+              verifyData.razorpayOrderId,
+              verifyData.razorpayPaymentId,
+              verifyData.razorpaySignature
             );
             alert("Payment Successful! Subscription Active.");
             router.push("/dashboard");
@@ -100,6 +110,14 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
           color: "#00f0ff", // cyan-500
         },
       };
+
+      if (order.isSubscription) {
+        options.subscription_id = order.subscriptionId;
+      } else {
+        options.amount = order.amount;
+        options.currency = order.currency;
+        options.order_id = order.orderId;
+      }
 
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();

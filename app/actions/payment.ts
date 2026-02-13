@@ -54,10 +54,11 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
 
   try {
     if (plan.autoRenew && plan.autoRenewPlanId) {
+      console.log(`Creating subscription for plan: ${plan.autoRenewPlanId}, user: ${session.user.id}`);
       // Create Razorpay Subscription
       const subscription = await razorpay.subscriptions.create({
         plan_id: plan.autoRenewPlanId,
-        total_count: 12 * 10, // Max 10 years for now, can be adjusted
+        total_count: 50, // Reduced from 120 (12*10) or 10 if it's yearly. Max is 100.
         quantity: 1,
         customer_notify: 1,
         notes: {
@@ -66,6 +67,7 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
           durationYears,
         },
       });
+      console.log("Subscription created:", subscription.id);
 
       // Create Payment Record (for tracking)
       await prisma.payment.create({
@@ -149,7 +151,22 @@ export async function verifyPayment(
   }
 
   // 1. Verify Signature
-  const body = razorpayOrderId + "|" + razorpayPaymentId;
+  // For subscriptions, the signature is payment_id + "|" + subscription_id
+  // For orders, the signature is order_id + "|" + payment_id
+  
+  // Let's find the payment record first to know if it's a subscription
+  const paymentRecord = await prisma.payment.findUnique({
+    where: { razorpayOrderId },
+  });
+
+  if (!paymentRecord) {
+    throw new Error("Payment record not found");
+  }
+
+  const body = paymentRecord.razorpaySubscriptionId 
+    ? razorpayPaymentId + "|" + razorpayOrderId
+    : razorpayOrderId + "|" + razorpayPaymentId;
+
   const expectedSignature = crypto
     .createHmac("sha256", env.RAZORPAY_KEY_SECRET)
     .update(body.toString())
