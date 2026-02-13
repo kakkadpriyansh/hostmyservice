@@ -17,6 +17,8 @@ export async function createPlan(data: {
   features: string[];
   requiresEnv?: boolean;
   providesDb?: boolean;
+  autoRenew?: boolean;
+  autoRenewPlanId?: string;
 }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id || session.user.role !== "ADMIN") {
@@ -40,6 +42,8 @@ export async function createPlan(data: {
         features: data.features,
         requiresEnv: !!data.requiresEnv,
         providesDb: !!data.providesDb,
+        autoRenew: !!data.autoRenew,
+        autoRenewPlanId: data.autoRenewPlanId,
       },
     });
     revalidatePath("/admin/plans");
@@ -62,6 +66,8 @@ export async function updatePlan(
     features?: string[];
     requiresEnv?: boolean;
     providesDb?: boolean;
+    autoRenew?: boolean;
+    autoRenewPlanId?: string;
   }
 ) {
   const session = await getServerSession(authOptions);
