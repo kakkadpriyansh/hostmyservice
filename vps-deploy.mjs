@@ -71,6 +71,18 @@ async function deploy() {
       return;
     }
 
+    if (process.argv.includes("--check-chunks")) {
+      console.log("Checking git status and chunks...");
+      const gitStatus = await ssh.execCommand("git status", { cwd: projectDir });
+      console.log("GIT STATUS:", gitStatus.stdout || gitStatus.stderr);
+
+      const findChunk = await ssh.execCommand(`find ${projectDir}/.next -name "55d40860d11e1390.js"`);
+      console.log("CHUNK SEARCH:", findChunk.stdout || "Chunk not found");
+      
+      ssh.dispose();
+      return;
+    }
+
     if (process.argv.includes("--logs")) {
       console.log(`Found directory at ${projectDir}. Fetching logs...`);
 
@@ -91,10 +103,15 @@ async function deploy() {
 
     console.log(`Found directory at ${projectDir}. Starting deployment...`);
 
-    // 1. Pull latest code
-    console.log("Pulling latest code...");
-    const pull = await ssh.execCommand("git pull origin main", { cwd: projectDir });
-    console.log(pull.stdout || pull.stderr);
+    // 1. Fetch and reset to origin/main (handles history rewrites)
+    console.log("Fetching and resetting to origin/main...");
+    await ssh.execCommand("git fetch origin", { cwd: projectDir });
+    const reset = await ssh.execCommand("git reset --hard origin/main", { cwd: projectDir });
+    console.log(reset.stdout || reset.stderr);
+
+    // 2. Clean build directory
+    console.log("Cleaning build directory...");
+    await ssh.execCommand("rm -rf .next", { cwd: projectDir });
 
     // 2. Install dependencies
     console.log("Installing dependencies...");
