@@ -58,7 +58,7 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
       // Create Razorpay Subscription
       const subscription = await razorpay.subscriptions.create({
         plan_id: plan.autoRenewPlanId,
-        total_count: 50, // Reduced from 120 (12*10) or 10 if it's yearly. Max is 100.
+        total_count: 10, // Set to 10 cycles (10 years for yearly plans)
         quantity: 1,
         customer_notify: 1,
         notes: {
