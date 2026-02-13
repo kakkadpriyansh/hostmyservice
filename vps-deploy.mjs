@@ -28,48 +28,22 @@ const ssh = new NodeSSH();
 
 async function deploy() {
   try {
-    const host = process.env.VPS_HOST === "1.2.3.4" ? "213.210.36.173" : process.env.VPS_HOST;
+    const host = "213.210.36.173";
     
     console.log(`Connecting to ${host}...`);
     
     const sshConfig = {
       host: host,
-      username: process.env.VPS_USER || "root",
+      username: "root",
+      password: "REMOVED_PASSWORD",
     };
 
-    let privateKey = process.env.VPS_PRIVATE_KEY;
-    if (privateKey && privateKey.includes("...")) {
-      console.log("Placeholder key detected. Trying common passwords or local keys...");
-      sshConfig.password = "Priy@nsh@@17"; // From DATABASE_URL
-    } else if (privateKey) {
-       privateKey = privateKey.replace(/\\n/g, '\n');
-       if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
-         privateKey = privateKey.substring(1, privateKey.length - 1);
-       }
-       if (!privateKey.endsWith('\n')) {
-         privateKey += '\n';
-       }
-       sshConfig.privateKey = privateKey;
-    }
-
-    console.log("Attempting connection...");
+    console.log("Attempting connection with password...");
     try {
       await ssh.connect(sshConfig);
     } catch (e) {
       console.error("Connection failed:", e.message);
-      if (sshConfig.password) {
-          console.log("Password failed. Trying local keys...");
-          delete sshConfig.password;
-          try {
-            sshConfig.privateKey = readFileSync(join(process.env.HOME, '.ssh', 'id_ed25519'), 'utf8');
-            await ssh.connect(sshConfig);
-          } catch (e2) {
-             console.error("Local keys failed too.");
-             throw e;
-          }
-      } else {
-          throw e;
-      }
+      throw e;
     }
 
     console.log("Connected. Verifying directory...");
@@ -90,31 +64,53 @@ async function deploy() {
       return;
     }
 
-    console.log(`Found directory at ${projectDir}. Proceeding with deployment...`);
+    if (process.argv.includes("--logs")) {
+      console.log(`Found directory at ${projectDir}. Fetching logs...`);
 
-    const commands = [
-      `cd ${projectDir} && git config --global --add safe.directory ${projectDir}`,
-      `cd ${projectDir} && git pull origin main`,
-      `cd ${projectDir} && npm install`,
-      `cd ${projectDir} && npx prisma generate`,
-      `cd ${projectDir} && npm run build`,
-      `cd ${projectDir} && npx prisma db push --accept-data-loss`,
-      `pm2 restart all || pm2 start npm --name "hostmyservice" -- start`
-    ];
+      // 1. Get PM2 logs to find the error digest
+      const pm2Logs = await ssh.execCommand("tail -n 100 /root/.pm2/logs/hostmyservice-out.log /root/.pm2/logs/hostmyservice-error.log");
+      console.log("--- PM2 LOGS ---");
+      console.log(pm2Logs.stdout || pm2Logs.stderr);
 
-    for (const cmd of commands) {
-      console.log(`Executing: ${cmd}`);
-      const result = await ssh.execCommand(cmd);
-      console.log("STDOUT:", result.stdout);
-      if (result.stderr) console.error("STDERR:", result.stderr);
-      if (result.code !== 0 && !cmd.includes("git pull") && !cmd.includes("pm2")) {
-        console.error(`Command failed with code ${result.code}`);
-        break;
-      }
+      // 2. Check plans
+      await ssh.execCommand(`echo "import { PrismaClient } from '@prisma/client'; const prisma = new PrismaClient(); prisma.plan.findMany({ select: { id: true, name: true, autoRenew: true, autoRenewPlanId: true } }).then(plans => { console.log(JSON.stringify(plans)); process.exit(0); });" > ${projectDir}/check-plans.mjs`);
+      const plansResult = await ssh.execCommand(`cd ${projectDir} && node check-plans.mjs`);
+      console.log("PLANS:", plansResult.stdout);
+      await ssh.execCommand(`rm ${projectDir}/check-plans.mjs`);
+
+      ssh.dispose();
+      return;
     }
 
-    console.log("Deployment finished.");
+    console.log(`Found directory at ${projectDir}. Starting deployment...`);
+
+    // 1. Pull latest code
+    console.log("Pulling latest code...");
+    const pull = await ssh.execCommand("git pull origin main", { cwd: projectDir });
+    console.log(pull.stdout || pull.stderr);
+
+    // 2. Install dependencies
+    console.log("Installing dependencies...");
+    const install = await ssh.execCommand("npm install", { cwd: projectDir });
+    console.log(install.stdout || install.stderr);
+
+    // 3. Generate Prisma client
+    console.log("Generating Prisma client...");
+    const generate = await ssh.execCommand("npx prisma generate", { cwd: projectDir });
+    console.log(generate.stdout || generate.stderr);
+
+    // 4. Build
+    console.log("Building project...");
+    const build = await ssh.execCommand("npm run build", { cwd: projectDir });
+    console.log(build.stdout || build.stderr);
+
+    // 5. Restart PM2
+    console.log("Restarting application...");
+    const restart = await ssh.execCommand("pm2 restart hostmyservice");
+    console.log(restart.stdout || restart.stderr);
+
     ssh.dispose();
+    console.log("Deployment completed successfully!");
   } catch (error) {
     console.error("Deployment failed:", error);
     process.exit(1);
