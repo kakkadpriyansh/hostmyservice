@@ -142,6 +142,7 @@ model Subscription {
   endDate       DateTime
   autoRenew     Boolean  @default(false)
   status        SubscriptionStatus @default(ACTIVE)
+  razorpaySubscriptionId String? @unique
   site          Site?
   payments      Payment[]
   createdAt     DateTime  @default(now())
@@ -168,6 +169,7 @@ model Payment {
   status            PaymentStatus @default(PENDING)
   razorpayOrderId   String?   @unique
   razorpayPaymentId String?   @unique
+  razorpaySubscriptionId String?
   razorpaySignature String?
   invoiceNumber     String?   @unique
   gstNumber         String?   // Optional GST number for invoice

@@ -53,6 +53,43 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
   const amount = Math.round(finalPrice * 100);
 
   try {
+    if (plan.autoRenew && plan.autoRenewPlanId) {
+      // Create Razorpay Subscription
+      const subscription = await razorpay.subscriptions.create({
+        plan_id: plan.autoRenewPlanId,
+        total_count: 12 * 10, // Max 10 years for now, can be adjusted
+        quantity: 1,
+        customer_notify: 1,
+        notes: {
+          userId: session.user.id,
+          planId: plan.id,
+          durationYears,
+        },
+      });
+
+      // Create Payment Record (for tracking)
+      await prisma.payment.create({
+        data: {
+          userId: session.user.id,
+          planId: plan.id,
+          amount: finalPrice,
+          durationYears: durationYears,
+          currency: "INR",
+          status: "PENDING",
+          razorpayOrderId: subscription.id, // Store subscription ID here for verification
+          razorpaySubscriptionId: subscription.id,
+        },
+      });
+
+      return {
+        subscriptionId: subscription.id,
+        amount: amount,
+        currency: "INR",
+        key: env.RAZORPAY_KEY_ID,
+        isSubscription: true,
+      };
+    }
+
     const order = await razorpay.orders.create({
       amount: amount,
       currency: "INR",
