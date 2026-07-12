@@ -11,7 +11,7 @@ export default async function PaymentsPage() {
       <h1 className="text-2xl font-bold font-display text-white">Payments Management</h1>
 
       <div className="glass ring-1 ring-white/10 sm:rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)]">
           <table className="min-w-full divide-y divide-white/5">
             <thead className="bg-white/5">
               <tr>

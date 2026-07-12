@@ -103,7 +103,8 @@ export default function PlansPage() {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-white/10 glass">
+      <div className="rounded-2xl border border-white/10 glass overflow-hidden">
+        <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-220px)]">
         <table className="min-w-full divide-y divide-white/5">
           <thead className="bg-white/5">
             <tr>
@@ -206,6 +207,7 @@ export default function PlansPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {isFormOpen && (
