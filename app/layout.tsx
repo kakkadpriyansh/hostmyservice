@@ -18,11 +18,6 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "HostMyService",
   description: "Static website hosting and development services",
-  icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-  },
 };
 
 export default function RootLayout({

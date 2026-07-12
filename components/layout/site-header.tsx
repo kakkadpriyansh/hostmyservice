@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Server } from "lucide-react";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 export function SiteHeader() {
@@ -11,9 +11,13 @@ export function SiteHeader() {
     <header className="fixed top-0 z-50 w-full border-b border-white/5 bg-background/60 backdrop-blur-xl">
       <div className="container mx-auto flex h-20 items-center justify-between px-6 lg:px-12">
         <Link href="/" className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10 group-hover:border-primary/50 transition-colors duration-300">
-            <Server className="h-5 w-5 text-primary group-hover:text-white transition-colors" />
-          </div>
+          <Image
+            src="/logo.png"
+            alt="HostMyService"
+            width={40}
+            height={40}
+            className="rounded-xl"
+          />
           <span className="text-xl font-display font-bold tracking-tight text-white group-hover:text-primary transition-colors">
             HostMyService
           </span>
