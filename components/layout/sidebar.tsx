@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
@@ -15,6 +16,7 @@ import {
   Globe,
   Upload,
   CreditCard,
+  TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -40,6 +42,8 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/admin/subscriptions", label: "Subscriptions", icon: Server },
     { href: "/admin/websites", label: "Websites", icon: Globe },
     { href: "/admin/plans", label: "Plans", icon: Shield },
+    { href: "/admin/payments", label: "Payments", icon: CreditCard },
+    { href: "/admin/revenue", label: "Revenue", icon: TrendingUp },
     { href: "/admin/upload", label: "Upload Test", icon: Upload },
     { href: "/admin/deploy", label: "Deployments", icon: Server },
     { href: "/admin/settings", label: "Settings", icon: Settings },
@@ -67,13 +71,17 @@ export function Sidebar({ role }: SidebarProps) {
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-20 items-center justify-center border-b border-white/5 px-6">
-            <Link href="/" className="flex items-center gap-2 group">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10 group-hover:border-primary/50 transition-colors duration-300">
-                    <Server className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
-                </div>
-                <span className="text-lg font-display font-bold tracking-tight text-white group-hover:text-primary transition-colors">
-                    HostMyService
-                </span>
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <Image
+                src="/logo.png"
+                alt="HostMyService"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <span className="text-lg font-display font-bold tracking-tight text-white group-hover:text-primary transition-colors">
+                HostMyService
+              </span>
             </Link>
           </div>
 

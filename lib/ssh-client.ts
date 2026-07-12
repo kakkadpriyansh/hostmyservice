@@ -9,6 +9,11 @@ export class SSHClient {
   }
 
   async connect() {
+    if (!env.VPS_HOST || !env.VPS_USER || !env.VPS_PRIVATE_KEY) {
+      throw new Error(
+        "VPS_HOST, VPS_USER, and VPS_PRIVATE_KEY must be set to use SSH features."
+      );
+    }
     try {
       await this.ssh.connect({
         host: env.VPS_HOST,
