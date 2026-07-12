@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Server, Mail } from "lucide-react";
+import Image from "next/image";
+import { Mail } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -9,9 +10,13 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10">
-                <Server className="h-5 w-5 text-primary" />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="HostMyService"
+                width={40}
+                height={40}
+                className="rounded-xl"
+              />
               <span className="text-xl font-display font-bold tracking-tight text-white">HostMyService</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
