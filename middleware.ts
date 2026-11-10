@@ -53,16 +53,27 @@ export default withAuth(
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
+     * Match all request paths except for:
      * - api/auth (auth API routes)
+     * - api/webhook (webhook routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public files)
-     * - login (login page)
-     * - register (register page)
+     * - static assets (.png, .jpg, .jpeg, .svg, .ico, .webp, .gif)
+     * - public pages (login, register, etc.)
      * - / (root page)
+     *
+     * Server Actions (POST with Next-Action header) are intentionally excluded:
+     * they have their own session auth via getServerSession() and must not be
+     * intercepted by middleware — doing so applies the 1 MB middleware body limit
+     * which blocks large ZIP file uploads.
      */
-    "/((?!api/auth|api/webhook|_next/static|_next/image|favicon.ico|login|register|forgot-password|reset-password|contact|privacy-policy|terms|refund-policy|shipping-policy|$).*)",
+    {
+      source:
+        "/((?!api/auth|api/webhook|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico)|login|register|forgot-password|reset-password|contact|privacy-policy|terms|refund-policy|shipping-policy|$).*)",
+      missing: [
+        // Skip middleware for Next.js Server Action requests
+        { type: "header", key: "next-action" },
+      ],
+    },
   ],
 };

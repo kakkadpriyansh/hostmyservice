@@ -16,6 +16,7 @@ interface PlanFormProps {
     features?: string[];
     requiresEnv?: boolean;
     providesDb?: boolean;
+    dbType?: "NONE" | "MONGODB" | "MYSQL" | "POSTGRESQL" | null;
     autoRenew?: boolean;
     autoRenewPlanId?: string | null;
   };
@@ -34,6 +35,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
     features: plan?.features?.join("\n") || "",
     requiresEnv: !!plan?.requiresEnv,
     providesDb: !!plan?.providesDb,
+    dbType: plan?.dbType || "NONE",
     autoRenew: !!plan?.autoRenew,
     autoRenewPlanId: plan?.autoRenewPlanId || "",
   });
@@ -65,7 +67,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 shadow-2xl glass">
+      <div className="w-full max-w-md rounded-2xl bg-[#061138] border border-white/10 p-6 shadow-2xl glass">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-bold font-display text-white">
             {plan ? "Edit Plan" : "Create Plan"}
@@ -210,7 +212,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
                 }
                 className="h-4 w-4 rounded border border-white/20 bg-white/5"
               />
-              Provide database connection
+              Provide database
             </label>
             <label className="flex items-center gap-2 text-sm text-gray-300">
               <input
@@ -224,6 +226,26 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
               Enable Auto-Renew
             </label>
           </div>
+
+          {formData.providesDb && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Database Type
+              </label>
+              <select
+                className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                value={formData.dbType}
+                onChange={(e) =>
+                  setFormData({ ...formData, dbType: e.target.value as any })
+                }
+              >
+                <option value="NONE" className="bg-[#061138] text-white">None (Static / Custom)</option>
+                <option value="MONGODB" className="bg-[#061138] text-white">MongoDB (Auto-provisioned)</option>
+                <option value="MYSQL" className="bg-[#061138] text-white">MySQL (Auto-provisioned)</option>
+                <option value="POSTGRESQL" className="bg-[#061138] text-white">PostgreSQL (Auto-provisioned)</option>
+              </select>
+            </div>
+          )}
 
           {formData.autoRenew && (
             <div>

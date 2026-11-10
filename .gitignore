@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# credential files
+hostmyservice-f3be1998e216.json
+oauth-credentials.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

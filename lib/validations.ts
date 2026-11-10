@@ -38,6 +38,7 @@ export const planSchema = z.object({
   features: z.array(z.string()).default([]),
   requiresEnv: z.boolean().default(false),
   providesDb: z.boolean().default(false),
+  dbType: z.enum(['NONE', 'MONGODB', 'MYSQL', 'POSTGRESQL']).default('NONE'),
   autoRenew: z.boolean().default(false),
   autoRenewPlanId: z.string().optional().or(z.literal("")),
 });

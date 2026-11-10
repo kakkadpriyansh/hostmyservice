@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>HostMyService Hero</title>
+<script src="32062cc1-ca9a-4df7-8ffb-9f8d0c6cb66b"></script>
+<meta name="hz:slide-selector" content=":not(x-dc)&gt;[data-canvas-width]"><meta name="hz:canvas-width" content="1440"><meta name="hz:canvas-height" content="1200"></head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* vietnamese */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDFXplDs.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDVXplDs.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("9b4c8bdf-a74c-46b3-84a0-c424de550652") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDFXplDs.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDVXplDs.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("9b4c8bdf-a74c-46b3-84a0-c424de550652") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDFXplDs.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/bricolagegrotesque/v9/3y9H6as8bTXq_nANBjzKo3IeZx8z6up5BeSl5jBNz_19PpbpMXuECpwUxJBOm_OJWiawDVXplDs.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("9b4c8bdf-a74c-46b3-84a0-c424de550652") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("bac5c77b-96f9-4f73-8bb4-4218f4c599ac") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwhsk.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwhsk.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwhsk.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwhsk.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwhsk.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("bac5c77b-96f9-4f73-8bb4-4218f4c599ac") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yyygA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("6bb58071-aed7-484d-a9b5-7f53f21481f6") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("801d9396-94e2-49b4-84b2-f1931e4c5a36") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yyygA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("6bb58071-aed7-484d-a9b5-7f53f21481f6") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("801d9396-94e2-49b4-84b2-f1931e4c5a36") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yyygA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("6bb58071-aed7-484d-a9b5-7f53f21481f6") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("801d9396-94e2-49b4-84b2-f1931e4c5a36") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko70yyygA.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/plusjakartasans/v12/LDIoaomQNQcsA88c7O9yZ4KMCoOg4Ko50yyygA.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("6bb58071-aed7-484d-a9b5-7f53f21481f6") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("801d9396-94e2-49b4-84b2-f1931e4c5a36") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+body{margin:0}
+a{text-decoration:none}
+a:focus-visible{outline:3px solid #FFFFFF;outline-offset:3px}
+.navlink{color:#E3E5FF}
+.navlink:hover{color:#FFFFFF}
+.btn-solid{transition:transform .15s ease, box-shadow .15s ease}
+.btn-solid:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 #0B0D2B}
+.btn-solid:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #0B0D2B}
+.btn-line:hover{background:rgba(255,255,255,0.14)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(-3deg)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes marquee-rev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.live-dot{animation:pulse 1.6s ease-in-out infinite}
+.toast{animation:floaty 6s ease-in-out infinite}
+.badge-spin{transform-origin:75px 75px;animation:spin 22s linear infinite}
+.track-a{animation:marquee 34s linear infinite}
+.track-b{animation:marquee-rev 40s linear infinite}
+@media (prefers-reduced-motion: reduce){.live-dot,.toast,.badge-spin,.track-a,.track-b{animation:none}}
+</style>
+</helmet>
+
+<div style="position: relative; overflow: hidden; min-height: 1200px; background: #2231F2; color: #FFFFFF; font-family: 'Plus Jakarta Sans', system-ui, sans-serif" data-canvas-width="1440" data-canvas-height="1200">
+
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: radial-gradient(rgba(255,255,255,0.20) 1.4px, transparent 1.6px); background-size: 28px 28px; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%); mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%)"></div>
+
+<svg aria-hidden="true" sc-camel-view-box="0 0 900 900" style="position: absolute; right: -300px; top: -260px; width: 900px; height: 900px" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="1.5">
+<circle cx="450" cy="450" r="440"></circle>
+<circle cx="450" cy="450" r="340"></circle>
+<circle cx="450" cy="450" r="240"></circle>
+<circle cx="450" cy="450" r="140"></circle>
+</svg>
+
+<div style="position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px; box-sizing: border-box">
+
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 32px; padding: 26px 0">
+<a href="https://hostmyservice.in/" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #FFFFFF; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em">
+<svg aria-hidden="true" width="34" height="34" sc-camel-view-box="0 0 34 34"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="{{accent}}" stroke="#0B0D2B" stroke-width="2"></rect><circle cx="17" cy="17" r="5.5" fill="#0B0D2B"></circle></svg>
+HostMyService
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 30px; font-size: 15px; font-weight: 600">
+<a class="navlink" href="#features" style="display: inline-flex; align-items: center; min-height: 44px">Features</a>
+<a class="navlink" href="#pricing" style="display: inline-flex; align-items: center; min-height: 44px">Pricing</a>
+<a class="navlink" href="https://hostmyservice.in/login" style="display: inline-flex; align-items: center; min-height: 44px">Log in</a>
+<a class="btn-solid" href="https://hostmyservice.in/register" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border-radius: 12px; border: 2px solid #0B0D2B; background: {{accent}}; color: #0B0D2B; font-weight: 700; box-shadow: 4px 4px 0 #0B0D2B">Get Started</a>
+</div>
+</nav>
+
+<section aria-label="Hero" style="display: flex; flex-wrap: wrap; align-items: center; gap: 56px; padding: 48px 0 56px">
+
+<div style="flex: 1 1 560px; min-width: 0">
+<div style="display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,0.40); background: rgba(255,255,255,0.12); font-size: 14px; font-weight: 600; color: #FFFFFF">
+<span class="live-dot" aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: {{accent}}"></span>
+v2.0 is live
+</div>
+
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(56px, 7.4vw, 100px); line-height: 0.96; letter-spacing: -0.045em; color: #FFFFFF">
+<span style="display: block">Go live.</span>
+<span style="display: inline-block; margin-top: 10px; padding: 0 0.14em 0.08em; border: 3px solid #0B0D2B; border-radius: 14px; background: {{accent}}; color: #0B0D2B; box-shadow: 8px 8px 0 #0B0D2B; transform: rotate(-2deg)">Stay live.</span>
+</h1>
+
+<p style="margin: 34px 0 0; max-width: 520px; font-size: 20px; line-height: 1.6; color: #E3E5FF">Hosting for static sites, Node apps and databases, with real people on WhatsApp when you get stuck.</p>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 34px">
+<a class="btn-solid" href="https://hostmyservice.in/register" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 30px; border-radius: 14px; border: 2px solid #0B0D2B; background: {{accent}}; color: #0B0D2B; font-size: 17px; font-weight: 700; box-shadow: 5px 5px 0 #0B0D2B">
+Start hosting
+<svg aria-hidden="true" width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</a>
+<a class="btn-line" href="https://wa.me/918401661887" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 26px; border-radius: 14px; border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 17px; font-weight: 700">
+<svg aria-hidden="true" width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+Chat on WhatsApp
+</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 30px; font-size: 15px; font-weight: 600; color: #FFFFFF">
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>From ₹118/month</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Free SSL</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>DDoS protection</span>
+</div>
+</div>
+
+<div style="flex: 1 1 460px; min-width: 0; position: relative; padding: 52px 28px 48px">
+
+<div aria-hidden="true" style="position: relative; border-radius: 20px; border: 3px solid #0B0D2B; background: #FFFFFF; box-shadow: 14px 14px 0 #0B0D2B; overflow: hidden; transform: rotate(1.8deg)">
+<div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 3px solid #0B0D2B; background: #E9EAFF">
+<div style="display: flex; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: #FFFFFF"></span><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: #FFFFFF"></span><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: {{accent}}"></span></div>
+<div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; border: 2px solid #0B0D2B; background: #FFFFFF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; color: #0B0D2B">
+<svg width="14" height="14" sc-camel-view-box="0 0 24 24" fill="none" stroke="#0B0D2B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path></svg>
+yourbrand.in
+</div>
+</div>
+
+<div style="padding: 24px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<div style="width: 30px; height: 30px; border-radius: 9px; background: #0B0D2B"></div>
+<div style="display: flex; gap: 10px"><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span></div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 22px; margin-top: 30px">
+<div style="flex: 1; min-width: 0">
+<div style="height: 20px; width: 92%; border-radius: 6px; background: #0B0D2B"></div>
+<div style="height: 20px; width: 64%; margin-top: 10px; border-radius: 6px; background: #2231F2"></div>
+<div style="height: 8px; width: 100%; margin-top: 22px; border-radius: 4px; background: #D5D8F5"></div>
+<div style="height: 8px; width: 82%; margin-top: 8px; border-radius: 4px; background: #D5D8F5"></div>
+<div style="height: 36px; width: 120px; margin-top: 22px; border-radius: 10px; border: 2px solid #0B0D2B; background: {{accent}}"></div>
+</div>
+<div style="position: relative; flex: 0 0 150px; height: 150px">
+<div style="position: absolute; left: 0; top: 14px; width: 118px; height: 118px; border-radius: 26px; background: #2231F2; border: 2px solid #0B0D2B"></div>
+<div style="position: absolute; right: 0; top: 0; width: 76px; height: 76px; border-radius: 50%; background: {{accent}}; border: 2px solid #0B0D2B"></div>
+<div style="position: absolute; right: 8px; bottom: 0; width: 64px; height: 64px; border-radius: 0 64px 0 0; background: #0B0D2B"></div>
+</div>
+</div>
+
+<div style="display: flex; gap: 14px; margin-top: 30px">
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 50%; background: {{accent}}; border: 2px solid #0B0D2B"></div><div style="height: 8px; width: 80%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 60%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 6px; background: #2231F2; border: 2px solid #0B0D2B"></div><div style="height: 8px; width: 70%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 50%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 6px 22px 6px 22px; background: #0B0D2B"></div><div style="height: 8px; width: 76%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 56%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+</div>
+</div>
+</div>
+
+<div style="position: absolute; z-index: 3; top: 22px; left: 44px; display: inline-flex; align-items: center; gap: 9px; padding: 7px 14px; border-radius: 10px; border: 2px solid #0B0D2B; background: {{accent}}; color: #0B0D2B; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 4px 4px 0 #0B0D2B; transform: rotate(-4deg)">
+<span class="live-dot" aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: #E11D2E"></span>Live
+</div>
+
+<svg aria-hidden="true" class="" sc-camel-view-box="0 0 150 150" style="position: absolute; z-index: 3; right: 6px; top: -22px; width: 124px; height: 124px">
+<circle cx="75" cy="75" r="72" fill="{{accent}}" stroke="#0B0D2B" stroke-width="3"></circle>
+<defs><path id="ring" d="M75,75 m-53,0 a53,53 0 1,1 106,0 a53,53 0 1,1 -106,0"></path></defs>
+<g class="badge-spin"><text font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" letter-spacing="1.6" fill="#0B0D2B"><textPath href="#ring">REAL HUMANS • ON WHATSAPP • 24/7 •</textPath></text></g>
+<g transform="translate(75 75)" fill="none" stroke="#0B0D2B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 -1a13 13 0 0 1 -19.3 11.3L-14 14l2.6 -7.7A13 13 0 1 1 13 -1z"></path></g>
+</svg>
+
+<div class="toast" style="position: absolute; z-index: 3; left: 0; bottom: 14px; display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; border: 2px solid #0B0D2B; background: #0B0D2B; color: #FFFFFF; box-shadow: 6px 6px 0 {{accent}}">
+<svg aria-hidden="true" width="26" height="26" sc-camel-view-box="0 0 24 24" fill="none" stroke="{{accent}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+<div>
+<div style="font-size: 15px; font-weight: 700">Deployed</div>
+<div style="margin-top: 1px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; color: #C9CEFF">1.8s · global edge</div>
+</div>
+</div>
+</div>
+
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 22px 28px; padding-bottom: 20px">
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">99.9%</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Uptime</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">&lt; 2s</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Deploy time</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">200+</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Global edge locations</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">24/7</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Support</div>
+</div>
+</div>
+
+</div>
+
+<div aria-label="Supported stacks and included features" role="group" style="position: relative; z-index: 1; height: 210px; margin-top: 8px">
+
+<div style="position: absolute; left: -3%; right: -3%; top: 78px; overflow: hidden; border-top: 3px solid #0B0D2B; border-bottom: 3px solid #0B0D2B; background: #0B0D2B; transform: rotate(1.3deg)">
+<div class="track-b" style="display: flex; width: max-content; align-items: center; gap: 36px; padding: 16px 36px 16px 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.01em; color: #FFFFFF; white-space: nowrap">
+<span>Free SSL</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span>DDoS protection</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span>Instant rollbacks</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span>Custom domains</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span>Smart compression</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span aria-hidden="true">Free SSL</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span aria-hidden="true">DDoS protection</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span aria-hidden="true">Instant rollbacks</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span aria-hidden="true">Custom domains</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+<span aria-hidden="true">Smart compression</span><span aria-hidden="true" style="color: {{accent}}">✦</span>
+</div>
+</div>
+
+<div style="position: absolute; left: -3%; right: -3%; top: 30px; overflow: hidden; border-top: 3px solid #0B0D2B; border-bottom: 3px solid #0B0D2B; background: {{accent}}; transform: rotate(-1.4deg)">
+<div class="track-a" style="display: flex; width: max-content; align-items: center; gap: 36px; padding: 18px 36px 18px 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; color: #0B0D2B; white-space: nowrap">
+<span>Static sites</span><span aria-hidden="true">✦</span>
+<span>Node.js</span><span aria-hidden="true">✦</span>
+<span>ASP.NET</span><span aria-hidden="true">✦</span>
+<span>Spring Boot</span><span aria-hidden="true">✦</span>
+<span>MongoDB</span><span aria-hidden="true">✦</span>
+<span>PostgreSQL</span><span aria-hidden="true">✦</span>
+<span>MySQL</span><span aria-hidden="true">✦</span>
+<span>MS SQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Static sites</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Node.js</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">ASP.NET</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Spring Boot</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MongoDB</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">PostgreSQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MySQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MS SQL</span><span aria-hidden="true">✦</span>
+</div>
+</div>
+
+</div>
+
+</div>
+<sc-if data-dc-static="" value="{{ false }}"><style>x-dc>*{display:none!important}x-dc>[data-dc-static]{display:block!important}</style>
+
+
+<div style="position: relative; overflow: hidden; min-height: 1200px; background: #2231F2; color: #FFFFFF; font-family: 'Plus Jakarta Sans', system-ui, sans-serif" data-canvas-width="1440" data-canvas-height="1200" data-document-role="page" data-label="Hero">
+
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-image: radial-gradient(rgba(255,255,255,0.20) 1.4px, transparent 1.6px); background-size: 28px 28px; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%); mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%)"></div>
+
+<svg aria-hidden="true" viewBox="0 0 900 900" style="position: absolute; right: -300px; top: -260px; width: 900px; height: 900px" fill="none" stroke="rgba(255,255,255,0.20)" stroke-width="1.5">
+<circle cx="450" cy="450" r="440"></circle>
+<circle cx="450" cy="450" r="340"></circle>
+<circle cx="450" cy="450" r="240"></circle>
+<circle cx="450" cy="450" r="140"></circle>
+</svg>
+
+<div style="position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px; box-sizing: border-box">
+
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 32px; padding: 26px 0">
+<a href="https://hostmyservice.in/" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: #FFFFFF; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em">
+<svg aria-hidden="true" width="34" height="34" viewBox="0 0 34 34"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="#D6FF3F" stroke="#0B0D2B" stroke-width="2"></rect><circle cx="17" cy="17" r="5.5" fill="#0B0D2B"></circle></svg>
+HostMyService
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 30px; font-size: 15px; font-weight: 600">
+<a class="navlink" href="#features" style="display: inline-flex; align-items: center; min-height: 44px">Features</a>
+<a class="navlink" href="#pricing" style="display: inline-flex; align-items: center; min-height: 44px">Pricing</a>
+<a class="navlink" href="https://hostmyservice.in/login" style="display: inline-flex; align-items: center; min-height: 44px">Log in</a>
+<a class="btn-solid" href="https://hostmyservice.in/register" style="display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border-radius: 12px; border: 2px solid #0B0D2B; background: #D6FF3F; color: #0B0D2B; font-weight: 700; box-shadow: 4px 4px 0 #0B0D2B">Get Started</a>
+</div>
+</nav>
+
+<section aria-label="Hero" style="display: flex; flex-wrap: wrap; align-items: center; gap: 56px; padding: 48px 0 56px">
+
+<div style="flex: 1 1 560px; min-width: 0">
+<div style="display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,0.40); background: rgba(255,255,255,0.12); font-size: 14px; font-weight: 600; color: #FFFFFF">
+<span class="live-dot" aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: #D6FF3F"></span>
+v2.0 is live
+</div>
+
+<h1 style="margin: 26px 0 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: clamp(56px, 7.4vw, 100px); line-height: 0.96; letter-spacing: -0.045em; color: #FFFFFF">
+<span style="display: block">Go live.</span>
+<span style="display: inline-block; margin-top: 10px; padding: 0 0.14em 0.08em; border: 3px solid #0B0D2B; border-radius: 14px; background: #D6FF3F; color: #0B0D2B; box-shadow: 8px 8px 0 #0B0D2B; transform: rotate(-2deg)">Stay live.</span>
+</h1>
+
+<p style="margin: 34px 0 0; max-width: 520px; font-size: 20px; line-height: 1.6; color: #E3E5FF">Hosting for static sites, Node apps and databases, with real people on WhatsApp when you get stuck.</p>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 34px">
+<a class="btn-solid" href="https://hostmyservice.in/register" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 30px; border-radius: 14px; border: 2px solid #0B0D2B; background: #D6FF3F; color: #0B0D2B; font-size: 17px; font-weight: 700; box-shadow: 5px 5px 0 #0B0D2B">
+Start hosting
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</a>
+<a class="btn-line" href="https://wa.me/918401661887" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 26px; border-radius: 14px; border: 2px solid #FFFFFF; color: #FFFFFF; font-size: 17px; font-weight: 700">
+<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+Chat on WhatsApp
+</a>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 30px; font-size: 15px; font-weight: 600; color: #FFFFFF">
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6FF3F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>From ₹118/month</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6FF3F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>Free SSL</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6FF3F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>DDoS protection</span>
+</div>
+</div>
+
+<div style="flex: 1 1 460px; min-width: 0; position: relative; padding: 52px 28px 48px">
+
+<div aria-hidden="true" style="position: relative; border-radius: 20px; border: 3px solid #0B0D2B; background: #FFFFFF; box-shadow: 14px 14px 0 #0B0D2B; overflow: hidden; transform: rotate(1.8deg)">
+<div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 3px solid #0B0D2B; background: #E9EAFF">
+<div style="display: flex; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: #FFFFFF"></span><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: #FFFFFF"></span><span style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0B0D2B; background: #D6FF3F"></span></div>
+<div style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; border: 2px solid #0B0D2B; background: #FFFFFF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; color: #0B0D2B">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0B0D2B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path></svg>
+yourbrand.in
+</div>
+</div>
+
+<div style="padding: 24px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<div style="width: 30px; height: 30px; border-radius: 9px; background: #0B0D2B"></div>
+<div style="display: flex; gap: 10px"><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span><span style="width: 44px; height: 8px; border-radius: 4px; background: #D5D8F5"></span></div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 22px; margin-top: 30px">
+<div style="flex: 1; min-width: 0">
+<div style="height: 20px; width: 92%; border-radius: 6px; background: #0B0D2B"></div>
+<div style="height: 20px; width: 64%; margin-top: 10px; border-radius: 6px; background: #2231F2"></div>
+<div style="height: 8px; width: 100%; margin-top: 22px; border-radius: 4px; background: #D5D8F5"></div>
+<div style="height: 8px; width: 82%; margin-top: 8px; border-radius: 4px; background: #D5D8F5"></div>
+<div style="height: 36px; width: 120px; margin-top: 22px; border-radius: 10px; border: 2px solid #0B0D2B; background: #D6FF3F"></div>
+</div>
+<div style="position: relative; flex: 0 0 150px; height: 150px">
+<div style="position: absolute; left: 0; top: 14px; width: 118px; height: 118px; border-radius: 26px; background: #2231F2; border: 2px solid #0B0D2B"></div>
+<div style="position: absolute; right: 0; top: 0; width: 76px; height: 76px; border-radius: 50%; background: #D6FF3F; border: 2px solid #0B0D2B"></div>
+<div style="position: absolute; right: 8px; bottom: 0; width: 64px; height: 64px; border-radius: 0 64px 0 0; background: #0B0D2B"></div>
+</div>
+</div>
+
+<div style="display: flex; gap: 14px; margin-top: 30px">
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 50%; background: #D6FF3F; border: 2px solid #0B0D2B"></div><div style="height: 8px; width: 80%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 60%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 6px; background: #2231F2; border: 2px solid #0B0D2B"></div><div style="height: 8px; width: 70%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 50%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+<div style="flex: 1; padding: 14px; border-radius: 12px; border: 2px solid #0B0D2B"><div style="width: 22px; height: 22px; border-radius: 6px 22px 6px 22px; background: #0B0D2B"></div><div style="height: 8px; width: 76%; margin-top: 14px; border-radius: 4px; background: #0B0D2B"></div><div style="height: 6px; width: 56%; margin-top: 8px; border-radius: 3px; background: #D5D8F5"></div></div>
+</div>
+</div>
+</div>
+
+<div style="position: absolute; z-index: 3; top: 22px; left: 44px; display: inline-flex; align-items: center; gap: 9px; padding: 7px 14px; border-radius: 10px; border: 2px solid #0B0D2B; background: #D6FF3F; color: #0B0D2B; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; box-shadow: 4px 4px 0 #0B0D2B; transform: rotate(-4deg)">
+<span class="live-dot" aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: #E11D2E"></span>Live
+</div>
+
+<svg aria-hidden="true" class="" viewBox="0 0 150 150" style="position: absolute; z-index: 3; right: 6px; top: -22px; width: 124px; height: 124px">
+<circle cx="75" cy="75" r="72" fill="#D6FF3F" stroke="#0B0D2B" stroke-width="3"></circle>
+<defs><path id="ring-dc-static" d="M75,75 m-53,0 a53,53 0 1,1 106,0 a53,53 0 1,1 -106,0"></path></defs>
+<g class="badge-spin"><text font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" letter-spacing="1.6" fill="#0B0D2B"><textPath href="#ring-dc-static">REAL HUMANS • ON WHATSAPP • 24/7 •</textPath></text></g>
+<g transform="translate(75 75)" fill="none" stroke="#0B0D2B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M13 -1a13 13 0 0 1 -19.3 11.3L-14 14l2.6 -7.7A13 13 0 1 1 13 -1z"></path></g>
+</svg>
+
+<div class="toast" style="position: absolute; z-index: 3; left: 0; bottom: 14px; display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 14px; border: 2px solid #0B0D2B; background: #0B0D2B; color: #FFFFFF; box-shadow: 6px 6px 0 #D6FF3F">
+<svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D6FF3F" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg>
+<div>
+<div style="font-size: 15px; font-weight: 700">Deployed</div>
+<div style="margin-top: 1px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; color: #C9CEFF">1.8s · global edge</div>
+</div>
+</div>
+</div>
+
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 22px 28px; padding-bottom: 20px">
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">99.9%</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Uptime</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">&lt; 2s</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Deploy time</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">200+</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Global edge locations</div>
+</div>
+<div style="flex: 1 1 200px; padding-top: 16px; border-top: 3px solid #FFFFFF">
+<div style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1">24/7</div>
+<div style="margin-top: 8px; font-size: 15px; font-weight: 500; color: #E3E5FF">Support</div>
+</div>
+</div>
+
+</div>
+
+<div aria-label="Supported stacks and included features" role="group" style="position: relative; z-index: 1; height: 210px; margin-top: 8px">
+
+<div style="position: absolute; left: -3%; right: -3%; top: 78px; overflow: hidden; border-top: 3px solid #0B0D2B; border-bottom: 3px solid #0B0D2B; background: #0B0D2B; transform: rotate(1.3deg)">
+<div class="track-b" style="display: flex; width: max-content; align-items: center; gap: 36px; padding: 16px 36px 16px 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.01em; color: #FFFFFF; white-space: nowrap">
+<span>Free SSL</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span>DDoS protection</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span>Instant rollbacks</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span>Custom domains</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span>Smart compression</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span aria-hidden="true">Free SSL</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span aria-hidden="true">DDoS protection</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span aria-hidden="true">Instant rollbacks</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span aria-hidden="true">Custom domains</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+<span aria-hidden="true">Smart compression</span><span aria-hidden="true" style="color: #D6FF3F">✦</span>
+</div>
+</div>
+
+<div style="position: absolute; left: -3%; right: -3%; top: 30px; overflow: hidden; border-top: 3px solid #0B0D2B; border-bottom: 3px solid #0B0D2B; background: #D6FF3F; transform: rotate(-1.4deg)">
+<div class="track-a" style="display: flex; width: max-content; align-items: center; gap: 36px; padding: 18px 36px 18px 0; font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.01em; text-transform: uppercase; color: #0B0D2B; white-space: nowrap">
+<span>Static sites</span><span aria-hidden="true">✦</span>
+<span>Node.js</span><span aria-hidden="true">✦</span>
+<span>ASP.NET</span><span aria-hidden="true">✦</span>
+<span>Spring Boot</span><span aria-hidden="true">✦</span>
+<span>MongoDB</span><span aria-hidden="true">✦</span>
+<span>PostgreSQL</span><span aria-hidden="true">✦</span>
+<span>MySQL</span><span aria-hidden="true">✦</span>
+<span>MS SQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Static sites</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Node.js</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">ASP.NET</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">Spring Boot</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MongoDB</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">PostgreSQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MySQL</span><span aria-hidden="true">✦</span>
+<span aria-hidden="true">MS SQL</span><span aria-hidden="true">✦</span>
+</div>
+</div>
+
+</div>
+
+</div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#D6FF3F&quot;,&quot;options&quot;:[&quot;#D6FF3F&quot;,&quot;#FFD84A&quot;,&quot;#FF9AE0&quot;,&quot;#7CFFC4&quot;]},&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1200}}">
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#D6FF3F' };
+}
+}
+</script>
+
+
+</body></html>

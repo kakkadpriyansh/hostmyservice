@@ -2,158 +2,336 @@
 
 import { useState } from "react";
 import { uploadSiteArchive } from "@/app/actions/admin/upload";
-import { deploySite } from "@/app/actions/admin/deploy";
-import { Upload, Server, Terminal, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { triggerDeployment } from "@/app/actions/admin/deploy";
+import { 
+  Upload, 
+  Server, 
+  Terminal, 
+  Loader2, 
+  Play, 
+  CheckCircle, 
+  AlertCircle, 
+  FileCode, 
+  Database, 
+  Clock 
+} from "lucide-react";
 
 interface DeployManagerProps {
   sites: any[];
+  pendingDeployments?: any[];
 }
 
-export function DeployManager({ sites }: DeployManagerProps) {
+export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerProps) {
+  const [activeTab, setActiveTab] = useState<"PENDING" | "MANUAL">("PENDING");
+  
+  // Pending queue state
+  const [deploymentsList, setDeploymentsList] = useState(pendingDeployments);
+  const [runningDeployId, setRunningDeployId] = useState<string | null>(null);
+
+  // Manual deployment state
   const [selectedSite, setSelectedSite] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<"IDLE" | "UPLOADING" | "DEPLOYING" | "SUCCESS" | "ERROR">("IDLE");
+  const [manualStatus, setManualStatus] = useState<"IDLE" | "UPLOADING" | "DEPLOYING" | "SUCCESS" | "ERROR">("IDLE");
+
+  // Shared logs state
   const [logs, setLogs] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [currentActionTitle, setCurrentActionTitle] = useState("Deployment Logs");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-    }
-  };
+  // Handler for 1-click trigger of queued deployment
+  async function handleTriggerDeployment(deploymentId: string, domainName: string) {
+    if (runningDeployId) return;
 
-  const handleDeploy = async () => {
-    if (!file || !selectedSite) return;
-
-    setStatus("UPLOADING");
-    setLogs(["Starting upload process..."]);
+    setRunningDeployId(deploymentId);
+    setCurrentActionTitle(`Auto-Deploying ${domainName}`);
     setErrorMessage("");
+    setLogs([
+      `${new Date().toISOString()}: [Start] Initiating full automated deployment for ${domainName}...`,
+      `${new Date().toISOString()}: [Status] Setting up remote directories & checking database provisioning...`
+    ]);
+
+    try {
+      const res = await triggerDeployment(deploymentId);
+
+      if ("logs" in res && res.logs) {
+        setLogs(res.logs);
+      }
+
+      if (res.success) {
+        setDeploymentsList((prev) => prev.filter((d) => d.id !== deploymentId));
+      } else {
+        setErrorMessage(res.error || "Deployment execution failed on VPS.");
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || "Network error while triggering deployment.");
+      setLogs((prev) => [...prev, `CRITICAL: ${err.message}`]);
+    } finally {
+      setRunningDeployId(null);
+    }
+  }
+
+  // Handler for direct manual archive upload & deploy
+  async function handleManualUpload(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedSite || !file) return;
+
+    const targetSiteObj = sites.find((s) => s.id === selectedSite);
+    const domainName = targetSiteObj ? targetSiteObj.domain : "Target Site";
+
+    setManualStatus("UPLOADING");
+    setCurrentActionTitle(`Manual Deploy: ${domainName}`);
+    setErrorMessage("");
+    setLogs([
+      `${new Date().toISOString()}: [Upload] Uploading archive to HostMyService local store...`
+    ]);
 
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      // 1. Upload
-      const uploadRes = await uploadSiteArchive(formData);
-      if (!uploadRes.success || !uploadRes.path) {
-        throw new Error(uploadRes.error || "Upload failed");
-      }
-      setLogs(prev => [...prev, "Upload successful.", "Starting deployment..."]);
-      
-      setStatus("DEPLOYING");
+      const uploadRes: any = await uploadSiteArchive(formData);
 
-      // 2. Deploy
-      const deployRes = await deploySite(selectedSite, uploadRes.path);
-      
-      if (deployRes.logs) {
-        setLogs(prev => [...prev, ...deployRes.logs!]);
+      if (!uploadRes.success || !uploadRes.uploadId) {
+        throw new Error(uploadRes.error || "Failed to save file on server");
       }
 
-      if (!deployRes.success) {
-        throw new Error(deployRes.error || "Deployment failed");
+      const uploadId = uploadRes.uploadId;
+      setLogs((prev) => [
+        ...prev,
+        `${new Date().toISOString()}: [Upload] Saved archive (ID: ${uploadId}).`,
+        `${new Date().toISOString()}: [Queue] Queuing automated deploy engine...`
+      ]);
+
+      setManualStatus("DEPLOYING");
+
+      // We trigger deploy using full pipeline
+      const deployRes = await fetch("/api/admin/deploy-direct", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ siteId: selectedSite, uploadId }),
+      }).then((r) => r.json()).catch(() => null);
+
+      if (deployRes && deployRes.success) {
+        setManualStatus("SUCCESS");
+        if (deployRes.logs) setLogs(deployRes.logs);
+      } else {
+        setManualStatus("ERROR");
+        setErrorMessage(deployRes?.error || "Automated deployment completed with errors. See logs.");
+        if (deployRes?.logs) setLogs(deployRes.logs);
       }
-
-      setStatus("SUCCESS");
-      setLogs(prev => [...prev, "Deployment completed successfully!"]);
-
-    } catch (error: any) {
-      setStatus("ERROR");
-      setErrorMessage(error.message);
-      setLogs(prev => [...prev, `Error: ${error.message}`]);
+    } catch (err: any) {
+      setManualStatus("ERROR");
+      setErrorMessage(err.message || "Manual upload failed");
+      setLogs((prev) => [...prev, `ERROR: ${err.message}`]);
     }
-  };
+  }
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Configuration */}
-        <div className="space-y-6 glass p-6 rounded-xl border border-white/10">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-white">
-            <Server className="h-5 w-5 text-[#00f0ff]" />
-            Deployment Configuration
-          </h2>
+    <div className="space-y-6">
+      {/* Top Tabs */}
+      <div className="flex border-b border-white/10 gap-8">
+        <button
+          onClick={() => setActiveTab("PENDING")}
+          className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-all ${
+            activeTab === "PENDING"
+              ? "border-[#00D2FF] text-[#00D2FF]"
+              : "border-transparent text-blue-200/60 hover:text-white"
+          }`}
+        >
+          <Clock className="w-4 h-4" />
+          Pending Client Uploads
+          {deploymentsList.length > 0 && (
+            <span className="px-2 py-0.5 rounded-full text-xs bg-[#00D2FF] text-[#07133B] font-black">
+              {deploymentsList.length}
+            </span>
+          )}
+        </button>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Select Website</label>
-            <select
-              value={selectedSite}
-              onChange={(e) => setSelectedSite(e.target.value)}
-              className="block w-full rounded-md border-white/10 bg-[#0A0A0A] text-white shadow-sm focus:border-[#00f0ff] focus:ring-[#00f0ff] sm:text-sm p-2 border"
-            >
-              <option value="">-- Choose a website --</option>
-              {sites.map((site) => (
-                <option key={site.id} value={site.id}>
-                  {site.domain} ({site.status})
-                </option>
-              ))}
-            </select>
-          </div>
+        <button
+          onClick={() => setActiveTab("MANUAL")}
+          className={`pb-3 text-sm font-bold flex items-center gap-2 border-b-2 transition-all ${
+            activeTab === "MANUAL"
+              ? "border-[#00D2FF] text-[#00D2FF]"
+              : "border-transparent text-blue-200/60 hover:text-white"
+          }`}
+        >
+          <Upload className="w-4 h-4" />
+          Direct / Manual Upload
+        </button>
+      </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Upload Source Code (ZIP)</label>
-            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-white/10 border-dashed rounded-md hover:bg-white/5 transition-colors group">
-              <div className="space-y-1 text-center">
-                <Upload className="mx-auto h-12 w-12 text-gray-500 group-hover:text-[#00f0ff] transition-colors" />
-                <div className="flex text-sm text-gray-400">
-                  <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-medium text-[#00f0ff] hover:text-[#7000ff] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#00f0ff] transition-colors">
-                    <span>Upload a file</span>
-                    <input id="file-upload" name="file-upload" type="file" className="sr-only" accept=".zip" onChange={handleFileChange} />
-                  </label>
-                  <p className="pl-1">or drag and drop</p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* Left Column: Actions */}
+        <div className="lg:col-span-7 space-y-4">
+          {activeTab === "PENDING" ? (
+            <div className="space-y-4">
+              {deploymentsList.length === 0 ? (
+                <div className="p-8 text-center rounded-[24px] bg-white/10 border border-white/15 text-blue-200/70 glass backdrop-blur-xl">
+                  <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto mb-2 opacity-90" />
+                  <p className="font-bold text-white text-base">No pending deployments!</p>
+                  <p className="text-xs text-blue-200/60 mt-1">All sites uploaded by clients have been deployed.</p>
                 </div>
-                <p className="text-xs text-gray-500">ZIP up to 50MB</p>
-                {file && (
-                  <p className="text-sm text-[#00f0ff] font-medium mt-2">{file.name}</p>
-                )}
-              </div>
-            </div>
-          </div>
+              ) : (
+                deploymentsList.map((dep) => {
+                  const isRunning = runningDeployId === dep.id;
+                  const plan = dep.site?.subscription?.plan;
+                  const hasEnv = !!dep.site?.envVars;
 
-          <button
-            onClick={handleDeploy}
-            disabled={!file || !selectedSite || status === "UPLOADING" || status === "DEPLOYING"}
-            className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-transparent rounded-md shadow-[0_0_20px_rgba(0,240,255,0.3)] text-sm font-medium text-black bg-[#00f0ff] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00f0ff] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-300"
-          >
-            {status === "UPLOADING" || status === "DEPLOYING" ? (
-                <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Processing...
-                </>
-            ) : (
-                <>
-                    <Upload className="h-4 w-4" />
-                    Deploy Now
-                </>
-            )}
-          </button>
+                  return (
+                    <div 
+                      key={dep.id} 
+                      className="p-5 rounded-[22px] bg-white/10 border border-white/15 hover:border-white/25 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass backdrop-blur-xl shadow-xl"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-white font-mono text-base">{dep.site.domain}</span>
+                          <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#0047FF]/20 text-blue-300 border border-blue-400/30 font-semibold">
+                            {dep.type || "ZIP"}
+                          </span>
+                          {plan?.dbType && plan.dbType !== "NONE" && (
+                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-200 border border-purple-500/30 flex items-center gap-1 font-semibold">
+                              <Database className="w-3 h-3" /> {plan.dbType}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-blue-200/70">
+                          Client: <span className="text-white font-medium">{dep.site?.user?.email || "Unknown"}</span> · Plan: <span className="text-[#00D2FF] font-semibold">{plan?.name || "Static"}</span>
+                        </p>
+                        <div className="flex items-center gap-3 text-xs pt-1">
+                          <span className={`inline-flex items-center gap-1 font-medium ${hasEnv ? "text-emerald-300" : "text-blue-300/60"}`}>
+                            <FileCode className="w-3 h-3" />
+                            {hasEnv ? ".env configured" : "No custom .env"}
+                          </span>
+                          {plan?.providesDb && (
+                            <span className="text-purple-300 inline-flex items-center gap-1 font-medium">
+                              <Database className="w-3 h-3" /> Dedicated port ready
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleTriggerDeployment(dep.id, dep.site.domain)}
+                          disabled={isRunning || !!runningDeployId}
+                          className="px-4 py-2.5 rounded-xl bg-[#00D2FF] hover:bg-white text-[#07133B] font-black text-xs flex items-center gap-2 shadow-[0_0_15px_rgba(0,210,255,0.4)] disabled:opacity-50 transition-all hover:shadow-[0_0_20px_rgba(0,210,255,0.6)]"
+                        >
+                          {isRunning ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Deploying...
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-3.5 h-3.5 fill-current" /> Deploy Now
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          ) : (
+            <div className="p-6 rounded-[24px] bg-white/10 border border-white/15 glass backdrop-blur-xl shadow-2xl">
+              <h3 className="font-bold text-white text-base mb-1 font-display">Manual Direct Upload & Deploy</h3>
+              <p className="text-xs text-blue-200/70 mb-4">
+                Select an existing client site and upload a new ZIP archive directly to execute deploy.
+              </p>
+
+              <form onSubmit={handleManualUpload} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-blue-100 mb-1">Select Website</label>
+                  <select
+                    value={selectedSite}
+                    onChange={(e) => setSelectedSite(e.target.value)}
+                    required
+                    className="w-full rounded-xl bg-[#061138] border border-white/20 p-2.5 text-sm text-white focus:outline-none focus:border-[#00D2FF]"
+                  >
+                    <option value="" className="bg-[#061138]">-- Choose domain --</option>
+                    {sites.map((s) => (
+                      <option key={s.id} value={s.id} className="bg-[#061138]">
+                        {s.domain} ({s.user?.email || "No user"})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-blue-100 mb-1">Upload ZIP Archive</label>
+                  <input
+                    type="file"
+                    accept=".zip"
+                    required
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="w-full text-xs text-blue-200/80 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-white/15 file:text-white hover:file:bg-[#00D2FF] hover:file:text-[#07133B] file:transition-colors"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={!selectedSite || !file || manualStatus === "UPLOADING" || manualStatus === "DEPLOYING"}
+                  className="w-full py-2.5 rounded-xl bg-[#00D2FF] hover:bg-white text-[#07133B] font-black text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(0,210,255,0.4)] disabled:opacity-50 transition-all hover:shadow-[0_0_25px_rgba(0,210,255,0.6)]"
+                >
+                  {manualStatus === "UPLOADING" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Uploading to server...
+                    </>
+                  ) : manualStatus === "DEPLOYING" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Executing Auto-Deploy...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4" /> Start Deployment
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
         </div>
 
-        {/* Logs Console */}
-        <div className="bg-[#050505] rounded-xl shadow-lg border border-white/10 flex flex-col h-[500px]">
-          <div className="p-4 border-b border-white/10 flex items-center justify-between bg-white/5">
-            <h2 className="text-gray-100 font-mono text-sm flex items-center gap-2">
-              <Terminal className="h-4 w-4 text-[#00f0ff]" />
-              Deployment Logs
-            </h2>
-            {status === "SUCCESS" && <span className="text-[#00f0ff] text-xs font-mono">SUCCESS</span>}
-            {status === "ERROR" && <span className="text-[#ff003c] text-xs font-mono">FAILED</span>}
+        {/* Right Column: Live Terminal Output */}
+        <div className="lg:col-span-5 bg-[#051136]/90 rounded-[24px] border border-white/15 flex flex-col h-[520px] overflow-hidden glass backdrop-blur-2xl shadow-2xl">
+          <div className="px-4 py-3 bg-white/5 border-b border-white/10 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-[#00D2FF]" />
+              <span className="text-xs font-bold text-white">{currentActionTitle}</span>
+            </div>
+            {runningDeployId && (
+              <span className="flex items-center gap-1.5 text-xs text-[#00D2FF] font-semibold animate-pulse">
+                <Loader2 className="w-3 h-3 animate-spin" /> In Progress
+              </span>
+            )}
           </div>
-          <div className="flex-1 p-4 overflow-y-auto font-mono text-xs text-gray-300 space-y-1 custom-scrollbar">
+
+          <div className="p-4 flex-1 overflow-y-auto font-mono text-xs space-y-1 text-blue-100/90 leading-relaxed bg-black/40">
             {logs.length === 0 ? (
-                <div className="text-gray-600 italic">Waiting for deployment...</div>
+              <p className="text-blue-300/40 italic">Waiting for deployment trigger...</p>
             ) : (
-                logs.map((log, i) => (
-                    <div key={i} className="break-all border-l-2 border-transparent hover:border-white/20 pl-2 transition-colors">
-                        {log}
-                    </div>
-                ))
-            )}
-            {errorMessage && (
-                <div className="text-[#ff003c] mt-2 border-l-2 border-[#ff003c] pl-2">
-                    Error: {errorMessage}
+              logs.map((line, idx) => (
+                <div key={idx} className="break-all">
+                  {line.includes("[SUCCESS]") || line.includes("successfully") ? (
+                    <span className="text-emerald-300">{line}</span>
+                  ) : line.includes("[FAILED]") || line.includes("ERROR") || line.includes("CRITICAL") ? (
+                    <span className="text-red-400 font-bold">{line}</span>
+                  ) : line.includes("[PENDING]") ? (
+                    <span className="text-amber-300">{line}</span>
+                  ) : (
+                    line
+                  )}
                 </div>
+              ))
             )}
           </div>
+
+          {errorMessage && (
+            <div className="p-3 bg-red-500/10 border-t border-red-500/20 text-red-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{errorMessage}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

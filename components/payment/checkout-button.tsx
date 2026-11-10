@@ -55,12 +55,6 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
     setLoading(true);
 
     try {
-      const res = await loadRazorpay();
-      if (!res) {
-        alert("Razorpay SDK failed to load. Are you online?");
-        return;
-      }
-
       // 1. Create Order
       const order = await createSubscriptionOrder(planId, durationYears);
       
@@ -68,14 +62,21 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
          throw new Error("Failed to create order");
       }
 
-      // 2. Initialize Razorpay
+      // 2. Load Razorpay
+      const res = await loadRazorpay();
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        return;
+      }
+
+      // 3. Initialize Razorpay
       const options: any = {
         key: order.key,
         name: "HostMyService",
         description: `Subscription for ${planName} (${durationYears} Year${durationYears > 1 ? 's' : ''})`,
         handler: async function (response: any) {
           try {
-            // 3. Verify Payment
+            // 5. Verify Payment
             // For subscriptions, we might need to send different data to verify
             const verifyData = order.isSubscription 
               ? {
@@ -172,7 +173,7 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
 
       {showBillingModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0A0A0A] p-6 shadow-2xl">
+          <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#061138] p-6 shadow-2xl">
             <button
               onClick={() => setShowBillingModal(false)}
               className="absolute right-4 top-4 text-gray-400 hover:text-white"

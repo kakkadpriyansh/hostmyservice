@@ -40,7 +40,7 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
     throw new Error("Plan not found");
   }
 
-  // Calculate price based on duration and optional dynamic pricing
+  // Calculate price based on duration
   let finalPrice = plan.price * durationYears;
 
   if (durationYears === 2 && plan.price2Years) {
@@ -55,10 +55,10 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
   try {
     if (plan.autoRenew && plan.autoRenewPlanId) {
       console.log(`Creating subscription for plan: ${plan.autoRenewPlanId}, user: ${session.user.id}`);
-      // Create Razorpay Subscription
+
       const subscription = await razorpay.subscriptions.create({
         plan_id: plan.autoRenewPlanId,
-        total_count: 10, // Set to 10 cycles (10 years for yearly plans)
+        total_count: 10,
         quantity: 1,
         customer_notify: 1,
         notes: {
@@ -69,7 +69,6 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
       });
       console.log("Subscription created:", subscription.id);
 
-      // Create Payment Record (for tracking)
       await prisma.payment.create({
         data: {
           userId: session.user.id,
@@ -78,7 +77,7 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
           durationYears: durationYears,
           currency: "INR",
           status: "PENDING",
-          razorpayOrderId: subscription.id, // Store subscription ID here for verification
+          razorpayOrderId: subscription.id,
           razorpaySubscriptionId: subscription.id,
         },
       });
@@ -95,7 +94,6 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
     const order = await razorpay.orders.create({
       amount: amount,
       currency: "INR",
-      // Receipt id must be <= 40 chars
       receipt: `rcpt_${Date.now()}_${session.user.id.slice(-8)}`,
       notes: {
         userId: session.user.id,
@@ -104,7 +102,6 @@ export async function createSubscriptionOrder(planId: string, durationYears: num
       },
     });
 
-    // Create Payment Record
     await prisma.payment.create({
       data: {
         userId: session.user.id,
@@ -134,7 +131,6 @@ export async function verifyPayment(
   razorpayPaymentId: string,
   razorpaySignature: string
 ) {
-  // Validate Inputs
   const result = paymentVerificationSchema.safeParse({
     razorpayOrderId,
     razorpayPaymentId,
@@ -150,11 +146,6 @@ export async function verifyPayment(
     throw new Error("Unauthorized");
   }
 
-  // 1. Verify Signature
-  // For subscriptions, the signature is payment_id + "|" + subscription_id
-  // For orders, the signature is order_id + "|" + payment_id
-  
-  // Let's find the payment record first to know if it's a subscription
   const paymentRecord = await prisma.payment.findUnique({
     where: { razorpayOrderId },
   });
@@ -163,7 +154,10 @@ export async function verifyPayment(
     throw new Error("Payment record not found");
   }
 
-  const body = paymentRecord.razorpaySubscriptionId 
+  // Verify signature
+  // For subscriptions: payment_id + "|" + subscription_id
+  // For orders: order_id + "|" + payment_id
+  const body = paymentRecord.razorpaySubscriptionId
     ? razorpayPaymentId + "|" + razorpayOrderId
     : razorpayOrderId + "|" + razorpayPaymentId;
 
@@ -176,7 +170,7 @@ export async function verifyPayment(
     throw new Error("Invalid payment signature");
   }
 
-  // 2. Update Payment Status
+  // Update payment status
   const payment = await prisma.payment.update({
     where: { razorpayOrderId },
     data: {
@@ -191,13 +185,12 @@ export async function verifyPayment(
     throw new Error("Payment record not found");
   }
 
-  // 3. Activate Subscription
+  // Activate subscription
   if (payment.plan) {
     const startDate = new Date();
     const endDate = new Date();
-    // Use durationYears from payment if available, otherwise default to 1 year
     const durationYears = payment.durationYears || 1;
-    endDate.setDate(startDate.getDate() + (durationYears * 365));
+    endDate.setDate(startDate.getDate() + durationYears * 365);
 
     await prisma.subscription.create({
       data: {

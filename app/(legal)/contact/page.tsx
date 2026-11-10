@@ -1,53 +1,102 @@
-import { Mail } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
 
 export default function ContactPage() {
   return (
     <div className="space-y-12">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl md:text-5xl font-bold font-display text-white">Contact Us</h1>
-        <p className="text-lg text-gray-400">
-          Have questions? We're here to help. Reach out to us through any of the channels below.
+        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-white/20 bg-white/10 text-xs font-bold text-white mb-2">
+          <span className="w-2 h-2 rounded-full bg-[#00D2FF] animate-pulse" />
+          Get in Touch
+        </span>
+        <h1 className="text-4xl md:text-5xl font-display font-black text-white tracking-tight">Contact Us</h1>
+        <p className="text-lg text-blue-200/70 max-w-xl mx-auto">
+          Have questions or need assistance? Reach out to us directly through any channel below.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="glass p-8 rounded-2xl border border-white/10 space-y-6">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-primary/10 text-primary">
-              <Mail className="h-6 w-6" />
+        <div className="space-y-6">
+          {/* Phone Contact */}
+          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 rounded-2xl bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30">
+                <Phone className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold font-display text-white">Call Us Directly</h3>
+                <p className="text-blue-200/70 text-sm mt-1">Available for sales & emergency support</p>
+                <a href="tel:+918401661887" className="text-[#00D2FF] hover:text-white transition-colors mt-2 block font-bold text-base">
+                  +91 84016 61887
+                </a>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-white">Email Us</h3>
-              <p className="text-gray-400 text-sm mt-1">For general inquiries and support</p>
-              <a href="mailto:hostmyservice@gmail.com" className="text-primary hover:text-primary/80 transition-colors mt-2 block font-medium">
-                hostmyservice@gmail.com
-              </a>
+          </div>
+
+          {/* WhatsApp Support */}
+          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <MessageCircle className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold font-display text-white">WhatsApp Support</h3>
+                <p className="text-blue-200/70 text-sm mt-1">Instant chat with our engineering team</p>
+                <a
+                  href="https://wa.me/918401661887"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:text-white transition-colors mt-2 block font-bold text-base"
+                >
+                  +91 84016 61887
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Email Support */}
+          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 rounded-2xl bg-violet-500/20 text-violet-300 border border-violet-500/30">
+                <Mail className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold font-display text-white">Email Us</h3>
+                <p className="text-blue-200/70 text-sm mt-1">For general inquiries, billing, and technical help</p>
+                <a href="mailto:hostmyservice@gmail.com" className="text-violet-300 hover:text-white transition-colors mt-2 block font-bold text-base">
+                  hostmyservice@gmail.com
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="glass p-8 rounded-2xl border border-white/10">
-          <h3 className="text-lg font-semibold text-white mb-6">Send us a message</h3>
+        {/* Message Form */}
+        <div className="glass p-8 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+          <h3 className="text-xl font-bold font-display text-white mb-2">Send us a message</h3>
+          <p className="text-xs text-blue-200/60 mb-6">Fill out the form below or call us at +91 84016 61887</p>
           <form className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="firstName" className="text-sm font-medium text-gray-300">First Name</label>
-                <input type="text" id="firstName" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary/50" />
+              <div className="space-y-1.5">
+                <label htmlFor="firstName" className="text-xs font-semibold text-blue-100">First Name</label>
+                <input type="text" id="firstName" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-blue-200/40 focus:outline-none focus:border-[#00D2FF] text-sm" />
               </div>
-              <div className="space-y-2">
-                <label htmlFor="lastName" className="text-sm font-medium text-gray-300">Last Name</label>
-                <input type="text" id="lastName" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary/50" />
+              <div className="space-y-1.5">
+                <label htmlFor="lastName" className="text-xs font-semibold text-blue-100">Last Name</label>
+                <input type="text" id="lastName" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-blue-200/40 focus:outline-none focus:border-[#00D2FF] text-sm" />
               </div>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium text-gray-300">Email</label>
-              <input type="email" id="email" className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary/50" />
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-xs font-semibold text-blue-100">Email Address</label>
+              <input type="email" id="email" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-blue-200/40 focus:outline-none focus:border-[#00D2FF] text-sm" />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium text-gray-300">Message</label>
-              <textarea id="message" rows={4} className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary/50"></textarea>
+            <div className="space-y-1.5">
+              <label htmlFor="message" className="text-xs font-semibold text-blue-100">Message</label>
+              <textarea id="message" rows={4} className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-blue-200/40 focus:outline-none focus:border-[#00D2FF] text-sm"></textarea>
             </div>
-            <button type="button" className="w-full bg-primary text-black font-semibold py-2.5 rounded-lg hover:bg-white transition-all duration-300">
+            <button
+              type="button"
+              className="w-full bg-[#00D2FF] text-[#07133B] font-bold py-3 rounded-xl hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:shadow-[0_0_30px_rgba(0,210,255,0.6)]"
+            >
               Send Message
             </button>
           </form>

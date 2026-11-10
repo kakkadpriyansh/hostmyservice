@@ -60,12 +60,22 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.role = user.role;
       }
+      // Refresh user data from database for each request to ensure role updates
+      if (token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id },
+          select: { id: true, role: true, email: true, name: true }
+        });
+        if (dbUser) {
+          token.role = dbUser.role;
+        }
+      }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.role = token.role;
+        session.user.id = token.id as string;
+        session.user.role = token.role as any;
       }
       return session;
     },

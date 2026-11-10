@@ -36,12 +36,12 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">5. Limitation of Liability</h2>
           <p>
-            In no event shall HostMyService, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
+            In no event shall HostMyService, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold text-white mb-4">6. Changes</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">6. Changes to Terms</h2>
           <p>
             We reserve the right, at our sole discretion, to modify or replace these Terms at any time. What constitutes a material change will be determined at our sole discretion.
           </p>
@@ -49,7 +49,16 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">7. Contact Us</h2>
-          <p>If you have any questions about these Terms, please contact us at hostmyservice@gmail.com.</p>
+          <p>
+            If you have any questions about these Terms, please contact us at{" "}
+            <a href="mailto:hostmyservice@gmail.com" className="text-[#00D2FF] hover:underline">
+              hostmyservice@gmail.com
+            </a>{" "}
+            or call/WhatsApp us at{" "}
+            <a href="tel:+918401661887" className="text-[#00D2FF] hover:underline font-semibold">
+              +91 84016 61887
+            </a>.
+          </p>
         </section>
       </div>
     </div>

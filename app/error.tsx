@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { AppBackground } from "@/components/layout/app-background";
 
 export default function Error({
   error,
@@ -10,32 +11,28 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error("Application Error:", error);
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#050505] text-white relative overflow-hidden font-sans">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
-      <div className="absolute top-[-100px] left-[-100px] h-[300px] w-[300px] rounded-full bg-[#00f0ff]/20 blur-[100px] pointer-events-none"></div>
-      <div className="absolute bottom-[-100px] right-[-100px] h-[300px] w-[300px] rounded-full bg-[#7000ff]/20 blur-[100px] pointer-events-none"></div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#07133B] text-white relative overflow-hidden font-sans selection:bg-[#00D2FF] selection:text-[#07133B] p-4">
+      <AppBackground />
 
-      <div className="z-10 text-center p-8 max-w-lg w-full glass rounded-2xl border border-white/10 shadow-2xl animate-fade-in-up">
-        <h1 className="text-4xl font-display font-bold text-[#ff003c] mb-2">Something went wrong!</h1>
-        <p className="mt-4 text-gray-400 text-lg">
+      <div className="z-10 text-center p-8 max-w-lg w-full glass rounded-[24px] border border-white/15 shadow-2xl animate-fade-in-up bg-white/10 backdrop-blur-2xl">
+        <h1 className="text-3xl font-display font-black text-[#ff003c] mb-2 tracking-tight">Something went wrong!</h1>
+        <p className="mt-4 text-blue-200/70 text-base leading-relaxed">
           An unexpected error has occurred. Our team has been notified.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={reset}
-            className="rounded-xl bg-[#00f0ff] px-6 py-3 text-black font-bold shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:bg-[#00f0ff]/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all duration-300"
+            className="rounded-xl bg-[#00D2FF] px-6 py-3 text-[#07133B] font-bold shadow-[0_0_20px_rgba(0,210,255,0.4)] hover:bg-white hover:shadow-[0_0_30px_rgba(0,210,255,0.6)] transition-all duration-300"
           >
             Try Again
           </button>
           <button
             onClick={() => (window.location.href = "/dashboard")}
-            className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-white font-semibold hover:bg-white/10 hover:border-white/40 transition-all duration-300"
+            className="rounded-xl border border-white/20 bg-white/10 px-6 py-3 text-white font-semibold hover:bg-white/20 transition-all duration-300"
           >
             Go to Dashboard
           </button>

@@ -41,8 +41,8 @@ export function LoginForm() {
       if (result?.error) {
         setError("Invalid email or password");
       } else {
-        // Force reload to ensure session is updated
-        window.location.href = callbackUrl;
+        router.push(callbackUrl);
+        router.refresh();
       }
     } catch (err) {
       setError("Something went wrong");
@@ -52,18 +52,14 @@ export function LoginForm() {
   };
 
   return (
-    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-      <div className="glass py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10">
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up">
+      <div className="glass rounded-[24px] border border-white/15 bg-white/10 py-8 px-6 shadow-2xl backdrop-blur-2xl sm:px-10">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {error && (
-            <div className="rounded-md bg-red-500/10 border border-red-500/20 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-400">{error}</h3>
-                </div>
+            <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 text-red-400 shrink-0" aria-hidden="true" />
+                <h3 className="ml-3 text-sm font-semibold text-red-300">{error}</h3>
               </div>
             </div>
           )}
@@ -71,62 +67,62 @@ export function LoginForm() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-300"
+              className="block text-sm font-semibold text-blue-100 mb-1.5"
             >
               Email address
             </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Mail className="h-5 w-5 text-gray-500" aria-hidden="true" />
+            <div className="relative rounded-xl shadow-sm">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-blue-300/60">
+                <Mail className="h-5 w-5" aria-hidden="true" />
               </div>
               <input
                 id="email"
                 type="email"
                 autoComplete="email"
-                className="block w-full appearance-none rounded-xl bg-white/5 border border-white/10 px-3 py-2 pl-10 placeholder-gray-500 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm text-white transition-all"
+                className="block w-full appearance-none rounded-xl bg-white/10 border border-white/20 px-3.5 py-2.5 pl-11 placeholder-blue-200/40 shadow-inner focus:border-[#00D2FF] focus:outline-none focus:ring-2 focus:ring-[#00D2FF]/40 text-sm text-white transition-all"
                 placeholder="you@example.com"
                 {...register("email")}
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-sm text-red-400">
+              <p className="mt-1 text-sm text-red-300">
                 {errors.email.message}
               </p>
             )}
           </div>
 
           <div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-1.5">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300"
+                className="block text-sm font-semibold text-blue-100"
               >
                 Password
               </label>
               <div className="text-sm">
                 <Link
                   href="/forgot-password"
-                  className="font-medium text-primary hover:text-primary/80 transition-colors"
+                  className="font-medium text-[#00D2FF] hover:text-white transition-colors"
                 >
                   Forgot password?
                 </Link>
               </div>
             </div>
-            <div className="mt-1 relative rounded-md shadow-sm">
-               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-gray-500" aria-hidden="true" />
+            <div className="relative rounded-xl shadow-sm">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-blue-300/60">
+                <Lock className="h-5 w-5" aria-hidden="true" />
               </div>
               <input
                 id="password"
                 type="password"
                 autoComplete="current-password"
-                className="block w-full appearance-none rounded-xl bg-white/5 border border-white/10 px-3 py-2 pl-10 placeholder-gray-500 shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm text-white transition-all"
+                className="block w-full appearance-none rounded-xl bg-white/10 border border-white/20 px-3.5 py-2.5 pl-11 placeholder-blue-200/40 shadow-inner focus:border-[#00D2FF] focus:outline-none focus:ring-2 focus:ring-[#00D2FF]/40 text-sm text-white transition-all"
                 placeholder="••••••••"
                 {...register("password")}
               />
             </div>
             {errors.password && (
-              <p className="mt-1 text-sm text-red-400">
+              <p className="mt-1 text-sm text-red-300">
                 {errors.password.message}
               </p>
             )}
@@ -136,7 +132,7 @@ export function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-black shadow-lg hover:bg-white hover:shadow-[0_0_20px_rgba(0,240,255,0.6)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+              className="flex w-full justify-center items-center rounded-xl bg-[#00D2FF] px-4 py-3 text-sm font-black text-[#07133B] shadow-[0_0_24px_rgba(0,210,255,0.4)] hover:bg-white hover:shadow-[0_0_30px_rgba(0,210,255,0.6)] focus:outline-none focus:ring-2 focus:ring-[#00D2FF] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
             >
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

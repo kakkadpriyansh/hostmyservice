@@ -37,6 +37,13 @@ enum Role {
   ADMIN
 }
 
+enum DbType {
+  NONE
+  MONGODB
+  MYSQL
+  POSTGRESQL
+}
+
 model Site {
   id            String    @id @default(cuid())
   domain        String    @unique // Primary domain (e.g., example.com)
@@ -78,6 +85,7 @@ model Deployment {
   type          DeploymentType @default(ZIP)
   uploadPath    String?   // Path to the extracted files
   archivePath   String?   // Path to the original zip file
+  driveFileId   String?   // Google Drive file ID
   gitRepoUrl    String?
   gitBranch     String?
   logs          DeploymentLog[]
@@ -123,6 +131,7 @@ model Plan {
   isActive    Boolean  @default(true)
   requiresEnv Boolean  @default(false)
   providesDb  Boolean  @default(false)
+  dbType      DbType   @default(NONE)
   autoRenew   Boolean  @default(false)
   autoRenewPlanId String?
   createdAt   DateTime @default(now())

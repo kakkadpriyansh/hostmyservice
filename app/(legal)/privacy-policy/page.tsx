@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
         <section>
           <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
           <p>
-            HostMyService ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
+            HostMyService (&quot;we&quot;, &quot;our&quot;, or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.
           </p>
         </section>
 
@@ -29,8 +29,8 @@ export default function PrivacyPolicyPage() {
             <li>To provide and maintain our Service</li>
             <li>To notify you about changes to our Service</li>
             <li>To provide customer support</li>
-            <li>To process payments</li>
-            <li>To monitor the usage of the Service</li>
+            <li>To process your transactions and manage your subscriptions</li>
+            <li>To monitor the usage of our Service</li>
           </ul>
         </section>
 
@@ -45,8 +45,9 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-white mb-4">5. Contact Us</h2>
           <p>If you have any questions about this Privacy Policy, please contact us:</p>
           <ul className="list-disc pl-6 space-y-2 mt-2">
-            <li>By email: hostmyservice@gmail.com</li>
-            <li>By visiting this page on our website: /contact</li>
+            <li>By email: <a href="mailto:hostmyservice@gmail.com" className="text-[#00D2FF] hover:underline">hostmyservice@gmail.com</a></li>
+            <li>By phone / WhatsApp: <a href="tel:+918401661887" className="text-[#00D2FF] hover:underline">+91 84016 61887</a></li>
+            <li>By visiting this page on our website: <a href="/contact" className="text-[#00D2FF] hover:underline">/contact</a></li>
           </ul>
         </section>
       </div>

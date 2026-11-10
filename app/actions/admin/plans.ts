@@ -17,6 +17,7 @@ export async function createPlan(data: {
   features: string[];
   requiresEnv?: boolean;
   providesDb?: boolean;
+  dbType?: "NONE" | "MONGODB" | "MYSQL" | "POSTGRESQL";
   autoRenew?: boolean;
   autoRenewPlanId?: string;
 }) {
@@ -42,6 +43,7 @@ export async function createPlan(data: {
         features: data.features,
         requiresEnv: !!data.requiresEnv,
         providesDb: !!data.providesDb,
+        dbType: (data.dbType as any) || "NONE",
         autoRenew: !!data.autoRenew,
         autoRenewPlanId: data.autoRenewPlanId,
       },
@@ -66,6 +68,7 @@ export async function updatePlan(
     features?: string[];
     requiresEnv?: boolean;
     providesDb?: boolean;
+  dbType?: "NONE" | "MONGODB" | "MYSQL" | "POSTGRESQL";
     autoRenew?: boolean;
     autoRenewPlanId?: string;
   }

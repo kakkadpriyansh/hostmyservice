@@ -67,7 +67,7 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 shadow-2xl glass">
+      <div className="w-full max-w-md rounded-2xl bg-[#061138] border border-white/10 p-6 shadow-2xl glass">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-bold font-display text-white">Assign Hosting Plan</h2>
           <button
@@ -91,9 +91,9 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
                 setFormData({ ...formData, userId: e.target.value })
               }
             >
-              <option value="" className="bg-[#0A0A0A]">Select a client...</option>
+              <option value="" className="bg-[#061138]">Select a client...</option>
               {users.map((user) => (
-                <option key={user.id} value={user.id} className="bg-[#0A0A0A]">
+                <option key={user.id} value={user.id} className="bg-[#061138]">
                   {user.name} ({user.email})
                 </option>
               ))}
@@ -112,9 +112,9 @@ export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
                 setFormData({ ...formData, planId: e.target.value })
               }
             >
-              <option value="" className="bg-[#0A0A0A]">Select a plan...</option>
+              <option value="" className="bg-[#061138]">Select a plan...</option>
               {plans.map((plan) => (
-                <option key={plan.id} value={plan.id} className="bg-[#0A0A0A]">
+                <option key={plan.id} value={plan.id} className="bg-[#061138]">
                   {plan.name} - ₹{plan.price} / {plan.duration} days
                 </option>
               ))}

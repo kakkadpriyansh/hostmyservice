@@ -9,8 +9,9 @@ import * as osModule from "os";
 import AdmZip from "adm-zip";
 import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
+import { uploadToGoogleDrive } from "@/lib/google-drive";
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 const ALLOWED_TYPES = ["application/zip", "application/x-zip-compressed", "application/x-zip"];
 
 export async function deploySite(formData: FormData) {
@@ -70,7 +71,7 @@ export async function deploySite(formData: FormData) {
         return { error: "Invalid file type. Only ZIP files are allowed." };
       }
       if (file.size > MAX_FILE_SIZE) {
-        return { error: "File too large. Maximum size is 50MB." };
+        return { error: "File too large. Maximum size is 500MB." };
       }
 
       const uploadId = uuidv4();
@@ -82,6 +83,17 @@ export async function deploySite(formData: FormData) {
       await mkdir(uploadPath, { recursive: true });
       const buffer = Buffer.from(await file.arrayBuffer());
       await writeFile(zipFilePath, buffer);
+
+      // Upload to Google Drive
+      let driveFileId = null;
+      try {
+        const fileName = `${site.domain}_${uploadId}_${file.name}`;
+        driveFileId = await uploadToGoogleDrive(buffer, fileName);
+        console.log(`File uploaded to Google Drive: ${driveFileId}`);
+      } catch (error) {
+        console.error('Google Drive upload failed:', error);
+        // Continue with local storage if Google Drive fails
+      }
 
       // Extraction logic (Optional - just for admin convenience)
       try {
@@ -98,6 +110,7 @@ export async function deploySite(formData: FormData) {
           type: "ZIP",
           uploadPath: extractPath,
           archivePath: zipFilePath, // Save path to original zip for download
+          driveFileId: driveFileId, // Save Google Drive file ID
         }
       });
 

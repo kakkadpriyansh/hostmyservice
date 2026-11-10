@@ -1,5 +1,7 @@
 "use server";
 
+import { runFullDeployment } from "@/lib/auto-deploy";
+
 import { SSHClient } from "@/lib/ssh-client";
 import { generateNginxConfig } from "@/lib/nginx-config";
 import prisma from "@/lib/prisma";
@@ -155,4 +157,52 @@ export async function deploySite(siteId: string, sourcePath: string): Promise<De
   } finally {
     ssh.dispose();
   }
+}
+
+
+export async function getPendingDeployments() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    const deployments = await prisma.deployment.findMany({
+      where: {
+        status: { in: ["PENDING", "BUILDING"] },
+        deletedAt: null,
+      },
+      include: {
+        site: {
+          include: {
+            user: true,
+            subscription: {
+              include: {
+                plan: true,
+              },
+            },
+          },
+        },
+        logs: {
+          orderBy: { timestamp: "desc" },
+          take: 5,
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return { success: true, data: deployments };
+  } catch (error: any) {
+    console.error("Failed to fetch pending deployments:", error);
+    return { success: false, error: error.message || "Failed to fetch deployments" };
+  }
+}
+
+export async function triggerDeployment(deploymentId: string) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    return { success: false, error: "Unauthorized access" };
+  }
+
+  return await runFullDeployment(deploymentId);
 }

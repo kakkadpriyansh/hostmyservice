@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { LoginForm } from "@/components/auth/login-form";
+import Link from "next/link";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
+import { AppBackground } from "@/components/layout/app-background";
 
 export const metadata: Metadata = {
   title: "Login - HostMyService",
@@ -11,41 +12,43 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="relative flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-background overflow-hidden font-sans">
-       {/* Background Effects */}
-      <div className="fixed inset-0 z-0 bg-grid-pattern opacity-30 pointer-events-none"></div>
-      <div className="glow-point top-[-20%] left-[-10%] opacity-20 animate-pulse-glow"></div>
-      <div className="glow-point bottom-[-20%] right-[-10%] opacity-20 animate-pulse-glow" style={{ animationDelay: "2s" }}></div>
+    <div className="relative flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[#07133B] overflow-hidden font-sans selection:bg-[#00D2FF] selection:text-[#07133B]">
+      <AppBackground />
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up">
         <div className="text-center mb-8">
-            <Link href="/" className="inline-block">
-                <h2 className="text-3xl font-display font-bold tracking-tight text-white hover:text-primary transition-colors">
-                HostMyService
-                </h2>
-            </Link>
-            <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-gray-200">
+          <Link href="/" className="inline-flex items-center gap-3 group">
+            <img
+              src="/icon.png"
+              alt="HostMyService Logo"
+              className="h-11 w-11 rounded-xl object-contain bg-white p-1 shadow-md border border-white/20 group-hover:scale-105 transition-transform"
+            />
+            <span className="font-display font-extrabold text-2xl tracking-tight text-white group-hover:text-sky-200 transition-colors">
+              HostMyService
+            </span>
+          </Link>
+          <h2 className="mt-6 text-center text-3xl font-display font-black tracking-tight text-white">
             Sign in to your account
-            </h2>
-            <p className="mt-2 text-center text-sm text-gray-400">
+          </h2>
+          <p className="mt-2 text-center text-sm text-blue-200/70">
             Or{" "}
             <Link
-                href="/register"
-                className="font-medium text-primary hover:text-primary/80 transition-colors"
+              href="/register"
+              className="font-bold text-[#00D2FF] hover:text-white transition-colors underline underline-offset-4 decoration-[#00D2FF]/40 hover:decoration-white"
             >
-                create a new account
+              create a new account
             </Link>
-            </p>
+          </p>
         </div>
-      </div>
 
-      <div className="relative z-10">
-        <Suspense fallback={
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md flex justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Suspense
+          fallback={
+            <div className="flex justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-[#00D2FF]" />
             </div>
-        }>
-            <LoginForm />
+          }
+        >
+          <LoginForm />
         </Suspense>
       </div>
     </div>

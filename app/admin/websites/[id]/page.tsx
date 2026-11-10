@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Globe, User, Shield, Server, Database, Download, GitBranch, ExternalLink } from "lucide-react";
 import { EditSiteForm } from "./edit-site-form";
 import { format } from "date-fns";
+import { DownloadButton } from "./download-button";
 
 export default async function WebsiteDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -89,13 +90,7 @@ export default async function WebsiteDetailsPage({ params }: { params: Promise<{
 
                     <div className="flex items-center gap-2">
                       {deployment.type === 'ZIP' && (
-                        <a
-                          href={`/api/admin/deployments/${deployment.id}/download`}
-                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
-                          title="Download Archive"
-                        >
-                          <Download className="h-4 w-4" />
-                        </a>
+                        <DownloadButton deploymentId={deployment.id} />
                       )}
                     </div>
                   </div>

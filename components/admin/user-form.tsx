@@ -39,7 +39,7 @@ export function UserForm({ onClose }: UserFormProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 shadow-2xl glass">
+      <div className="w-full max-w-md rounded-2xl bg-[#061138] border border-white/10 p-6 shadow-2xl glass">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-bold font-display text-white">Create New Client</h2>
           <button
@@ -116,8 +116,8 @@ export function UserForm({ onClose }: UserFormProps) {
                 })
               }
             >
-              <option value="USER" className="bg-[#0A0A0A]">Client (User)</option>
-              <option value="ADMIN" className="bg-[#0A0A0A]">Admin</option>
+              <option value="USER" className="bg-[#061138]">Client (User)</option>
+              <option value="ADMIN" className="bg-[#061138]">Admin</option>
             </select>
           </div>
 

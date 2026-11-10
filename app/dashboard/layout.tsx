@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
+import { AppBackground } from "@/components/layout/app-background";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
@@ -13,9 +14,9 @@ export default async function DashboardLayout({
   const role = (session?.user?.role as "USER" | "ADMIN") || "USER";
 
   return (
-    <div className="flex min-h-screen bg-background font-sans text-foreground overflow-hidden">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+    <div className="relative flex min-h-screen bg-[#07133B] font-sans text-foreground overflow-hidden selection:bg-[#00D2FF] selection:text-[#07133B]">
+      {/* Background Mesh, Circles and Dot Grid */}
+      <AppBackground />
       
       <Sidebar role={role} />
       <div className="relative z-10 flex flex-1 flex-col overflow-y-auto h-screen">
