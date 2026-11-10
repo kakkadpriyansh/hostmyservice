@@ -3,7 +3,7 @@
  *
  * Listens for GitHub push events on the configured port.
  * On receiving a valid push to the target branch, it runs:
- *   git pull → npm install → npm run build → pm2 restart hostmyservice
+ *   git pull → npm install → prisma generate → prisma db push → npm run build → pm2 restart hostmyservice
  *
  * Run via PM2:
  *   pm2 start scripts/webhook-server.mjs --name hostmyservice-webhook
@@ -68,6 +68,8 @@ async function runDeploy() {
   const steps = [
     { label: "git pull",           cmd: "git pull origin main" },
     { label: "npm install",        cmd: "npm install --prefer-offline" },
+    { label: "prisma generate",    cmd: "npx prisma generate" },
+    { label: "prisma db push",     cmd: "npx prisma db push --skip-generate" },
     { label: "npm run build",      cmd: "npm run build" },
     { label: `pm2 restart ${PM2_APP_NAME}`, cmd: `pm2 restart ${PM2_APP_NAME}` },
   ];

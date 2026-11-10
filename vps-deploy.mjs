@@ -123,6 +123,12 @@ async function deploy() {
     const generate = await ssh.execCommand("npx prisma generate", { cwd: projectDir });
     console.log(generate.stdout || generate.stderr);
 
+    // 3b. Sync database schema (refuses destructive changes without --accept-data-loss)
+    console.log("Syncing database schema...");
+    const dbPush = await ssh.execCommand("npx prisma db push --skip-generate", { cwd: projectDir });
+    console.log(dbPush.stdout || dbPush.stderr);
+    if (dbPush.code !== 0) throw new Error("prisma db push failed");
+
     // 4. Build
     console.log("Building project...");
     const build = await ssh.execCommand("npm run build", { cwd: projectDir });
