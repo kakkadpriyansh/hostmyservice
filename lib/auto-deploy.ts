@@ -19,6 +19,8 @@ export async function runFullDeployment(
     output: string,
     status: "SUCCESS" | "FAILED" | "PENDING"
   ) => {
+    // Strip ANSI color codes from build tool output so logs render cleanly
+    output = output.replace(/\x1b\[[0-9;]*m/g, "");
     const line = `${new Date().toISOString()}: [${step}] ${output}`;
     console.log(`[AutoDeploy ${deploymentId}] ${line}`);
     logs.push(line);
