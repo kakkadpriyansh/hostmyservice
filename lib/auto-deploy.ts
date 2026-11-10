@@ -193,7 +193,12 @@ export async function runFullDeployment(
 
       // ── 8b. npm install ───────────────────────────────────────────────────
       await logStep("Node", "Installing npm dependencies...", "PENDING");
-      const installRes = await ssh.execCommand(`cd ${projectDir} && npm install`);
+      let installRes = await ssh.execCommand(`cd ${projectDir} && npm install`);
+      // Many projects ship with stale peer ranges (e.g. vaul@0.9 vs React 19); retry leniently on ERESOLVE
+      if (installRes.code !== 0 && /ERESOLVE/.test(installRes.stderr + installRes.stdout)) {
+        await logStep("Node", "Peer dependency conflict detected, retrying with --legacy-peer-deps...", "PENDING");
+        installRes = await ssh.execCommand(`cd ${projectDir} && npm install --legacy-peer-deps`);
+      }
       if (installRes.code !== 0) {
         const errorDetails = (installRes.stderr || installRes.stdout || "npm install exited with code " + installRes.code).trim();
         // Log last relevant lines of npm output for the user
