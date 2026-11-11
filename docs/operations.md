@@ -87,7 +87,7 @@ server {
     client_max_body_size 510m;
 
     location / {
-        proxy_pass http://127.0.0.1:3000;
+        proxy_pass http://127.0.0.1:3006;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
@@ -115,7 +115,7 @@ sudo crontab -e
 
 ```cron
 # HostMyService maintenance, 03:15 server time
-15 3 * * * S=$(grep -E '^CRON_SECRET=' /var/www/hostmyservice/.env | cut -d= -f2- | tr -d '"'); curl -fsS -X POST -H "Authorization: Bearer $S" http://127.0.0.1:3000/api/cron/maintenance >> /var/log/hostmyservice-cron.log 2>&1
+15 3 * * * S=$(grep -E '^CRON_SECRET=' /var/www/hostmyservice/.env | cut -d= -f2- | tr -d '"'); curl -fsS -X POST -H "Authorization: Bearer $S" http://127.0.0.1:3006/api/cron/maintenance >> /var/log/hostmyservice-cron.log 2>&1
 ```
 
 The response lists each subscription it expired and whether its site was

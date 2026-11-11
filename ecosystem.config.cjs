@@ -12,7 +12,7 @@ module.exports = {
       // ── Main Next.js Application ──────────────────────────────────────────
       name: "hostmyservice",
       script: "node_modules/.bin/next",
-      args: "start",
+      args: "start -p 3006",
       cwd: "/var/www/hostmyservice",
       instances: 1,
       autorestart: true,
@@ -20,7 +20,7 @@ module.exports = {
       max_memory_restart: "2G", // a 500MB upload is held in memory about twice; must stay well above that
       env: {
         NODE_ENV: "production",
-        PORT: 3000,
+        PORT: 3006, // nginx (hostmyservice.in) proxies here; 3000 belongs to a customer site
       },
     },
     {
