@@ -105,7 +105,7 @@ export default async function DashboardOverview() {
         </div>
 
         {subscriptions.length === 0 ? (
-          <div className="flex h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 text-center backdrop-blur-sm">
+          <div className="flex h-48 flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 bg-[#0A1A4F]/90 text-center backdrop-blur-sm">
             <div className="rounded-full bg-white/10 p-3 mb-3">
               <Server className="h-6 w-6 text-gray-400" />
             </div>

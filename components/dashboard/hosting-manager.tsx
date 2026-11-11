@@ -92,7 +92,7 @@ export function HostingManager({ sub }: HostingManagerProps) {
 
   if (!sub.site) {
     return (
-      <div className="glass rounded-[24px] border border-white/15 bg-white/10 shadow-2xl p-8 backdrop-blur-xl">
+      <div className="glass rounded-[24px] border border-white/15 shadow-2xl p-8 backdrop-blur-xl">
         <div className="mb-6 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30">
             <Globe className="h-6 w-6" />
@@ -145,7 +145,7 @@ export function HostingManager({ sub }: HostingManagerProps) {
   }
 
   return (
-    <div className="rounded-[24px] border border-white/15 bg-white/10 p-6 md:p-8 backdrop-blur-xl shadow-2xl">
+    <div className="rounded-[24px] border border-white/15 bg-[#0A1A4F]/95 p-6 md:p-8 backdrop-blur-xl shadow-2xl">
       <div className="mb-6 flex items-start justify-between">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30">

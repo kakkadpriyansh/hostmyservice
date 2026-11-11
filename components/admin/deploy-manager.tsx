@@ -168,7 +168,7 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
           {activeTab === "PENDING" ? (
             <div className="space-y-4">
               {deploymentsList.length === 0 ? (
-                <div className="p-8 text-center rounded-[24px] bg-white/10 border border-white/15 text-blue-200/70 glass backdrop-blur-xl">
+                <div className="p-8 text-center rounded-[24px] border border-white/15 text-blue-200/70 glass backdrop-blur-xl">
                   <CheckCircle className="w-10 h-10 text-emerald-400 mx-auto mb-2 opacity-90" />
                   <p className="font-bold text-white text-base">No pending deployments!</p>
                   <p className="text-xs text-blue-200/60 mt-1">All sites uploaded by clients have been deployed.</p>
@@ -182,7 +182,7 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
                   return (
                     <div 
                       key={dep.id} 
-                      className="p-5 rounded-[22px] bg-white/10 border border-white/15 hover:border-white/25 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass backdrop-blur-xl shadow-xl"
+                      className="p-5 rounded-[22px] border border-white/15 hover:border-white/25 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass backdrop-blur-xl shadow-xl"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -235,7 +235,7 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
               )}
             </div>
           ) : (
-            <div className="p-6 rounded-[24px] bg-white/10 border border-white/15 glass backdrop-blur-xl shadow-2xl">
+            <div className="p-6 rounded-[24px] border border-white/15 glass backdrop-blur-xl shadow-2xl">
               <h3 className="font-bold text-white text-base mb-1 font-display">Manual Direct Upload & Deploy</h3>
               <p className="text-xs text-blue-200/70 mb-4">
                 Select an existing client site and upload a new ZIP archive directly to execute deploy.

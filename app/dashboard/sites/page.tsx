@@ -42,7 +42,7 @@ export default function MySitesPage() {
       </div>
 
       {subscriptions.length === 0 ? (
-        <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 text-center backdrop-blur-sm glass">
+        <div className="flex h-64 flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 text-center backdrop-blur-sm glass">
           <div className="rounded-full bg-white/10 p-4 mb-4">
             <Server className="h-8 w-8 text-gray-400" />
           </div>

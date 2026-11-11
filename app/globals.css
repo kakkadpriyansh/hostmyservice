@@ -76,15 +76,19 @@ body {
 }
 
 /* Custom Utilities */
+/* Card surface used across the dashboard and admin panel. Near-solid navy so
+   the background rings, dot grid and bright gradient don't show through cards
+   (the old 5% white made text hard to read on the lower, brighter part). */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(10, 26, 79, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.25);
 }
 
 .glass-hover:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background: rgba(14, 34, 98, 0.97);
   border-color: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
   transition: all 0.3s ease;

@@ -132,7 +132,7 @@ export function DeploymentLogsViewer({ siteId, domain }: DeploymentLogsViewerPro
   };
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-black/40 overflow-hidden shadow-2xl backdrop-blur-xl">
+    <div className="rounded-2xl border border-white/10 bg-[#050D2B]/95 overflow-hidden shadow-2xl backdrop-blur-xl">
       {/* Header bar (Vercel-style deployment summary) */}
       <div className="flex items-center justify-between px-4 py-3 bg-white/[0.04] border-b border-white/10">
         <div className="flex items-center gap-3">

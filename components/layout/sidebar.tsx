@@ -66,7 +66,7 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Sidebar Container */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-72 transform border-r border-white/10 bg-[#061138]/80 backdrop-blur-2xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static",
+          "fixed inset-y-0 left-0 z-40 w-72 transform border-r border-white/10 bg-[#061138]/95 backdrop-blur-2xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >

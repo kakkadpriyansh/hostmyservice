@@ -8,7 +8,7 @@ export function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-end border-b border-white/10 bg-[#061138]/60 backdrop-blur-xl px-8 shadow-sm">
+    <header className="sticky top-0 z-30 flex h-20 items-center justify-end border-b border-white/10 bg-[#061138]/95 backdrop-blur-xl px-8 shadow-sm">
       <div className="flex items-center gap-4">
         <div className="text-sm text-right hidden sm:block">
           <p className="font-semibold text-white">{session?.user?.name || "User"}</p>

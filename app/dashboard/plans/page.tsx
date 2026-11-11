@@ -47,7 +47,7 @@ export default async function PlansPage() {
           return (
             <div
               key={plan.id}
-              className="group relative flex flex-col rounded-[28px] border border-white/15 bg-white/10 p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#00D2FF]/60 hover:bg-white/[0.14] hover:-translate-y-1"
+              className="group relative flex flex-col rounded-[28px] border border-white/15 bg-[#0A1A4F]/95 p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#00D2FF]/60 hover:bg-[#0E2262] hover:-translate-y-1"
             >
               <div className="mb-6">
                 <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-[#00D2FF] uppercase tracking-wider mb-3">
