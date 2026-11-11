@@ -131,8 +131,10 @@ Setup:
 
 1. Set `WEBHOOK_SECRET` in `.env` (the server rejects every request if it's empty).
 2. GitHub → repository → Settings → Webhooks → add
-   `http://<vps-ip>:9000/` (or proxy it through nginx with HTTPS),
-   content type `application/json`, the same secret, push events only.
+   `http://<vps-ip>:9000/webhook` (the path must be `/webhook`; or proxy it
+   through nginx with HTTPS), content type **`application/json`** (the server
+   can't read form-encoded payloads), the same secret, push events only.
+   Open the port with `sudo ufw allow 9000/tcp`.
 3. `pm2 restart hostmyservice-webhook --update-env`.
 
 `prisma db push` refuses changes that would lose data. If a deploy fails
@@ -155,7 +157,7 @@ Do the urgent manual steps in
    git reset --hard origin/main
    npm install
    npx prisma generate
-   npx prisma db push        # adds Site.appPort, Site.suspendReason, Site.runAsSiteUser
+   npx prisma db push        # adds Site.appPort/suspendReason/runAsSiteUser and the affiliate tables
    ```
 2. **Environment**: add `RAZORPAY_WEBHOOK_SECRET`, `CRON_SECRET` and
    `WEBHOOK_SECRET` (see [environment.md](environment.md)). Set the same

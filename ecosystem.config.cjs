@@ -38,8 +38,8 @@ module.exports = {
         DEPLOY_BRANCH: "main",
         PROJECT_DIR: "/var/www/hostmyservice",
         PM2_APP: "hostmyservice",
-        // WEBHOOK_SECRET is read from the system environment or .env
-        // Set it on the server:  export WEBHOOK_SECRET="your-secret-here"
+        // WEBHOOK_SECRET is read from /var/www/hostmyservice/.env
+        // (loaded by the script itself). Requests are rejected without it.
       },
     },
   ],

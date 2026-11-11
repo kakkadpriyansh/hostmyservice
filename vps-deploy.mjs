@@ -29,23 +29,23 @@ const ssh = new NodeSSH();
 async function deploy() {
   try {
     const host = process.env.VPS_HOST;
+    const privateKey = process.env.VPS_PRIVATE_KEY?.replace(/\\n/g, "\n");
     const password = process.env.VPS_PASSWORD;
     const username = process.env.VPS_USER || "root";
-    
-    if (!host || !password) {
-      console.error("VPS_HOST or VPS_PASSWORD not found in .env");
+
+    if (!host || (!privateKey && !password)) {
+      console.error("VPS_HOST and VPS_PRIVATE_KEY (or VPS_PASSWORD) must be set in .env");
       process.exit(1);
     }
-    
-    console.log(`Connecting to ${host}...`);
-    
-    const sshConfig = {
-      host: host,
-      username: username,
-      password: password,
-    };
 
-    console.log("Attempting connection with password...");
+    console.log(`Connecting to ${host}...`);
+
+    // SSH key preferred; password only as a fallback (password logins should be disabled on the VPS)
+    const sshConfig = privateKey
+      ? { host, username, privateKey }
+      : { host, username, password };
+
+    console.log(`Attempting connection with ${privateKey ? "SSH key" : "password"}...`);
     try {
       await ssh.connect(sshConfig);
     } catch (e) {

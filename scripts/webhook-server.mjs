@@ -13,9 +13,21 @@ import http from "http";
 import crypto from "crypto";
 import { exec } from "child_process";
 import { promisify } from "util";
-import { appendFileSync } from "fs";
+import { appendFileSync, existsSync, readFileSync } from "fs";
 
 const execAsync = promisify(exec);
+
+// Load the project's .env (PM2 doesn't), without overriding variables that
+// are already set in the environment.
+function loadDotEnv(file) {
+  if (!existsSync(file)) return;
+  for (const line of readFileSync(file, "utf8").split(/\r?\n/)) {
+    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+    if (!m || process.env[m[1]] !== undefined) continue;
+    process.env[m[1]] = m[2].replace(/^(['"])(.*)\1$/, "$2");
+  }
+}
+loadDotEnv(`${process.env.PROJECT_DIR || "/var/www/hostmyservice"}/.env`);
 
 // ─── Config ────────────────────────────────────────────────────────────────
 const PORT = process.env.WEBHOOK_PORT || 9000;

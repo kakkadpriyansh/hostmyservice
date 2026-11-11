@@ -18,6 +18,7 @@ All values live in `.env` (template: `.env.example`). Variables marked
 | `VPS_HOST` | for deploys | IP address of the VPS |
 | `VPS_USER` | for deploys | SSH user, normally `root` |
 | `VPS_PRIVATE_KEY` | for deploys | Private key without a passphrase, newlines written as `\n`. Set it with `node scripts/set-vps-key.mjs <key-file>` |
+| `VPS_PASSWORD` | no | Legacy. Only used by `vps-deploy.mjs` when `VPS_PRIVATE_KEY` is missing. Remove it once password SSH logins are disabled |
 | `DEPLOY_RUN_AS_ROOT` | no | `true` disables per-site users for every site and runs customer code as `VPS_USER`. Emergency use only, see [deployment-pipeline.md](deployment-pipeline.md#isolation) |
 | `EXPIRY_ENFORCEMENT_START` | no | ISO date-time. Subscriptions created before it are never expired automatically. Default `2026-11-12T00:00:00Z` |
 
@@ -42,7 +43,7 @@ All values live in `.env` (template: `.env.example`). Variables marked
 | Variable | Required | Description |
 |---|---|---|
 | `CRON_SECRET` | for cron | At least 16 characters. `openssl rand -hex 32`. Without it `/api/cron/maintenance` returns 503 |
-| `WEBHOOK_SECRET` | for CI/CD | GitHub webhook secret. Without it the webhook server rejects every request |
+| `WEBHOOK_SECRET` | for CI/CD | GitHub webhook secret. The webhook server reads it from `PROJECT_DIR/.env`. Without it every request is rejected |
 | `WEBHOOK_PORT` | no | Webhook server port. Default `9000` |
 | `DEPLOY_BRANCH` | no | Branch that triggers a deploy. Default `main` |
 | `PROJECT_DIR` | no | Where HostMyService is checked out. Default `/var/www/hostmyservice` |
