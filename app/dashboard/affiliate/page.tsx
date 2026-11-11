@@ -16,7 +16,7 @@ import { AffiliateApplicationForm } from "@/components/affiliate/application-for
 import { ReferralLink } from "@/components/affiliate/referral-link";
 import { PayoutDetailsForm } from "@/components/affiliate/payout-details-form";
 import { RequestPayoutButton } from "@/components/affiliate/request-payout-button";
-import { badge, card, statusBadge, td, th } from "@/components/affiliate/styles";
+import { badge, card, panel, statusBadge, td, th } from "@/components/affiliate/styles";
 
 export const dynamic = "force-dynamic";
 
@@ -213,7 +213,7 @@ export default async function AffiliatePage() {
         </div>
       </div>
 
-      <div className={`${card} p-0 overflow-hidden`}>
+      <div className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Commissions</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-white/5">
@@ -256,7 +256,7 @@ export default async function AffiliatePage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className={`${card} p-0 overflow-hidden`}>
+        <div className={`${panel} overflow-hidden`}>
           <h2 className="px-6 pt-6 text-lg font-bold text-white">Payout history</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-white/5">
@@ -289,7 +289,7 @@ export default async function AffiliatePage() {
           </div>
         </div>
 
-        <div className={`${card} p-0 overflow-hidden`}>
+        <div className={`${panel} overflow-hidden`}>
           <h2 className="px-6 pt-6 text-lg font-bold text-white">Recent sign-ups</h2>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-white/5">

@@ -6,7 +6,7 @@ import { getAdminSession } from "@/lib/authz";
 import { effectiveRate, formatPaise, getAffiliateSettings } from "@/lib/affiliate";
 import { AffiliateSettingsForm } from "@/components/admin/affiliates/settings-form";
 import { PayoutActions, ReviewActions } from "@/components/admin/affiliates/affiliate-actions";
-import { badge, card, statusBadge, td, th } from "@/components/affiliate/styles";
+import { badge, card, panel, statusBadge, td, th } from "@/components/affiliate/styles";
 
 export const dynamic = "force-dynamic";
 
@@ -59,7 +59,7 @@ export default async function AdminAffiliatesPage() {
       </div>
 
       {/* Payout requests */}
-      <section className={`${card} p-0 overflow-hidden`}>
+      <section className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Payout requests ({openPayouts.length})</h2>
         <p className="px-6 text-sm text-gray-400">Send the money, then mark it paid with the UTR so the affiliate can see it.</p>
         <div className="mt-4 overflow-x-auto">
@@ -124,7 +124,7 @@ export default async function AdminAffiliatesPage() {
       </section>
 
       {/* Affiliates */}
-      <section className={`${card} p-0 overflow-hidden`}>
+      <section className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Affiliates ({affiliates.length})</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-white/5">

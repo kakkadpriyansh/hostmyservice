@@ -12,7 +12,7 @@ import {
   holdCutoff,
 } from "@/lib/affiliate";
 import { PayoutActions, RateForm, ReverseCommissionButton, ReviewActions } from "@/components/admin/affiliates/affiliate-actions";
-import { badge, card, statusBadge, td, th } from "@/components/affiliate/styles";
+import { badge, card, panel, statusBadge, td, th } from "@/components/affiliate/styles";
 
 export const dynamic = "force-dynamic";
 
@@ -114,7 +114,7 @@ export default async function AdminAffiliateDetailPage({ params }: { params: Pro
         ))}
       </div>
 
-      <section className={`${card} p-0 overflow-hidden`}>
+      <section className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Payouts</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-white/5">
@@ -141,7 +141,7 @@ export default async function AdminAffiliateDetailPage({ params }: { params: Pro
         </div>
       </section>
 
-      <section className={`${card} p-0 overflow-hidden`}>
+      <section className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Commissions</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-white/5">
@@ -176,7 +176,7 @@ export default async function AdminAffiliateDetailPage({ params }: { params: Pro
         </div>
       </section>
 
-      <section className={`${card} p-0 overflow-hidden`}>
+      <section className={`${panel} overflow-hidden`}>
         <h2 className="px-6 pt-6 text-lg font-bold text-white">Referred users ({referrals.length})</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="min-w-full divide-y divide-white/5">
