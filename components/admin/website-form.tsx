@@ -7,8 +7,8 @@ import { Loader2, User, Globe, LayoutGrid } from "lucide-react";
 import Link from "next/link";
 
 interface WebsiteFormProps {
-  users: any[];
-  plans: any[];
+  users: { id: string; name: string | null; email: string }[];
+  plans: { id: string; name: string; price: number; duration: number }[];
 }
 
 export function WebsiteForm({ users, plans }: WebsiteFormProps) {

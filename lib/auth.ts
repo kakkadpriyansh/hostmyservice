@@ -3,7 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { env } from "@/lib/env";
+import type { Role } from "@prisma/client";
+import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -21,9 +22,19 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Invalid credentials");
+        }
+
+        // Slow down password guessing: per account and per client IP
+        const email = credentials.email.toLowerCase();
+        const ip = clientIpFromHeaders(req?.headers);
+        if (
+          !rateLimit(`login:email:${email}`, 10, 15 * 60 * 1000) ||
+          !rateLimit(`login:ip:${ip}`, 30, 15 * 60 * 1000)
+        ) {
+          throw new Error("Too many login attempts. Please try again in 15 minutes.");
         }
 
         const user = await prisma.user.findUnique({
@@ -75,7 +86,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
-        session.user.role = token.role as any;
+        session.user.role = token.role as Role;
       }
       return session;
     },

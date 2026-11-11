@@ -3,15 +3,15 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, rm } from "fs/promises";
 import { join } from "path";
 import * as osModule from "os";
-import AdmZip from "adm-zip";
+import { safeExtractZip, UnsafeArchiveError } from "@/lib/zip";
+import { gitRepoUrlSchema, gitBranchSchema, MAX_UPLOAD_BYTES } from "@/lib/validations";
 import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
 import { uploadToGoogleDrive } from "@/lib/google-drive";
 
-const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 const ALLOWED_TYPES = ["application/zip", "application/x-zip-compressed", "application/x-zip"];
 
 export async function deploySite(formData: FormData) {
@@ -21,7 +21,7 @@ export async function deploySite(formData: FormData) {
   }
 
   const siteId = formData.get("siteId") as string;
-  const deploymentType = formData.get("type") as "ZIP" | "GIT" || "ZIP";
+  const deploymentType = formData.get("type") === "GIT" ? "GIT" : "ZIP";
   
   if (!siteId) {
     return { error: "Missing site ID" };
@@ -30,22 +30,49 @@ export async function deploySite(formData: FormData) {
   // Verify ownership
   const site = await prisma.site.findUnique({
     where: { id: siteId },
+    include: { subscription: true },
   });
 
-  if (!site) return { error: "Site not found" };
+  if (!site || site.deletedAt) return { error: "Site not found" };
   if (site.userId !== session.user.id) return { error: "Unauthorized" };
+
+  // Only sites with a live subscription can be deployed
+  if (site.status !== "ACTIVE") {
+    return { error: "This site is suspended. Renew your plan or contact support." };
+  }
+  const subscription = site.subscription;
+  // Only an explicit EXPIRED status blocks deploys. The cron sets it for new
+  // subscriptions; older ones are never expired automatically.
+  if (subscription?.status === "EXPIRED") {
+    return { error: "Your subscription has expired. Renew your plan to deploy." };
+  }
+
+  // Only a build that is already running blocks a new deployment. Older
+  // queued (never started) deployments are replaced by this one below.
+  const building = await prisma.deployment.findFirst({
+    where: { siteId: site.id, status: "BUILDING", deletedAt: null },
+    select: { id: true },
+  });
+  if (building) {
+    return { error: "A deployment for this site is currently running. Try again when it finishes." };
+  }
 
   try {
     console.log(`Starting deployment for site ${siteId} by user ${session.user.id}`);
     
     if (deploymentType === "GIT") {
-      const gitRepoUrl = formData.get("gitRepoUrl") as string;
-      const gitBranch = formData.get("gitBranch") as string || "main";
-
-      if (!gitRepoUrl) {
-        return { error: "Git Repository URL is required" };
+      const repo = gitRepoUrlSchema.safeParse(formData.get("gitRepoUrl"));
+      if (!repo.success) {
+        return { error: repo.error.issues[0]?.message || "Invalid Git repository URL" };
       }
+      const branch = gitBranchSchema.safeParse(formData.get("gitBranch") || "main");
+      if (!branch.success) {
+        return { error: branch.error.issues[0]?.message || "Invalid branch name" };
+      }
+      const gitRepoUrl = repo.data;
+      const gitBranch = branch.data;
 
+      await supersedeQueuedDeployments(site.id);
       await prisma.deployment.create({
         data: {
           siteId: site.id,
@@ -70,8 +97,8 @@ export async function deploySite(formData: FormData) {
       if (!ALLOWED_TYPES.includes(file.type) && !file.name.endsWith(".zip")) {
         return { error: "Invalid file type. Only ZIP files are allowed." };
       }
-      if (file.size > MAX_FILE_SIZE) {
-        return { error: "File too large. Maximum size is 500MB." };
+      if (file.size > MAX_UPLOAD_BYTES) {
+        return { error: `File too large. Maximum size is ${MAX_UPLOAD_BYTES / 1024 / 1024}MB.` };
       }
 
       const uploadId = uuidv4();
@@ -84,6 +111,17 @@ export async function deploySite(formData: FormData) {
       const buffer = Buffer.from(await file.arrayBuffer());
       await writeFile(zipFilePath, buffer);
 
+      try {
+        await safeExtractZip(zipFilePath, extractPath);
+      } catch (e) {
+        await rm(uploadPath, { recursive: true, force: true });
+        if (e instanceof UnsafeArchiveError) {
+          return { error: e.message };
+        }
+        console.error("Failed to extract zip:", e);
+        return { error: "Could not read the ZIP file. Please check it and upload again." };
+      }
+
       // Upload to Google Drive
       let driveFileId = null;
       try {
@@ -95,14 +133,7 @@ export async function deploySite(formData: FormData) {
         // Continue with local storage if Google Drive fails
       }
 
-      // Extraction logic (Optional - just for admin convenience)
-      try {
-        const zip = new AdmZip(zipFilePath);
-        zip.extractAllTo(extractPath, true);
-      } catch (e) {
-        console.warn("Failed to extract zip, but proceeding with upload:", e);
-      }
-
+      await supersedeQueuedDeployments(site.id);
       await prisma.deployment.create({
         data: {
           siteId: site.id,
@@ -122,4 +153,12 @@ export async function deploySite(formData: FormData) {
     console.error("Deploy error:", error);
     return { error: "Deployment failed" };
   }
+}
+
+/** The newest upload wins: older deployments that never started leave the admin queue. */
+async function supersedeQueuedDeployments(siteId: string) {
+  await prisma.deployment.updateMany({
+    where: { siteId, status: "PENDING", deletedAt: null },
+    data: { deletedAt: new Date() },
+  });
 }

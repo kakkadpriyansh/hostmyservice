@@ -26,12 +26,12 @@
        domain: sub.site?.domain || null,
        startDate: sub.startDate,
        endDate: sub.endDate,
-       status: sub.status as any,
+       status: sub.status,
        plan: {
          name: sub.plan.name,
          price: sub.plan.price,
-         requiresEnv: (sub.plan as any).requiresEnv,
-         providesDb: (sub.plan as any).providesDb,
+         requiresEnv: sub.plan.requiresEnv,
+         providesDb: sub.plan.providesDb,
        },
        site: sub.site,
      }));

@@ -60,6 +60,12 @@ model Site {
   serverIp      String?   // Assigned by Admin
   envVars       String?   @db.Text
   dbConnection  String?
+  appPort       Int?      @unique // Port the site's Node.js app listens on (reused across redeploys)
+  suspendReason String?   // "EXPIRED" (auto, lifted on renewal) or "ADMIN" (manual)
+  // Run the site's build and app as its own Linux user. New sites get true;
+  // sites created before Nov 2026 stay false (run as root, as before) until an
+  // admin opts them in with scripts/isolate-site.ts.
+  runAsSiteUser Boolean   @default(false)
 
   deployments   Deployment[]
 }

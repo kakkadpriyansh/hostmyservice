@@ -13,6 +13,18 @@ const envSchema = z.object({
   // Razorpay Configuration
   RAZORPAY_KEY_ID: z.string().min(1),
   RAZORPAY_KEY_SECRET: z.string().min(1),
+  // Secret set in Razorpay Dashboard → Webhooks (falls back to RAZORPAY_KEY_SECRET)
+  RAZORPAY_WEBHOOK_SECRET: z.string().min(1).optional(),
+
+  // Shared secret for /api/cron/* endpoints (sent as "Authorization: Bearer <secret>")
+  CRON_SECRET: z.string().min(16).optional(),
+
+  // Subscriptions created before this ISO date are never auto-expired (default 2026-11-12)
+  EXPIRY_ENFORCEMENT_START: z.string().datetime().optional(),
+
+  // Customer apps run as a dedicated unprivileged Linux user per site.
+  // Set to "true" only as a temporary escape hatch; it runs customer code as the SSH user.
+  DEPLOY_RUN_AS_ROOT: z.enum(["true", "false"]).optional(),
 
   // Admin
   ADMIN_EMAIL: z.string().email().optional(),

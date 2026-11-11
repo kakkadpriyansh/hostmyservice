@@ -7,6 +7,8 @@ import { razorpay } from "@/lib/razorpay";
 import crypto from "crypto";
 import { env } from "@/lib/env";
 import { planIdSchema, paymentVerificationSchema } from "@/lib/validations";
+import { activatePayment } from "@/lib/subscriptions";
+import { safeEqual } from "@/lib/crypto";
 
 export async function createSubscriptionOrder(planId: string, durationYears: number = 1) {
   const session = await getServerSession(authOptions);
@@ -150,7 +152,8 @@ export async function verifyPayment(
     where: { razorpayOrderId },
   });
 
-  if (!paymentRecord) {
+  // The order must exist and belong to the caller
+  if (!paymentRecord || paymentRecord.userId !== session.user.id) {
     throw new Error("Payment record not found");
   }
 
@@ -163,44 +166,18 @@ export async function verifyPayment(
 
   const expectedSignature = crypto
     .createHmac("sha256", env.RAZORPAY_KEY_SECRET)
-    .update(body.toString())
+    .update(body)
     .digest("hex");
 
-  if (expectedSignature !== razorpaySignature) {
+  if (!safeEqual(expectedSignature, razorpaySignature)) {
     throw new Error("Invalid payment signature");
   }
 
-  // Update payment status
-  const payment = await prisma.payment.update({
-    where: { razorpayOrderId },
-    data: {
-      status: "SUCCESS",
-      razorpayPaymentId,
-      razorpaySignature,
-    },
-    include: { plan: true },
-  });
-
-  if (!payment) {
+  // Idempotent: a replayed verification or a webhook that already activated
+  // this payment does not create a second subscription
+  const activation = await activatePayment(paymentRecord.id, { razorpayPaymentId, razorpaySignature });
+  if (!activation.activated && activation.reason === "not_found") {
     throw new Error("Payment record not found");
-  }
-
-  // Activate subscription
-  if (payment.plan) {
-    const startDate = new Date();
-    const endDate = new Date();
-    const durationYears = payment.durationYears || 1;
-    endDate.setDate(startDate.getDate() + durationYears * 365);
-
-    await prisma.subscription.create({
-      data: {
-        userId: session.user.id,
-        planId: payment.plan.id,
-        startDate,
-        endDate,
-        status: "ACTIVE",
-      },
-    });
   }
 
   return { success: true };

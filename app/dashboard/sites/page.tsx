@@ -50,7 +50,7 @@ export default function MySitesPage() {
             No active subscriptions
           </h3>
           <p className="mt-2 text-sm text-gray-400 max-w-sm">
-            You haven't subscribed to any hosting plans yet. Buy a plan to start deploying your sites.
+            You haven&apos;t subscribed to any hosting plans yet. Buy a plan to start deploying your sites.
           </p>
         </div>
       ) : (

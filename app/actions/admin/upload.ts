@@ -3,12 +3,12 @@
 import { writeFile, mkdir, rm } from "fs/promises";
 import { join } from "path";
 import * as osModule from "os";
-import AdmZip from "adm-zip";
+import { safeExtractZip, UnsafeArchiveError } from "@/lib/zip";
+import { MAX_UPLOAD_BYTES } from "@/lib/validations";
 import { v4 as uuidv4 } from "uuid";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 const ALLOWED_TYPES = ["application/zip", "application/x-zip-compressed"];
 
 export async function uploadSiteArchive(formData: FormData) {
@@ -30,8 +30,8 @@ export async function uploadSiteArchive(formData: FormData) {
   }
 
   // 2. Validate File Size
-  if (file.size > MAX_FILE_SIZE) {
-    return { error: "File too large. Maximum size is 500MB." };
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return { error: `File too large. Maximum size is ${MAX_UPLOAD_BYTES / 1024 / 1024}MB.` };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -50,20 +50,25 @@ export async function uploadSiteArchive(formData: FormData) {
     // 4. Save ZIP file
     await writeFile(zipFilePath, buffer);
 
-    // 5. Extract Files
-    const zip = new AdmZip(zipFilePath);
-    zip.extractAllTo(extractPath, true);
+    // 5. Extract Files (rejects zip slip, symlinks and zip bombs)
+    let entries: string[];
+    try {
+      entries = await safeExtractZip(zipFilePath, extractPath);
+    } catch (e) {
+      await rm(uploadPath, { recursive: true, force: true });
+      if (e instanceof UnsafeArchiveError) return { error: e.message };
+      throw e;
+    }
 
     // 6. Validate Structure (Must contain index.html)
-    const entries = zip.getEntries();
-    const indexHtmlEntries = entries.filter((entry) => 
-      entry.entryName.toLowerCase().endsWith("index.html") && !entry.entryName.startsWith("__MACOSX")
+    const indexHtmlEntries = entries.filter((name) =>
+      name.toLowerCase().endsWith("index.html") && !name.startsWith("__MACOSX")
     );
 
     // Security: Check for dangerous file types
     const dangerousExtensions = [".php", ".phtml", ".php3", ".php4", ".php5", ".phps", ".sh", ".bash", ".exe", ".dll", ".bat", ".cmd", ".msi", ".vbs", ".pl", ".cgi", ".jsp", ".asp", ".aspx", ".py", ".rb"];
-    const hasDangerousFiles = entries.some((entry) => {
-      const lowerName = entry.entryName.toLowerCase();
+    const hasDangerousFiles = entries.some((name) => {
+      const lowerName = name.toLowerCase();
       return dangerousExtensions.some((ext) => lowerName.endsWith(ext));
     });
 
@@ -81,13 +86,13 @@ export async function uploadSiteArchive(formData: FormData) {
     // Find the best candidate for root (shortest path)
     // sort by depth (number of slashes)
     indexHtmlEntries.sort((a, b) => {
-      const depthA = (a.entryName.match(/\//g) || []).length;
-      const depthB = (b.entryName.match(/\//g) || []).length;
+      const depthA = (a.match(/\//g) || []).length;
+      const depthB = (b.match(/\//g) || []).length;
       return depthA - depthB;
     });
 
     const rootIndex = indexHtmlEntries[0];
-    const rootDir = rootIndex.entryName.substring(0, rootIndex.entryName.lastIndexOf('/'));
+    const rootDir = rootIndex.substring(0, rootIndex.lastIndexOf('/'));
     
     // If rootDir is empty string, it means index.html is at root
     const effectivePath = rootDir ? join(extractPath, rootDir) : extractPath;

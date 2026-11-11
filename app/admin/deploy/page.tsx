@@ -23,7 +23,7 @@ export default async function DeployPage() {
         <div>
           <h1 className="text-2xl font-bold font-display text-white">Deployment Control Center</h1>
           <p className="text-sm text-gray-400">
-            Review client-uploaded code, provision isolated databases, configure Nginx & Let's Encrypt SSL, and deploy with 1-click.
+            Review client-uploaded code, provision isolated databases, configure Nginx &amp; Let&apos;s Encrypt SSL, and deploy with 1-click.
           </p>
         </div>
       </div>

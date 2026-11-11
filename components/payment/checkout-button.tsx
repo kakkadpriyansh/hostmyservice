@@ -5,6 +5,14 @@ import { createSubscriptionOrder, verifyPayment } from "@/app/actions/payment";
 import { Loader2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BillingForm } from "./billing-form";
+import type { ProfileData } from "@/app/actions/client/profile";
+
+interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  razorpay_order_id?: string;
+  razorpay_subscription_id?: string;
+}
 
 interface CheckoutButtonProps {
   planId: string;
@@ -12,7 +20,7 @@ interface CheckoutButtonProps {
   price: number;
   price2Years?: number | null;
   price3Years?: number | null;
-  userProfile?: any; // Using any to avoid complex type imports, but ideally should be User type
+  userProfile?: ({ [K in keyof ProfileData]?: string | null } & { email?: string | null }) | null;
 }
 
 export function CheckoutButton({ planId, planName, price, price2Years, price3Years, userProfile }: CheckoutButtonProps) {
@@ -70,22 +78,22 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
       }
 
       // 3. Initialize Razorpay
-      const options: any = {
+      const options: Record<string, unknown> = {
         key: order.key,
         name: "HostMyService",
         description: `Subscription for ${planName} (${durationYears} Year${durationYears > 1 ? 's' : ''})`,
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayResponse) {
           try {
             // 5. Verify Payment
             // For subscriptions, we might need to send different data to verify
             const verifyData = order.isSubscription 
               ? {
-                  razorpayOrderId: response.razorpay_subscription_id, // Use subscription ID
+                  razorpayOrderId: response.razorpay_subscription_id ?? "", // Use subscription ID
                   razorpayPaymentId: response.razorpay_payment_id,
                   razorpaySignature: response.razorpay_signature,
                 }
               : {
-                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayOrderId: response.razorpay_order_id ?? "",
                   razorpayPaymentId: response.razorpay_payment_id,
                   razorpaySignature: response.razorpay_signature,
                 };
@@ -120,7 +128,7 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
         options.order_id = order.orderId;
       }
 
-      const paymentObject = new (window as any).Razorpay(options);
+      const paymentObject = new (window as unknown as { Razorpay: new (opts: Record<string, unknown>) => { open: () => void } }).Razorpay(options);
       paymentObject.open();
     } catch (error) {
       console.error("Payment failed", error);
@@ -181,7 +189,13 @@ export function CheckoutButton({ planId, planName, price, price2Years, price3Yea
               <X className="h-5 w-5" />
             </button>
             <BillingForm
-              initialData={userProfile}
+              initialData={
+                userProfile
+                  ? (Object.fromEntries(
+                      Object.entries(userProfile).filter(([, v]) => v != null)
+                    ) as Partial<ProfileData>)
+                  : undefined
+              }
               onSuccess={() => {
                 setIsProfileComplete(true);
                 setShowBillingModal(false);

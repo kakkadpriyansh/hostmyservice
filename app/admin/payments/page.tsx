@@ -36,7 +36,7 @@ export default async function PaymentsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 bg-transparent">
-              {payments?.map((payment: any) => (
+              {payments?.map((payment) => (
                 <tr key={payment.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-white">{payment.user?.name || "Unknown"}</div>

@@ -32,27 +32,46 @@ export function DeploymentLogsViewer({ siteId, domain }: DeploymentLogsViewerPro
   const [copied, setCopied] = useState(false);
   const logsEndRef = useRef<HTMLDivElement>(null);
 
+  // Latest status, read by the polling interval without re-creating it
+  const statusRef = useRef<string | undefined>(undefined);
+
   const fetchLogs = async (isManual = false) => {
     if (isManual) setLoading(true);
     const res = await getClientDeploymentLogs(siteId);
     if (res.success && res.data) {
       setDeployment(res.data);
+      statusRef.current = res.data.status;
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchLogs();
+    let cancelled = false;
+    const load = async () => {
+      const res = await getClientDeploymentLogs(siteId);
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setDeployment(res.data);
+        statusRef.current = res.data.status;
+      }
+      setLoading(false);
+    };
 
-    // Auto-poll logs every 3 seconds if status is PENDING or BUILDING (like Vercel live stream)
+    load();
+
+    // Auto-poll logs every 3 seconds while a deployment is queued or building (like Vercel live stream)
     const interval = setInterval(() => {
-      if (deployment?.status === "PENDING" || deployment?.status === "BUILDING" || !deployment) {
-        fetchLogs();
+      const status = statusRef.current;
+      if (status === undefined || status === "PENDING" || status === "BUILDING") {
+        load();
       }
     }, 3000);
 
-    return () => clearInterval(interval);
-  }, [siteId, deployment?.status]);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [siteId]);
 
   // Auto-scroll to bottom of logs when building
   useEffect(() => {

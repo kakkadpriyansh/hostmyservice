@@ -1,5 +1,7 @@
 "use server";
 
+import { requireAdmin } from "@/lib/authz";
+
 import prisma from "@/lib/prisma";
 
 export interface MonthlyRevenue {
@@ -29,6 +31,7 @@ export interface RevenueStats {
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 export async function getRevenueStats(): Promise<RevenueStats> {
+  await requireAdmin();
   const now = new Date();
 
   // Build last 12 months range

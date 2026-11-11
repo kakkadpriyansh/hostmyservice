@@ -236,7 +236,7 @@ export function PlanForm({ plan, onClose }: PlanFormProps) {
                 className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-2.5 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                 value={formData.dbType}
                 onChange={(e) =>
-                  setFormData({ ...formData, dbType: e.target.value as any })
+                  setFormData({ ...formData, dbType: e.target.value as typeof formData.dbType })
                 }
               >
                 <option value="NONE" className="bg-[#061138] text-white">None (Static / Custom)</option>

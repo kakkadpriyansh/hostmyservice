@@ -86,6 +86,7 @@ export const config = {
      * Match all request paths except for:
      * - api/auth (auth API routes)
      * - api/webhook (webhook routes)
+     * - api/cron (maintenance, authenticated with CRON_SECRET)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - static assets (.png, .jpg, .jpeg, .svg, .ico, .webp, .gif)
@@ -99,7 +100,7 @@ export const config = {
      */
     {
       source:
-        "/((?!api/auth|api/webhook|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico)|login|register|forgot-password|reset-password|contact|privacy-policy|terms|refund-policy|shipping-policy|$).*)",
+        "/((?!api/auth|api/webhook|api/cron|_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico)|login|register|forgot-password|reset-password|contact|privacy-policy|terms|refund-policy|shipping-policy|$).*)",
       missing: [
         // Skip middleware for Next.js Server Action requests
         { type: "header", key: "next-action" },

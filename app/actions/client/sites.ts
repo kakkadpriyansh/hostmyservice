@@ -4,9 +4,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-
-const domainSchema = z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/, "Invalid domain format");
+import { hostnameSchema } from "@/lib/validations";
 
 export async function createSite(subscriptionId: string, domain: string) {
   const session = await getServerSession(authOptions);
@@ -15,10 +13,11 @@ export async function createSite(subscriptionId: string, domain: string) {
     return { success: false, error: "Unauthorized" };
   }
 
-  const validation = domainSchema.safeParse(domain);
+  const validation = hostnameSchema.safeParse(domain);
   if (!validation.success) {
-    return { success: false, error: validation.error.message };
+    return { success: false, error: validation.error.issues[0]?.message || "Invalid domain" };
   }
+  domain = validation.data;
 
   try {
     // 1. Check if subscription belongs to user
@@ -33,6 +32,10 @@ export async function createSite(subscriptionId: string, domain: string) {
 
     if (subscription.userId !== session.user.id) {
       return { success: false, error: "Unauthorized access to subscription" };
+    }
+
+    if (subscription.status === "EXPIRED") {
+      return { success: false, error: "This subscription is not active" };
     }
 
     if (subscription.site) {
@@ -55,7 +58,8 @@ export async function createSite(subscriptionId: string, domain: string) {
         userId: session.user.id,
         subscriptionId,
         status: "ACTIVE",
-        sslStatus: "NONE"
+        sslStatus: "NONE",
+        runAsSiteUser: true
       }
     });
 

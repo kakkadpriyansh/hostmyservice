@@ -13,12 +13,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PricingSection } from "@/components/pricing-section";
+import type { Plan } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  let plans: any[] = [];
+  let plans: Plan[] = [];
   try {
     plans = await prisma.plan.findMany({
       where: {
@@ -34,11 +35,11 @@ export default async function Home() {
 
   const minPrice =
     plans.length > 0
-      ? Math.round(Math.min(...plans.map((p: any) => p.price)) / 12)
+      ? Math.round(Math.min(...plans.map((p) => p.price)) / 12)
       : 118;
   const yearlyMinPrice =
     plans.length > 0
-      ? Math.min(...plans.map((p: any) => p.price))
+      ? Math.min(...plans.map((p) => p.price))
       : 1420;
 
   return (
@@ -565,7 +566,7 @@ export default async function Home() {
             </h2>
 
             <p className="mt-[22px] mx-auto max-w-[560px] text-center text-[19px] leading-[1.6] text-[#D6DCFF]">
-              We've stripped away the bloat. What remains is pure speed and security.
+              We&apos;ve stripped away the bloat. What remains is pure speed and security.
             </p>
 
             {/* Cards layout — exact row structure from HTML */}
@@ -813,7 +814,7 @@ export default async function Home() {
         </section>
 
         {/* Pricing Section */}
-        <PricingSection plans={plans.map((p: any) => ({
+        <PricingSection plans={plans.map((p) => ({
           id: p.id,
           name: p.name,
           description: p.description ?? null,

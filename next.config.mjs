@@ -3,9 +3,11 @@ const nextConfig = {
   serverExternalPackages: ["ssh2", "node-ssh"],
   
   experimental: {
-    // Set server actions body size limit to a very large value
+    // Server Actions buffer the whole request in memory. Keep this just above
+    // MAX_UPLOAD_BYTES (500MB, lib/validations.ts) and well below PM2's
+    // max_memory_restart (ecosystem.config.cjs).
     serverActions: {
-      bodySizeLimit: '500mb',
+      bodySizeLimit: '510mb',
     },
   },
 };

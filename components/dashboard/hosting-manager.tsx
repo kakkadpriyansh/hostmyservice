@@ -28,7 +28,7 @@ export function HostingManager({ sub }: HostingManagerProps) {
   const [gitBranch, setGitBranch] = useState("main");
 
   // Env State
-  const [savedEnvContent, setSavedEnvContent] = useState((sub.site as any)?.envVars || "");
+  const [savedEnvContent, setSavedEnvContent] = useState(sub.site?.envVars || "");
   const [envContent, setEnvContent] = useState(savedEnvContent);
   const [isEnvEditing, setIsEnvEditing] = useState(!savedEnvContent);
 
@@ -152,17 +152,17 @@ export function HostingManager({ sub }: HostingManagerProps) {
             <Server className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="text-xl font-bold font-display text-white">{(sub.site as any).domain}</h3>
+            <h3 className="text-xl font-bold font-display text-white">{sub.site.domain}</h3>
             <div className="flex items-center gap-2 mt-1">
                <span className={cn(
                   "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                  (sub.site as any).serverIp ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
+                  sub.site.serverIp ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
                )}>
-                 {(sub.site as any).serverIp ? "Active" : "Pending Assignment"}
+                 {sub.site.serverIp ? "Active" : "Pending Assignment"}
                </span>
-               {(sub.site as any).serverIp && (
+               {sub.site.serverIp && (
                  <span className="text-xs text-blue-200/70 font-mono">
-                   {(sub.site as any).serverIp}
+                   {sub.site.serverIp}
                  </span>
                )}
             </div>
@@ -346,12 +346,12 @@ export function HostingManager({ sub }: HostingManagerProps) {
         {sub.site && (
           <DeploymentLogsViewer
             siteId={sub.site.id}
-            domain={(sub.site as any).domain}
+            domain={sub.site.domain}
           />
         )}
 
         {/* Instructions */}
-        {!(sub.site as any).serverIp && (
+        {!sub.site.serverIp && (
            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
              <h4 className="text-sm font-bold text-amber-300 mb-1">Waiting for IP Assignment</h4>
              <p className="text-xs text-amber-200/80 leading-relaxed">
@@ -359,11 +359,11 @@ export function HostingManager({ sub }: HostingManagerProps) {
              </p>
            </div>
         )}
-        {(sub.site as any).dbConnection && (
+        {sub.site.dbConnection && (
           <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
             <h4 className="text-sm font-bold text-emerald-300 mb-1">Database Connection String</h4>
             <p className="text-xs text-emerald-100 break-all font-mono bg-black/40 p-2.5 rounded-lg border border-emerald-500/20 mt-1">
-              {(sub.site as any).dbConnection}
+              {sub.site.dbConnection}
             </p>
           </div>
         )}

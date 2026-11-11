@@ -37,9 +37,10 @@ function logSync(message) {
  * Verify HMAC-SHA256 signature from GitHub's X-Hub-Signature-256 header.
  */
 function verifySignature(body, signature) {
+  // Fail closed: without a secret anyone could trigger a redeploy
   if (!SECRET) {
-    logSync("WARNING: No WEBHOOK_SECRET set. Skipping signature verification.");
-    return true;
+    logSync("REJECTED: WEBHOOK_SECRET is not set. Set it to the secret configured in GitHub.");
+    return false;
   }
   if (!signature) return false;
   const hmac = crypto.createHmac("sha256", SECRET);
@@ -154,5 +155,5 @@ server.listen(PORT, () => {
   logSync(`  Project dir : ${PROJECT_DIR}`);
   logSync(`  Branch      : ${BRANCH}`);
   logSync(`  PM2 app     : ${PM2_APP_NAME}`);
-  logSync(`  Secret set  : ${SECRET ? "yes" : "NO (unsecured!)"}`);
+  logSync(`  Secret set  : ${SECRET ? "yes" : "NO — all requests will be rejected"}`);
 });

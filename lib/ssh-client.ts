@@ -1,5 +1,9 @@
 import { NodeSSH } from "node-ssh";
 import { env } from "@/lib/env";
+import { writeFile, rm } from "fs/promises";
+import os from "os";
+import path from "path";
+import { randomUUID } from "crypto";
 
 export class SSHClient {
   private ssh: NodeSSH;
@@ -71,31 +75,18 @@ export class SSHClient {
     }
   }
 
+  /** Writes `content` to `remotePath` via a temporary local file and SFTP. */
   async uploadString(content: string, remotePath: string) {
-     try {
-         // Use a temporary file approach or echo (careful with escaping)
-         // node-ssh doesn't have putString directly, but we can write to a temp file locally and upload, 
-         // or use execCommand with cat.
-         // Safer: scp a temp file.
-         
-         // Actually, node-ssh usually wraps sftp. Let's see if we can use sftp directly or just execCommand.
-         // Echo is risky for complex configs.
-         // Let's use sftp writeStream if available, or just save locally and upload.
-         
-         // Implementation: Write to temp local file then upload.
-         const fs = require('fs');
-         const path = require('path');
-         const os = require('os');
-         const tempFile = path.join(os.tmpdir(), `nginx-${Date.now()}.conf`);
-         fs.writeFileSync(tempFile, content);
-         
-         await this.ssh.putFile(tempFile, remotePath);
-         fs.unlinkSync(tempFile);
-         
-     } catch (error) {
-         console.error(`Failed to upload string to ${remotePath}`, error);
-         throw error;
-     }
+    const tempFile = path.join(os.tmpdir(), `hms-upload-${randomUUID()}`);
+    try {
+      await writeFile(tempFile, content, { mode: 0o600 });
+      await this.ssh.putFile(tempFile, remotePath);
+    } catch (error) {
+      console.error(`Failed to upload string to ${remotePath}`, error);
+      throw error;
+    } finally {
+      await rm(tempFile, { force: true });
+    }
   }
 
   dispose() {

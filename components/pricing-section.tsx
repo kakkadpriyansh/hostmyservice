@@ -351,7 +351,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
 
                 {/* Features */}
                 <div className="text-xs font-bold tracking-[0.08em] uppercase text-[#AEB6EC]">
-                  What's included
+                  What&apos;s included
                 </div>
                 <ul className="flex flex-col gap-3.5 mt-4 text-[17px] font-medium text-white list-none p-0">
                   {features.map((feature) => {

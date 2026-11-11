@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { uploadSiteArchive } from "@/app/actions/admin/upload";
-import { triggerDeployment } from "@/app/actions/admin/deploy";
+import { triggerDeployment, deploySite, type getPendingDeployments } from "@/app/actions/admin/deploy";
+import type { getWebsites } from "@/app/actions/admin/websites";
 import { 
   Upload, 
   Server, 
@@ -16,9 +17,14 @@ import {
   Clock 
 } from "lucide-react";
 
+type AdminSite = Extract<Awaited<ReturnType<typeof getWebsites>>, { data: unknown }>["data"][number];
+type PendingDeployment = Extract<Awaited<ReturnType<typeof getPendingDeployments>>, { data: unknown }>["data"][number];
+
+const errorMessageOf = (err: unknown) => (err instanceof Error ? err.message : String(err));
+
 interface DeployManagerProps {
-  sites: any[];
-  pendingDeployments?: any[];
+  sites: AdminSite[];
+  pendingDeployments?: PendingDeployment[];
 }
 
 export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerProps) {
@@ -62,9 +68,9 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
       } else {
         setErrorMessage(res.error || "Deployment execution failed on VPS.");
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "Network error while triggering deployment.");
-      setLogs((prev) => [...prev, `CRITICAL: ${err.message}`]);
+    } catch (err: unknown) {
+      setErrorMessage(errorMessageOf(err) || "Network error while triggering deployment.");
+      setLogs((prev) => [...prev, `CRITICAL: ${errorMessageOf(err)}`]);
     } finally {
       setRunningDeployId(null);
     }
@@ -89,10 +95,10 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
     formData.append("file", file);
 
     try {
-      const uploadRes: any = await uploadSiteArchive(formData);
+      const uploadRes = await uploadSiteArchive(formData);
 
-      if (!uploadRes.success || !uploadRes.uploadId) {
-        throw new Error(uploadRes.error || "Failed to save file on server");
+      if (!("success" in uploadRes) || !uploadRes.success || !uploadRes.path) {
+        throw new Error(("error" in uploadRes && uploadRes.error) || "Failed to save file on server");
       }
 
       const uploadId = uploadRes.uploadId;
@@ -104,12 +110,8 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
 
       setManualStatus("DEPLOYING");
 
-      // We trigger deploy using full pipeline
-      const deployRes = await fetch("/api/admin/deploy-direct", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ siteId: selectedSite, uploadId }),
-      }).then((r) => r.json()).catch(() => null);
+      // Deploy the extracted static files to the selected site
+      const deployRes = await deploySite(selectedSite, uploadRes.path).catch(() => null);
 
       if (deployRes && deployRes.success) {
         setManualStatus("SUCCESS");
@@ -119,10 +121,10 @@ export function DeployManager({ sites, pendingDeployments = [] }: DeployManagerP
         setErrorMessage(deployRes?.error || "Automated deployment completed with errors. See logs.");
         if (deployRes?.logs) setLogs(deployRes.logs);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setManualStatus("ERROR");
-      setErrorMessage(err.message || "Manual upload failed");
-      setLogs((prev) => [...prev, `ERROR: ${err.message}`]);
+      setErrorMessage(errorMessageOf(err) || "Manual upload failed");
+      setLogs((prev) => [...prev, `ERROR: ${errorMessageOf(err)}`]);
     }
   }
 

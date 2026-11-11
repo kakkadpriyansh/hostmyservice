@@ -8,6 +8,9 @@ import prisma from "@/lib/prisma";
 import { siteIdSchema, domainSchema } from "@/lib/validations";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { safeUserSelect } from "@/lib/authz";
+import path from "path";
+import os from "os";
 
 interface DeployResult {
   success: boolean;
@@ -28,6 +31,14 @@ export async function deploySite(siteId: string, sourcePath: string): Promise<De
   if (!siteIdResult.success) {
     return { success: false, error: "Invalid Site ID" };
   }
+
+  // sourcePath comes from the client: only allow folders created by uploadSiteArchive
+  const uploadsRoot = path.resolve(os.tmpdir(), "hostmyservice", "uploads");
+  const resolvedSource = path.resolve(String(sourcePath || ""));
+  if (!resolvedSource.startsWith(uploadsRoot + path.sep)) {
+    return { success: false, error: "Invalid source path" };
+  }
+  sourcePath = resolvedSource;
 
   const logs: string[] = [];
   
@@ -144,8 +155,8 @@ export async function deploySite(siteId: string, sourcePath: string): Promise<De
     
     return { success: true, message: "Deployment successful", logs };
 
-  } catch (error: any) {
-    const errorMsg = error.message || "Unknown error";
+  } catch (error: unknown) {
+    const errorMsg = (error instanceof Error && error.message) || "Unknown error";
     await logStep("Error", `Deployment failed: ${errorMsg}`, "FAILED");
     
     await prisma.deployment.update({
@@ -175,7 +186,7 @@ export async function getPendingDeployments() {
       include: {
         site: {
           include: {
-            user: true,
+            user: { select: safeUserSelect },
             subscription: {
               include: {
                 plan: true,
@@ -192,9 +203,9 @@ export async function getPendingDeployments() {
     });
 
     return { success: true, data: deployments };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch pending deployments:", error);
-    return { success: false, error: error.message || "Failed to fetch deployments" };
+    return { success: false, error: (error instanceof Error && error.message) || "Failed to fetch deployments" };
   }
 }
 

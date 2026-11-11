@@ -43,7 +43,7 @@ export async function createPlan(data: {
         features: data.features,
         requiresEnv: !!data.requiresEnv,
         providesDb: !!data.providesDb,
-        dbType: (data.dbType as any) || "NONE",
+        dbType: data.dbType || "NONE",
         autoRenew: !!data.autoRenew,
         autoRenewPlanId: data.autoRenewPlanId,
       },

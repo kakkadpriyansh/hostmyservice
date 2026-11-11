@@ -1,5 +1,7 @@
 "use server";
 
+import { getAdminSession } from "@/lib/authz";
+
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
@@ -13,6 +15,9 @@ export async function createUser(data: {
   password?: string;
   role?: "USER" | "ADMIN";
 }) {
+  if (!(await getAdminSession())) {
+    return { success: false, error: "Unauthorized" };
+  }
   const validation = userSchema.safeParse(data);
   if (!validation.success) {
     return { success: false, error: validation.error.message };

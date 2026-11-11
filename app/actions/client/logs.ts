@@ -59,7 +59,7 @@ export async function getClientDeploymentLogs(
       success: true,
       data: {
         deploymentId: deployment.id,
-        status: deployment.status as any,
+        status: deployment.status,
         type: deployment.type,
         createdAt: deployment.createdAt.toISOString(),
         logs: deployment.logs.map((log) => ({
@@ -71,7 +71,7 @@ export async function getClientDeploymentLogs(
         })),
       },
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Failed to fetch client deployment logs:", error);
     return { success: false, error: "Failed to load deployment logs" };
   }

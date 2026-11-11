@@ -1,118 +1,157 @@
 import crypto from "crypto";
 import { SSHClient } from "@/lib/ssh-client";
+import { shortHash } from "@/lib/shell";
 
-function sanitizeName(domain: string): string {
-  return domain.replace(/[.\-]/g, "_").substring(0, 48);
-}
+/**
+ * Database provisioning for customer sites.
+ *
+ * Security model:
+ * - Every database listens on 127.0.0.1 only. Customer apps run on the same
+ *   VPS, so they connect locally; nothing is exposed to the internet.
+ * - Every database requires a username and password.
+ * - Names include a hash of the full domain, so two domains can never map to
+ *   the same database or user (e.g. priyansh.prnexgen.in vs priyansh.prnexgen.com).
+ *
+ * Generated names and passwords only contain [a-z0-9_] / [A-Za-z0-9], so they
+ * are safe to interpolate into the shell commands below.
+ */
 
-function sanitizeUsername(domain: string): string {
-  return domain.replace(/[.\-]/g, "_").substring(0, 16);
-}
+const DB_HOST = "127.0.0.1";
 
 function generatePassword(): string {
-  return crypto.randomBytes(12).toString("base64").replace(/[^a-zA-Z0-9]/g, "").substring(0, 16);
+  // 24 alphanumeric chars (~143 bits)
+  return crypto.randomBytes(32).toString("base64").replace(/[^a-zA-Z0-9]/g, "").substring(0, 24);
 }
 
 export class DbProvisioner {
   private ssh: SSHClient;
-  private serverHost: string;
 
-  constructor(ssh: SSHClient, serverHost: string = "localhost") {
+  constructor(ssh: SSHClient) {
     this.ssh = ssh;
-    this.serverHost = serverHost;
   }
 
-  /**
-   * Finds a free port on the VPS starting from a base port (e.g. 27018 for separate Mongo instances).
-   */
+  static generateCredentials(domain: string): { dbName: string; username: string; password: string } {
+    const hash = shortHash(domain, 10);
+    const readable = domain.replace(/[^a-z0-9]/g, "_").substring(0, 20);
+    return {
+      dbName: `${readable}_${hash}`, // <= 31 chars
+      username: `u_${hash}`, // 12 chars, fits MySQL's 32-char limit
+      password: generatePassword(),
+    };
+  }
+
+  /** Finds a port nothing is listening on, starting from `startPort`. */
   async findFreePort(startPort: number = 27018): Promise<number> {
-    for (let port = startPort; port < startPort + 100; port++) {
+    for (let port = startPort; port < startPort + 200; port++) {
       const check = await this.ssh.execCommand(
-        `ss -tlnp 2>/dev/null | grep -qE "[:.]${port}\\b" && echo "in_use" || echo "free"`
+        `ss -tlnH 2>/dev/null | awk '{print $4}' | grep -qE "[:.]${port}$" && echo "in_use" || echo "free"`
       );
       if (check.stdout.trim() === "free") {
         return port;
       }
     }
-    return startPort;
+    throw new Error(`No free port found between ${startPort} and ${startPort + 199}`);
   }
 
   /**
-   * Port-wise MongoDB Provisioning:
-   * 1. Finds a dedicated unused port (e.g., 27018, 27019, 27020...)
-   * 2. Creates dedicated data directory `/var/lib/mongodb_instances/${dbName}`
-   * 3. Creates dedicated log file `/var/log/mongodb/${dbName}.log`
-   * 4. Spawns mongod on that custom port via PM2 or systemd daemon
-   * 5. Sets up administrative & user credentials for that specific port instance
-   * 6. Returns direct external connection string: mongodb://user:pass@HOST:PORT/dbName
+   * Dedicated mongod instance per site, managed by PM2 so it survives reboots.
+   * 1. Start a temporary instance without auth, bound to localhost only
+   * 2. Create the site's user, then shut the temporary instance down
+   * 3. Start the permanent instance with --auth under PM2
    */
   async provisionMongoDBPortWise(dbName: string, username: string, password: string): Promise<string> {
     const port = await this.findFreePort(27018);
     const dataDir = `/var/lib/mongodb_instances/${dbName}`;
     const logDir = `/var/log/mongodb`;
     const logFile = `${logDir}/${dbName}.log`;
+    const pm2Name = `mongo-${dbName}`;
 
-    // 1. Prepare directories
     await this.ssh.execCommand(`sudo mkdir -p ${dataDir} ${logDir}`);
-    await this.ssh.execCommand(`sudo chown -R $USER:$USER ${dataDir} ${logDir} 2>/dev/null || sudo chown -R mongodb:mongodb ${dataDir}`);
 
-    // 2. Start dedicated instance with PM2 or background mongod
-    const pm2Check = await this.ssh.execCommand("which pm2");
-    const hasPm2 = pm2Check.code === 0;
+    // Run mongod as the `mongodb` system user when it exists, never as root
+    const hasMongoUser = (await this.ssh.execCommand(`id -u mongodb >/dev/null 2>&1 && echo yes`)).stdout.includes("yes");
+    if (hasMongoUser) {
+      await this.ssh.execCommand(`sudo chown -R mongodb:mongodb ${dataDir} ${logDir}`);
+    }
+    const asMongo = hasMongoUser ? "sudo -u mongodb " : "";
 
-    // Start mongod as an independent background daemon process
-    await this.ssh.execCommand(
-      `mongod --port ${port} --dbpath ${dataDir} --logpath ${logFile} --bind_ip 0.0.0.0 --fork`
+    // 1. Temporary instance (localhost only, no auth) to create the first user
+    const start = await this.ssh.execCommand(
+      `${asMongo}mongod --port ${port} --dbpath ${dataDir} --logpath ${logFile} --bind_ip 127.0.0.1 --fork`
     );
-
-    // Wait 2 seconds for mongod to initialize port
-    // Ensure the newly spawned MongoDB port is allowed through the VPS firewall
-    await this.ssh.execCommand(`sudo ufw allow ${port}/tcp 2>/dev/null || sudo iptables -A INPUT -p tcp --dport ${port} -j ACCEPT 2>/dev/null`);
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // 3. Create user credentials on the dedicated port instance
-    const createUserCmd = `mongosh --port ${port} --quiet --eval "db.getSiblingDB('${dbName}').createUser({user: '${username}', pwd: '${password}', roles: [{role: 'readWrite', db: '${dbName}'}, {role: 'dbAdmin', db: '${dbName}'}]})"`;
-    const result = await this.ssh.execCommand(createUserCmd);
-
-    if (result.code !== 0 && result.stderr && !result.stderr.includes("already exists")) {
-      // Non-fatal fallback check: retry once in admin auth context
-      console.warn(`Initial mongosh on port ${port} warning: ${result.stderr}`);
+    if (start.code !== 0) {
+      throw new Error(`Failed to start MongoDB on port ${port}: ${start.stderr || start.stdout}`);
     }
 
-    const host = this.serverHost || "localhost";
-    return `mongodb://${username}:${password}@${host}:${port}/${dbName}`;
+    try {
+      // 2. Create the site's user
+      const createUser = await this.ssh.execCommand(
+        `mongosh --port ${port} --quiet --eval "db.getSiblingDB('${dbName}').createUser({user: '${username}', pwd: '${password}', roles: [{role: 'readWrite', db: '${dbName}'}, {role: 'dbAdmin', db: '${dbName}'}]})"`
+      );
+      if (createUser.code !== 0 && !`${createUser.stderr}${createUser.stdout}`.includes("already exists")) {
+        throw new Error(`Failed to create MongoDB user: ${createUser.stderr || createUser.stdout}`);
+      }
+    } finally {
+      await this.ssh.execCommand(`${asMongo}mongod --dbpath ${dataDir} --shutdown`);
+    }
+
+    // 3. Permanent instance with authentication, managed by PM2
+    const pm2Uid = hasMongoUser ? "--uid mongodb --gid mongodb " : "";
+    await this.ssh.execCommand(`pm2 delete ${pm2Name} 2>/dev/null || true`);
+    const pm2Start = await this.ssh.execCommand(
+      `pm2 start "$(command -v mongod)" --name ${pm2Name} --interpreter none ${pm2Uid}-- --port ${port} --dbpath ${dataDir} --logpath ${logFile} --logappend --bind_ip 127.0.0.1 --auth`
+    );
+    if (pm2Start.code !== 0) {
+      throw new Error(`Failed to start MongoDB under PM2: ${pm2Start.stderr || pm2Start.stdout}`);
+    }
+    await this.ssh.execCommand(`pm2 save`);
+
+    return `mongodb://${username}:${password}@${DB_HOST}:${port}/${dbName}?authSource=${dbName}`;
   }
 
   async provisionMySQL(dbName: string, username: string, password: string): Promise<string> {
-    const cmd = `mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`${dbName}\`; CREATE USER IF NOT EXISTS '${username}'@'%' IDENTIFIED BY '${password}'; GRANT ALL PRIVILEGES ON \`${dbName}\`.* TO '${username}'@'%'; FLUSH PRIVILEGES;"`;
-    const result = await this.ssh.execCommand(cmd);
-    if (result.code !== 0 && result.stderr && !result.stderr.toLowerCase().includes("warning")) {
-      throw new Error(`MySQL provisioning failed: ${result.stderr}`);
+    // ALTER USER makes this safe to re-run: the returned password is always the active one
+    const sql = [
+      `CREATE DATABASE IF NOT EXISTS \\\`${dbName}\\\``,
+      ...["localhost", "127.0.0.1"].flatMap((host) => [
+        `CREATE USER IF NOT EXISTS '${username}'@'${host}' IDENTIFIED BY '${password}'`,
+        `ALTER USER '${username}'@'${host}' IDENTIFIED BY '${password}'`,
+        `GRANT ALL PRIVILEGES ON \\\`${dbName}\\\`.* TO '${username}'@'${host}'`,
+      ]),
+      `FLUSH PRIVILEGES`,
+    ].join("; ");
+
+    const result = await this.ssh.execCommand(`sudo mysql -u root -e "${sql};"`);
+    if (result.code !== 0) {
+      throw new Error(`MySQL provisioning failed: ${result.stderr || result.stdout}`);
     }
-    const host = this.serverHost || "localhost";
-    return `mysql://${username}:${password}@${host}:3306/${dbName}`;
+    return `mysql://${username}:${password}@${DB_HOST}:3306/${dbName}`;
   }
 
   async provisionPostgreSQL(dbName: string, username: string, password: string): Promise<string> {
-    const createUser = `psql -U postgres -c "CREATE USER ${username} WITH PASSWORD '${password}';"`;
-    const createDb = `psql -U postgres -c "CREATE DATABASE ${dbName} OWNER ${username};"`;
-    const r1 = await this.ssh.execCommand(createUser);
-    if (r1.code !== 0 && r1.stderr && !r1.stderr.includes("already exists")) {
-      throw new Error(`PostgreSQL user creation failed: ${r1.stderr}`);
-    }
-    const r2 = await this.ssh.execCommand(createDb);
-    if (r2.code !== 0 && r2.stderr && !r2.stderr.includes("already exists")) {
-      throw new Error(`PostgreSQL database creation failed: ${r2.stderr}`);
-    }
-    const host = this.serverHost || "localhost";
-    return `postgresql://${username}:${password}@${host}:5432/${dbName}`;
-  }
+    const psql = (sql: string) =>
+      this.ssh.execCommand(`sudo -u postgres psql -v ON_ERROR_STOP=1 -c "${sql}"`);
 
-  static generateCredentials(domain: string): { dbName: string; username: string; password: string } {
-    const dbName = sanitizeName(domain);
-    const username = sanitizeUsername(domain);
-    const password = generatePassword();
-    return { dbName, username, password };
+    // Create the role, or reset its password if it already exists
+    const createUser = await psql(`CREATE ROLE ${username} WITH LOGIN PASSWORD '${password}';`);
+    if (createUser.code !== 0) {
+      if (!createUser.stderr.includes("already exists")) {
+        throw new Error(`PostgreSQL user creation failed: ${createUser.stderr}`);
+      }
+      const alter = await psql(`ALTER ROLE ${username} WITH LOGIN PASSWORD '${password}';`);
+      if (alter.code !== 0) {
+        throw new Error(`PostgreSQL password update failed: ${alter.stderr}`);
+      }
+    }
+
+    const createDb = await psql(`CREATE DATABASE ${dbName} OWNER ${username};`);
+    if (createDb.code !== 0 && !createDb.stderr.includes("already exists")) {
+      throw new Error(`PostgreSQL database creation failed: ${createDb.stderr}`);
+    }
+
+    // Other tenants must not be able to connect to this database
+    await psql(`REVOKE ALL ON DATABASE ${dbName} FROM PUBLIC;`);
+
+    return `postgresql://${username}:${password}@${DB_HOST}:5432/${dbName}`;
   }
 }

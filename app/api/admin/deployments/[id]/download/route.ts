@@ -11,35 +11,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log("=== DOWNLOAD ROUTE DEBUG ===");
-    console.log("Request headers:", Object.fromEntries(req.headers.entries()));
-    
     const session = await getServerSession(authOptions);
-    console.log("Full session object:", JSON.stringify(session, null, 2));
-
-    if (!session) {
-      console.log("❌ No session found");
-      return new NextResponse("No session found", { status: 401 });
+    if (!session?.user?.id) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
-
-    if (!session.user) {
-      console.log("❌ No user in session");
-      return new NextResponse("No user in session", { status: 401 });
-    }
-
-    if (!session.user.id) {
-      console.log("❌ No user ID in session");
-      return new NextResponse("No user ID in session", { status: 401 });
-    }
-
-    console.log(`✅ User found: ${session.user.id}, Role: ${session.user.role}`);
-
     if (session.user.role !== "ADMIN") {
-      console.log(`❌ User role is ${session.user.role}, expected ADMIN`);
-      return new NextResponse(`Access denied. User role: ${session.user.role}`, { status: 403 });
+      return new NextResponse("Forbidden", { status: 403 });
     }
-
-    console.log("✅ Admin access granted for user:", session.user.id);
 
     const { id } = await params;
     const deploymentId = id;

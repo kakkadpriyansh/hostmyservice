@@ -1,15 +1,24 @@
-import { env } from "@/lib/env";
-
 type LogLevel = "info" | "warn" | "error" | "debug";
+type LogMeta = Record<string, unknown>;
+
+// JSON.stringify turns Error objects into {}; keep their name and message
+function serialize(meta: LogMeta): LogMeta {
+  return Object.fromEntries(
+    Object.entries(meta).map(([key, value]) => [
+      key,
+      value instanceof Error ? { name: value.name, message: value.message } : value,
+    ])
+  );
+}
 
 class Logger {
-  private log(level: LogLevel, message: string, meta?: any) {
+  private log(level: LogLevel, message: string, meta?: LogMeta) {
     const timestamp = new Date().toISOString();
     const logData = {
       timestamp,
       level,
       message,
-      ...(meta && { meta }),
+      ...(meta && { meta: serialize(meta) }),
     };
 
     if (process.env.NODE_ENV === "development") {
@@ -29,19 +38,19 @@ class Logger {
     }
   }
 
-  info(message: string, meta?: any) {
+  info(message: string, meta?: LogMeta) {
     this.log("info", message, meta);
   }
 
-  warn(message: string, meta?: any) {
+  warn(message: string, meta?: LogMeta) {
     this.log("warn", message, meta);
   }
 
-  error(message: string, meta?: any) {
+  error(message: string, meta?: LogMeta) {
     this.log("error", message, meta);
   }
 
-  debug(message: string, meta?: any) {
+  debug(message: string, meta?: LogMeta) {
     this.log("debug", message, meta);
   }
 }

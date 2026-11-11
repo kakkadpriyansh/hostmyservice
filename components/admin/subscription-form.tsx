@@ -6,14 +6,16 @@ import { getUsers } from "@/app/actions/admin/users";
 import { getPlans } from "@/app/actions/admin/plans";
 import { X } from "lucide-react";
 
+type PlanOption = { id: string; name: string; price: number; duration: number };
+
 interface SubscriptionFormProps {
   onClose: () => void;
 }
 
 export function SubscriptionForm({ onClose }: SubscriptionFormProps) {
   const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState<any[]>([]);
-  const [plans, setPlans] = useState<any[]>([]);
+  const [users, setUsers] = useState<Awaited<ReturnType<typeof getUsers>>>([]);
+  const [plans, setPlans] = useState<PlanOption[]>([]);
   
   const [formData, setFormData] = useState({
     userId: "",

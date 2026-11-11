@@ -11,7 +11,7 @@ export default async function DashboardOverview() {
 
   const totalSubscriptions = subscriptions.length;
   // Active Deployments: Sites that are set up and have a server IP assigned
-  const activeDeployments = subscriptions.filter(s => (s.site as any)?.serverIp).length;
+  const activeDeployments = subscriptions.filter(s => s.site?.serverIp).length;
   
   // Calculate expiring soon (e.g. within 7 days)
   const expiringSoon = subscriptions.filter(s => {
@@ -56,7 +56,7 @@ export default async function DashboardOverview() {
             Welcome back, {session?.user?.name || "User"}
           </h1>
           <p className="mt-2 text-sm text-gray-400">
-            Here's what's happening with your projects today.
+            Here&apos;s what&apos;s happening with your projects today.
           </p>
         </div>
         <Link

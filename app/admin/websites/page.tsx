@@ -53,7 +53,7 @@ export default async function WebsitesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 bg-transparent">
-              {websites?.map((site: any) => (
+              {websites?.map((site) => (
                 <tr key={site.id} className="hover:bg-white/5 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">

@@ -8,6 +8,13 @@ import { v4 as uuidv4 } from "uuid";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { headers } from "next/headers";
+import crypto from "crypto";
+import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
+
+// Only a hash of the reset token is stored, so a database leak can't be used to reset passwords
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const hashResetToken = (token: string) => crypto.createHash("sha256").update(token).digest("hex");
 
 export async function registerUser(data: z.infer<typeof registerSchema>) {
   const result = registerSchema.safeParse(data);
@@ -46,6 +53,15 @@ export async function registerUser(data: z.infer<typeof registerSchema>) {
 }
 
 export async function forgotPassword(email: string) {
+  // Each call sends an email, so cap it per address and per client IP
+  const ip = clientIpFromHeaders(await headers());
+  if (
+    !rateLimit(`forgot:email:${String(email).toLowerCase()}`, 3, 60 * 60 * 1000) ||
+    !rateLimit(`forgot:ip:${ip}`, 10, 60 * 60 * 1000)
+  ) {
+    return { success: false, error: "Too many requests. Please try again later." };
+  }
+
   try {
     const user = await prisma.user.findUnique({
       where: { email },
@@ -62,7 +78,7 @@ export async function forgotPassword(email: string) {
     await prisma.user.update({
       where: { email },
       data: {
-        resetToken,
+        resetToken: hashResetToken(resetToken),
         resetTokenExpiry,
       },
     });
@@ -77,10 +93,18 @@ export async function forgotPassword(email: string) {
 }
 
 export async function resetPassword(token: string, password: string) {
+  const parsed = registerSchema.shape.password.safeParse(password);
+  if (!parsed.success || typeof token !== "string" || !token) {
+    return { success: false, error: "Invalid or expired token" };
+  }
+
   try {
     const user = await prisma.user.findFirst({
       where: {
-        resetToken: token,
+        // Links sent before tokens were hashed hold a plain UUID stored as-is (valid
+        // for up to 1 hour). Only UUID-shaped input may match a stored value directly,
+        // so a leaked hash can never be used as a token.
+        resetToken: { in: UUID_REGEX.test(token) ? [hashResetToken(token), token] : [hashResetToken(token)] },
         resetTokenExpiry: {
           gt: new Date(),
         },
