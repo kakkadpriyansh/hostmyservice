@@ -108,3 +108,50 @@ export const changePasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmNewPassword"],
   });
+
+// ─── Affiliate program ───────────────────────────────────────────────────────
+
+export const affiliateApplicationSchema = z.object({
+  website: z
+    .string()
+    .trim()
+    .url("Enter a full URL, e.g. https://github.com/you")
+    .max(300)
+    .refine((u) => /^https?:\/\//i.test(u), "Use an http(s) link"),
+  promotionPlan: z
+    .string()
+    .trim()
+    .min(30, "Tell us a little more (at least 30 characters)")
+    .max(2000),
+  acceptTerms: z.literal(true, { message: "You must accept the affiliate terms" }),
+});
+
+export const payoutDetailsSchema = z.discriminatedUnion("payoutMethod", [
+  z.object({
+    payoutMethod: z.literal("UPI"),
+    upiId: z
+      .string()
+      .trim()
+      .regex(/^[a-zA-Z0-9._-]{2,256}@[a-zA-Z][a-zA-Z0-9]{1,63}$/, "Invalid UPI ID, e.g. name@okhdfcbank"),
+  }),
+  z.object({
+    payoutMethod: z.literal("BANK"),
+    bankAccountName: z.string().trim().min(2, "Account holder name is required").max(100),
+    bankAccountNumber: z.string().trim().regex(/^\d{9,18}$/, "Account number must be 9–18 digits"),
+    bankIfsc: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC, e.g. HDFC0001234"),
+  }),
+]);
+
+export const affiliateSettingsSchema = z.object({
+  programEnabled: z.boolean(),
+  applicationsOpen: z.boolean(),
+  defaultCommissionRate: z.number().min(0).max(100),
+  commissionScope: z.enum(["FIRST_PAYMENT", "ALL_PAYMENTS"]),
+  minPayoutRupees: z.number().int().min(1).max(10_000_000),
+  holdDays: z.number().int().min(0).max(365),
+  cookieDays: z.number().int().min(1).max(365),
+});

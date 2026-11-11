@@ -42,6 +42,8 @@ customer code must never run with the privileges of the control plane.
 | `lib/db-provisioner.ts` | Per-site MongoDB / MySQL / PostgreSQL |
 | `lib/site-control.ts` | Suspend / resume sites, subscription expiry |
 | `lib/subscriptions.ts` | Idempotent payment activation |
+| `lib/affiliate.ts` | Affiliate program: commissions, balances, payouts |
+| `app/r/[code]` | Public affiliate referral links |
 | `lib/ssl.ts` | certbot |
 | `lib/nginx-config.ts` | nginx server blocks |
 | `lib/zip.ts` | Safe ZIP extraction |
@@ -66,5 +68,6 @@ See [security.md](security.md) for the rules.
 ## Key flows
 
 - **Purchase** → [payments.md](payments.md)
+- **Referrals and payouts** → [affiliate-program.md](affiliate-program.md)
 - **Deploy** → [deployment-pipeline.md](deployment-pipeline.md)
 - **Expiry and suspension** → [deployment-pipeline.md](deployment-pipeline.md#suspension-and-expiry)

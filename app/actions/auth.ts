@@ -8,7 +8,8 @@ import { v4 as uuidv4 } from "uuid";
 import { sendPasswordResetEmail } from "@/lib/email";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
+import { REFERRAL_COOKIE, AFFILIATE_CODE_REGEX, getAffiliateSettings } from "@/lib/affiliate";
 import crypto from "crypto";
 import { rateLimit, clientIpFromHeaders } from "@/lib/rate-limit";
 
@@ -35,6 +36,7 @@ export async function registerUser(data: z.infer<typeof registerSchema>) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const referredByAffiliateId = await resolveReferral();
 
     await prisma.user.create({
       data: {
@@ -42,14 +44,29 @@ export async function registerUser(data: z.infer<typeof registerSchema>) {
         email,
         password: hashedPassword,
         role: "USER",
+        referredByAffiliateId,
       },
     });
+
+    if (referredByAffiliateId) {
+      (await cookies()).delete(REFERRAL_COOKIE);
+    }
 
     return { success: true };
   } catch (error) {
     console.error("Registration error:", error);
     return { success: false, error: "Something went wrong" };
   }
+}
+
+/** Affiliate that referred this visitor (from the /r/<code> cookie), if still eligible. */
+async function resolveReferral(): Promise<string | null> {
+  const code = (await cookies()).get(REFERRAL_COOKIE)?.value;
+  if (!code || !AFFILIATE_CODE_REGEX.test(code)) return null;
+  const settings = await getAffiliateSettings();
+  if (!settings.programEnabled) return null;
+  const affiliate = await prisma.affiliate.findUnique({ where: { code }, select: { id: true, status: true } });
+  return affiliate?.status === "APPROVED" ? affiliate.id : null;
 }
 
 export async function forgotPassword(email: string) {

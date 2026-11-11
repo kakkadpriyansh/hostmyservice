@@ -21,6 +21,7 @@ affected them and what the code does instead. "Existing" means created before
 | Password reset links | Tokens are stored hashed | Links emailed before the upgrade keep working until they expire (1 hour) |
 | Deployment queue | A running build blocks a new deploy | Old queued deployments that never ran no longer block anything: a new upload replaces them |
 | Login | Rate-limited | 10 failed attempts per 15 minutes per account; normal use is unaffected |
+| Affiliate program | Approved affiliates earn on referred customers | Users who signed up before can't be attributed to an affiliate; nothing changes until an admin approves someone |
 
 ## What existing customers will still see
 

@@ -58,6 +58,9 @@ Razorpay Subscription instead of an Order.
 
 After the transaction, a site suspended for expiry is resumed.
 
+It also creates the referral commission, if the customer was referred by an
+approved affiliate (see [affiliate-program.md](affiliate-program.md)).
+
 **Never create a `Subscription` for a payment anywhere else.**
 
 ## Admin "Force Activate"

@@ -16,6 +16,7 @@ Everything is in [`docs/`](docs/README.md):
 - [Security audit, November 2026](docs/security-audit-2026-11.md): **contains manual steps that still need to be done on production**
 - [Customer deployment pipeline](docs/deployment-pipeline.md)
 - [Payments and subscriptions](docs/payments.md)
+- [Developer affiliate program](docs/affiliate-program.md)
 - [Operations](docs/operations.md): VPS setup, deploying, cron, runbook
 - [Environment variables](docs/environment.md)
 - [Database](docs/database.md)

@@ -9,27 +9,33 @@ generator client {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  password      String?
-  image         String?
-  phoneNumber   String?
-  address       String?
-  city          String?
-  state         String?
-  postalCode    String?
-  country       String?
-  role          Role      @default(USER)
-  resetToken    String?
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  password         String?
+  image            String?
+  phoneNumber      String?
+  address          String?
+  city             String?
+  state            String?
+  postalCode       String?
+  country          String?
+  role             Role      @default(USER)
+  resetToken       String?
   resetTokenExpiry DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime? // Soft delete
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime? // Soft delete
 
   sites         Site[]
   payments      Payment[]
   subscriptions Subscription[]
+
+  // Affiliate program
+  affiliate             Affiliate?   @relation("AffiliateAccount")
+  referredByAffiliateId String? // Set once, at sign-up, from the referral cookie
+  referredBy            Affiliate?   @relation("ReferredBy", fields: [referredByAffiliateId], references: [id])
+  commissionsGenerated  Commission[] @relation("ReferredUserCommissions")
 }
 
 enum Role {
@@ -45,29 +51,29 @@ enum DbType {
 }
 
 model Site {
-  id            String    @id @default(cuid())
-  domain        String    @unique // Primary domain (e.g., example.com)
-  serverPath    String?   // Path on VPS (e.g., /var/www/example.com)
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  status        SiteStatus @default(ACTIVE)
-  sslStatus     SslStatus  @default(NONE)
-  subscriptionId String?   @unique
-  subscription  Subscription? @relation(fields: [subscriptionId], references: [id])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime? // Soft delete
-  serverIp      String?   // Assigned by Admin
-  envVars       String?   @db.Text
-  dbConnection  String?
-  appPort       Int?      @unique // Port the site's Node.js app listens on (reused across redeploys)
-  suspendReason String?   // "EXPIRED" (auto, lifted on renewal) or "ADMIN" (manual)
+  id             String        @id @default(cuid())
+  domain         String        @unique // Primary domain (e.g., example.com)
+  serverPath     String? // Path on VPS (e.g., /var/www/example.com)
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  status         SiteStatus    @default(ACTIVE)
+  sslStatus      SslStatus     @default(NONE)
+  subscriptionId String?       @unique
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  deletedAt      DateTime? // Soft delete
+  serverIp       String? // Assigned by Admin
+  envVars        String?       @db.Text
+  dbConnection   String?
+  appPort        Int?          @unique // Port the site's Node.js app listens on (reused across redeploys)
+  suspendReason  String? // "EXPIRED" (auto, lifted on renewal) or "ADMIN" (manual)
   // Run the site's build and app as its own Linux user. New sites get true;
   // sites created before Nov 2026 stay false (run as root, as before) until an
   // admin opts them in with scripts/isolate-site.ts.
-  runAsSiteUser Boolean   @default(false)
+  runAsSiteUser  Boolean       @default(false)
 
-  deployments   Deployment[]
+  deployments Deployment[]
 }
 
 enum SslStatus {
@@ -84,33 +90,33 @@ enum SiteStatus {
 }
 
 model Deployment {
-  id            String    @id @default(cuid())
-  siteId        String
-  site          Site      @relation(fields: [siteId], references: [id])
-  status        DeployStatus @default(PENDING)
-  type          DeploymentType @default(ZIP)
-  uploadPath    String?   // Path to the extracted files
-  archivePath   String?   // Path to the original zip file
-  driveFileId   String?   // Google Drive file ID
-  gitRepoUrl    String?
-  gitBranch     String?
-  logs          DeploymentLog[]
-  createdAt     DateTime  @default(now())
+  id          String          @id @default(cuid())
+  siteId      String
+  site        Site            @relation(fields: [siteId], references: [id])
+  status      DeployStatus    @default(PENDING)
+  type        DeploymentType  @default(ZIP)
+  uploadPath  String? // Path to the extracted files
+  archivePath String? // Path to the original zip file
+  driveFileId String? // Google Drive file ID
+  gitRepoUrl  String?
+  gitBranch   String?
+  logs        DeploymentLog[]
+  createdAt   DateTime        @default(now())
   // No soft delete needed for logs usually, but BRD said "All tables"
   // Let's add it to be safe, or assume logs are immutable history.
   // BRD: "All tables must include... Soft delete support"
-  deletedAt     DateTime?
+  deletedAt   DateTime?
 }
 
 model DeploymentLog {
-  id            String    @id @default(cuid())
-  deploymentId  String
-  deployment    Deployment @relation(fields: [deploymentId], references: [id])
-  step          String
-  output        String    @db.Text
-  status        String    // SUCCESS, FAILED, PENDING
-  timestamp     DateTime  @default(now())
-  deletedAt     DateTime?
+  id           String     @id @default(cuid())
+  deploymentId String
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  step         String
+  output       String     @db.Text
+  status       String // SUCCESS, FAILED, PENDING
+  timestamp    DateTime   @default(now())
+  deletedAt    DateTime?
 }
 
 enum DeployStatus {
@@ -126,44 +132,44 @@ enum DeploymentType {
 }
 
 model Plan {
-  id          String   @id @default(cuid())
-  name        String
-  price       Float
-  price2Years Float?   // Optional price for 2 years
-  price3Years Float?   // Optional price for 3 years
-  duration    Int      // Duration in days
-  description String?
-  features    String[]
-  isActive    Boolean  @default(true)
-  requiresEnv Boolean  @default(false)
-  providesDb  Boolean  @default(false)
-  dbType      DbType   @default(NONE)
-  autoRenew   Boolean  @default(false)
+  id              String    @id @default(cuid())
+  name            String
+  price           Float
+  price2Years     Float? // Optional price for 2 years
+  price3Years     Float? // Optional price for 3 years
+  duration        Int // Duration in days
+  description     String?
+  features        String[]
+  isActive        Boolean   @default(true)
+  requiresEnv     Boolean   @default(false)
+  providesDb      Boolean   @default(false)
+  dbType          DbType    @default(NONE)
+  autoRenew       Boolean   @default(false)
   autoRenewPlanId String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  deletedAt     DateTime?
-  
-  payments    Payment[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  payments      Payment[]
   subscriptions Subscription[]
 }
 
 model Subscription {
-  id            String    @id @default(cuid())
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  planId        String
-  plan          Plan      @relation(fields: [planId], references: [id])
-  startDate     DateTime
-  endDate       DateTime
-  autoRenew     Boolean  @default(false)
-  status        SubscriptionStatus @default(ACTIVE)
-  razorpaySubscriptionId String? @unique
-  site          Site?
-  payments      Payment[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+  id                     String             @id @default(cuid())
+  userId                 String
+  user                   User               @relation(fields: [userId], references: [id])
+  planId                 String
+  plan                   Plan               @relation(fields: [planId], references: [id])
+  startDate              DateTime
+  endDate                DateTime
+  autoRenew              Boolean            @default(false)
+  status                 SubscriptionStatus @default(ACTIVE)
+  razorpaySubscriptionId String?            @unique
+  site                   Site?
+  payments               Payment[]
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  deletedAt              DateTime?
 }
 
 enum SubscriptionStatus {
@@ -173,30 +179,141 @@ enum SubscriptionStatus {
 }
 
 model Payment {
-  id                String    @id @default(cuid())
-  userId            String
-  user              User      @relation(fields: [userId], references: [id])
-  planId            String?
-  plan              Plan?     @relation(fields: [planId], references: [id])
-  subscriptionId    String?
-  subscription      Subscription? @relation(fields: [subscriptionId], references: [id])
-  amount            Float
-  currency          String    @default("INR")
-  status            PaymentStatus @default(PENDING)
-  razorpayOrderId   String?   @unique
-  razorpayPaymentId String?   @unique
+  id                     String        @id @default(cuid())
+  userId                 String
+  user                   User          @relation(fields: [userId], references: [id])
+  planId                 String?
+  plan                   Plan?         @relation(fields: [planId], references: [id])
+  subscriptionId         String?
+  subscription           Subscription? @relation(fields: [subscriptionId], references: [id])
+  amount                 Float
+  currency               String        @default("INR")
+  status                 PaymentStatus @default(PENDING)
+  razorpayOrderId        String?       @unique
+  razorpayPaymentId      String?       @unique
   razorpaySubscriptionId String?
-  razorpaySignature String?
-  invoiceNumber     String?   @unique
-  gstNumber         String?   // Optional GST number for invoice
-  gstAmount         Float?    // Optional GST amount
-  durationYears     Int       @default(1) // Duration in years (1, 2, 3)
-  createdAt         DateTime  @default(now())
-  deletedAt         DateTime?
+  razorpaySignature      String?
+  invoiceNumber          String?       @unique
+  gstNumber              String? // Optional GST number for invoice
+  gstAmount              Float? // Optional GST amount
+  durationYears          Int           @default(1) // Duration in years (1, 2, 3)
+  commission             Commission?
+  createdAt              DateTime      @default(now())
+  deletedAt              DateTime?
 }
 
 enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
+}
+
+// ─── Affiliate program ───────────────────────────────────────────────────────
+// See docs/affiliate-program.md. Money is stored in paise (Int) to avoid
+// floating-point rounding.
+
+enum AffiliateStatus {
+  PENDING // applied, waiting for admin review
+  APPROVED // can refer and earn
+  REJECTED
+  SUSPENDED // no new commissions, can't request payouts
+}
+
+enum CommissionStatus {
+  PENDING // earned; becomes withdrawable after the hold period
+  PAID
+  REVERSED // cancelled by an admin (e.g. refunded payment)
+}
+
+enum PayoutStatus {
+  REQUESTED
+  PAID
+  REJECTED
+}
+
+enum CommissionScope {
+  FIRST_PAYMENT // only a referred customer's first successful payment
+  ALL_PAYMENTS // every payment, including renewals
+}
+
+model Affiliate {
+  id             String          @id @default(cuid())
+  userId         String          @unique
+  user           User            @relation("AffiliateAccount", fields: [userId], references: [id])
+  code           String          @unique // used in /r/<code>
+  status         AffiliateStatus @default(PENDING)
+  commissionRate Float? // percent; null = AffiliateSettings.defaultCommissionRate
+
+  // Application
+  website       String? // portfolio / GitHub / channel
+  promotionPlan String?   @db.Text // how they plan to refer customers
+  adminNote     String?   @db.Text // shown to the applicant on rejection/suspension
+  reviewedAt    DateTime?
+
+  // Payout details
+  payoutMethod      String? // "UPI" | "BANK"
+  upiId             String?
+  bankAccountName   String?
+  bankAccountNumber String?
+  bankIfsc          String?
+
+  clickCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  referrals   User[]       @relation("ReferredBy")
+  commissions Commission[]
+  payouts     Payout[]
+}
+
+model Commission {
+  id              String           @id @default(cuid())
+  affiliateId     String
+  affiliate       Affiliate        @relation(fields: [affiliateId], references: [id])
+  paymentId       String           @unique // one commission per payment
+  payment         Payment          @relation(fields: [paymentId], references: [id])
+  referredUserId  String
+  referredUser    User             @relation("ReferredUserCommissions", fields: [referredUserId], references: [id])
+  baseAmountPaise Int // payment amount excluding GST
+  ratePercent     Float
+  amountPaise     Int
+  status          CommissionStatus @default(PENDING)
+  payoutId        String? // set while included in a payout request
+  payout          Payout?          @relation(fields: [payoutId], references: [id])
+  reversedReason  String?
+  createdAt       DateTime         @default(now())
+
+  @@index([affiliateId, status])
+}
+
+model Payout {
+  id          String       @id @default(cuid())
+  affiliateId String
+  affiliate   Affiliate    @relation(fields: [affiliateId], references: [id])
+  amountPaise Int
+  status      PayoutStatus @default(REQUESTED)
+  // Snapshot of where to send the money at request time
+  method      String
+  destination String
+  reference   String? // UTR / transaction ID, entered by the admin when paid
+  adminNote   String?
+  requestedAt DateTime     @default(now())
+  processedAt DateTime?
+
+  commissions Commission[]
+
+  @@index([affiliateId, status])
+}
+
+// Single row (id = "default"), edited from Admin → Affiliates
+model AffiliateSettings {
+  id                    String          @id @default("default")
+  programEnabled        Boolean         @default(true)
+  applicationsOpen      Boolean         @default(true)
+  defaultCommissionRate Float           @default(10) // percent
+  commissionScope       CommissionScope @default(ALL_PAYMENTS)
+  minPayoutPaise        Int             @default(100000) // ₹1000
+  holdDays              Int             @default(7) // matches the 7-day refund window
+  cookieDays            Int             @default(30)
+  updatedAt             DateTime        @updatedAt
 }

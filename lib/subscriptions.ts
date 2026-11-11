@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { resumeSiteIfExpired } from "@/lib/site-control";
+import { recordCommissionForPayment } from "@/lib/affiliate";
 
 /**
  * Plan prices are yearly, so a subscription lasts `durationYears` years
@@ -49,6 +50,7 @@ export async function activatePayment(
     });
 
     if (!payment.plan) {
+      await recordCommissionForPayment(tx, payment.id);
       return { activated: true, subscriptionId: null } as const;
     }
 
@@ -96,6 +98,9 @@ export async function activatePayment(
       where: { id: payment.id },
       data: { subscriptionId },
     });
+
+    // Referral commission, in the same transaction as the payment
+    await recordCommissionForPayment(tx, payment.id);
 
     return { activated: true, subscriptionId } as const;
   });

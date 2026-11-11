@@ -14,6 +14,7 @@ These docs are for the people who develop and run HostMyService.
 | [compatibility.md](compatibility.md) | know how the November 2026 release treats customers who signed up before it |
 | [deployment-pipeline.md](deployment-pipeline.md) | understand or debug how customer sites are built and served |
 | [payments.md](payments.md) | change checkout, Razorpay webhooks or subscription logic |
+| [affiliate-program.md](affiliate-program.md) | run or change the developer affiliate (referral) program |
 | [operations.md](operations.md) | set up the VPS, deploy HostMyService, run cron, handle incidents |
 | [environment.md](environment.md) | look up an environment variable |
 | [database.md](database.md) | change the Prisma schema |

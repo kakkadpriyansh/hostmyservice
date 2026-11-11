@@ -5,6 +5,7 @@ import { env } from "@/lib/env";
 import { safeEqual } from "@/lib/crypto";
 import { activatePayment, subscriptionEndDate } from "@/lib/subscriptions";
 import { resumeSiteIfExpired } from "@/lib/site-control";
+import { recordCommissionForPayment } from "@/lib/affiliate";
 
 export async function POST(req: NextRequest) {
   try {
@@ -113,7 +114,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        await tx.payment.create({
+        const renewalPayment = await tx.payment.create({
           data: {
             userId,
             planId,
@@ -126,6 +127,9 @@ export async function POST(req: NextRequest) {
             durationYears,
           },
         });
+
+        // Referral commission on renewals (only if the program pays on all payments)
+        await recordCommissionForPayment(tx, renewalPayment.id);
 
         return sub;
       });

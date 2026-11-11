@@ -16,6 +16,7 @@ import {
   Upload,
   CreditCard,
   TrendingUp,
+  Gift,
 } from "lucide-react";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
@@ -32,6 +33,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/dashboard/sites", label: "My Sites", icon: Server },
     { href: "/dashboard/plans", label: "Buy Plan", icon: CreditCard },
+    { href: "/dashboard/affiliate", label: "Affiliate Program", icon: Gift },
     { href: "/dashboard/settings", label: "Settings", icon: Settings },
   ];
 
@@ -43,6 +45,7 @@ export function Sidebar({ role }: SidebarProps) {
     { href: "/admin/plans", label: "Plans", icon: Shield },
     { href: "/admin/payments", label: "Payments", icon: CreditCard },
     { href: "/admin/revenue", label: "Revenue", icon: TrendingUp },
+    { href: "/admin/affiliates", label: "Affiliates", icon: Gift },
     { href: "/admin/upload", label: "Upload Test", icon: Upload },
     { href: "/admin/deploy", label: "Deployments", icon: Server },
     { href: "/admin/settings", label: "Settings", icon: Settings },

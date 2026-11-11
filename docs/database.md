@@ -43,6 +43,10 @@ plus `prisma migrate resolve --applied`).
 | `Site` | A customer domain | See fields below |
 | `Deployment` | One deploy attempt | `type` ZIP or GIT; `status` PENDING → BUILDING → DEPLOYED / FAILED |
 | `DeploymentLog` | Step-by-step deploy output | Shown to the customer |
+| `Affiliate` | Approved (or applying) referrers | `code` used in `/r/<code>`; see [affiliate-program.md](affiliate-program.md) |
+| `Commission` | One per referred payment | Money in paise. Unique `paymentId` |
+| `Payout` | A payout request and its result | `REQUESTED` → `PAID` (with reference) or `REJECTED` |
+| `AffiliateSettings` | Single row, id `default` | Created with defaults on first use |
 
 `Site` fields worth knowing:
 
