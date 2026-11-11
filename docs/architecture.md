@@ -15,7 +15,7 @@
                 │        webhook server        PM2 "hostmyservice-webhook" :9000
                 └───────────────────────────────────────────────────────────┘
  Razorpay ──webhook──▶ /api/webhook/razorpay
- GitHub   ──webhook──▶ webhook server ──▶ git pull, build, restart HostMyService
+ GitHub   ──webhook──▶ webhook server ──▶ fetch + reset, build, restart HostMyService
  cron     ──POST────▶ /api/cron/maintenance (expiry + temp cleanup)
 ```
 

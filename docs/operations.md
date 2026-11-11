@@ -125,7 +125,7 @@ suspended. Run the same `curl` by hand to test it.
 
 `scripts/webhook-server.mjs` (PM2 `hostmyservice-webhook`, port 9000) listens
 for GitHub pushes to `main` and runs:
-`git pull → npm install → prisma generate → prisma db push → npm run build → pm2 restart hostmyservice`.
+`git fetch` + `git reset --hard origin/main` → `npm install` → `prisma generate` → `prisma db push` → `npm run build` → `pm2 restart hostmyservice`. Never edit files directly on the server: the reset discards them.
 
 Setup:
 
@@ -146,10 +146,13 @@ Do the urgent manual steps in
 [security-audit-2026-11.md](security-audit-2026-11.md#manual-steps-still-required)
 (new SSH key, admin passwords, account review) as well. Then:
 
-1. **Code and schema**
+1. **Code and schema.** The git history was rewritten, so use fetch + reset, not pull.
+   The running webhook server still has the old `git pull` step, so this first
+   update has to be done by hand:
    ```bash
    cd /var/www/hostmyservice
-   git pull origin main
+   git fetch origin
+   git reset --hard origin/main
    npm install
    npx prisma generate
    npx prisma db push        # adds Site.appPort, Site.suspendReason, Site.runAsSiteUser
