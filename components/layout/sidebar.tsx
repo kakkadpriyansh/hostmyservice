@@ -23,11 +23,27 @@ import { signOut } from "next-auth/react";
 
 interface SidebarProps {
   role: "USER" | "ADMIN";
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, isOpen: controlledIsOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+  const isControlled = controlledIsOpen !== undefined;
+  const isOpen = isControlled ? controlledIsOpen : internalIsOpen;
+  const handleClose = () => {
+    if (onClose) onClose();
+    if (!isControlled) setInternalIsOpen(false);
+  };
+  const handleToggle = () => {
+    if (isControlled) {
+      if (isOpen && onClose) onClose();
+    } else {
+      setInternalIsOpen(!internalIsOpen);
+    }
+  };
 
   const userLinks = [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -55,20 +71,22 @@ export function Sidebar({ role }: SidebarProps) {
 
   return (
     <>
-      {/* Mobile Toggle */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-3.5 left-4 z-50 p-2 rounded-xl bg-[#061138]/90 text-white backdrop-blur-md border border-white/20 shadow-lg md:hidden hover:bg-white/20 transition-colors"
-        aria-label="Toggle navigation"
-      >
-        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      {/* Fallback Mobile Toggle only if sidebar is rendered standalone (uncontrolled) */}
+      {!isControlled && (
+        <button
+          onClick={handleToggle}
+          className="fixed top-3.5 left-4 z-50 p-2 rounded-xl bg-[#061138]/90 text-white backdrop-blur-md border border-white/20 shadow-lg md:hidden hover:bg-white/20 transition-colors"
+          aria-label="Toggle navigation"
+        >
+          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      )}
 
       {/* Mobile Backdrop Overlay */}
       {isOpen && (
         <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
+          onClick={handleClose}
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden animate-fade-in"
           aria-hidden="true"
         />
       )}
@@ -76,13 +94,13 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Sidebar Container */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 w-72 transform border-r border-white/10 bg-[#061138]/95 backdrop-blur-2xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed inset-y-0 left-0 z-50 w-72 transform border-r border-white/10 bg-[#061138]/98 backdrop-blur-2xl transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:z-40",
+          isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-20 items-center justify-between border-b border-white/10 px-6">
+          {/* Logo & Close Button */}
+          <div className="flex h-16 sm:h-20 items-center justify-between border-b border-white/10 px-5 sm:px-6">
             <Link href="/" className="flex items-center gap-3 group">
               <img
                 src="/icon.png"
@@ -93,6 +111,14 @@ export function Sidebar({ role }: SidebarProps) {
                 HostMyService
               </span>
             </Link>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="p-2 rounded-xl text-blue-200 hover:text-white bg-white/5 border border-white/10 md:hidden hover:bg-white/15 transition-colors"
+              aria-label="Close sidebar"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
 
           {/* Navigation */}
@@ -104,7 +130,7 @@ export function Sidebar({ role }: SidebarProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleClose}
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-200 group relative overflow-hidden",
                     isActive
