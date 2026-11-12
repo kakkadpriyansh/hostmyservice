@@ -53,7 +53,7 @@ export function LoginForm() {
 
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up">
-      <div className="glass rounded-[24px] border border-white/15 bg-white/10 py-8 px-6 shadow-2xl backdrop-blur-2xl sm:px-10">
+      <div className="glass rounded-2xl sm:rounded-[24px] border border-white/15 bg-white/10 py-6 px-4 sm:py-8 sm:px-10 shadow-2xl backdrop-blur-2xl">
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {error && (
             <div className="rounded-xl bg-red-500/10 border border-red-500/30 p-4">

@@ -17,15 +17,15 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
           {/* Phone Contact */}
-          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+          <div className="glass p-5 sm:p-7 rounded-2xl sm:rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
             <div className="flex items-start gap-4">
-              <div className="p-3.5 rounded-2xl bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30">
-                <Phone className="h-6 w-6" />
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-[#00D2FF]/20 text-[#00D2FF] border border-[#00D2FF]/30 shrink-0">
+                <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold font-display text-white">Call Us Directly</h3>
-                <p className="text-blue-200/70 text-sm mt-1">Available for sales & emergency support</p>
-                <a href="tel:+918401661887" className="text-[#00D2FF] hover:text-white transition-colors mt-2 block font-bold text-base">
+                <h3 className="text-base sm:text-lg font-bold font-display text-white">Call Us Directly</h3>
+                <p className="text-blue-200/70 text-xs sm:text-sm mt-1">Available for sales & emergency support</p>
+                <a href="tel:+918401661887" className="text-[#00D2FF] hover:text-white transition-colors mt-2 block font-bold text-sm sm:text-base">
                   +91 84016 61887
                 </a>
               </div>
@@ -33,19 +33,19 @@ export default function ContactPage() {
           </div>
 
           {/* WhatsApp Support */}
-          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+          <div className="glass p-5 sm:p-7 rounded-2xl sm:rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
             <div className="flex items-start gap-4">
-              <div className="p-3.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                <MessageCircle className="h-6 w-6" />
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
+                <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold font-display text-white">WhatsApp Support</h3>
-                <p className="text-blue-200/70 text-sm mt-1">Instant chat with our engineering team</p>
+                <h3 className="text-base sm:text-lg font-bold font-display text-white">WhatsApp Support</h3>
+                <p className="text-blue-200/70 text-xs sm:text-sm mt-1">Instant chat with our engineering team</p>
                 <a
                   href="https://wa.me/918401661887"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-emerald-400 hover:text-white transition-colors mt-2 block font-bold text-base"
+                  className="text-emerald-400 hover:text-white transition-colors mt-2 block font-bold text-sm sm:text-base"
                 >
                   +91 84016 61887
                 </a>
@@ -54,15 +54,15 @@ export default function ContactPage() {
           </div>
 
           {/* Email Support */}
-          <div className="glass p-7 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+          <div className="glass p-5 sm:p-7 rounded-2xl sm:rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
             <div className="flex items-start gap-4">
-              <div className="p-3.5 rounded-2xl bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                <Mail className="h-6 w-6" />
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-violet-500/20 text-violet-300 border border-violet-500/30 shrink-0">
+                <Mail className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div>
-                <h3 className="text-lg font-bold font-display text-white">Email Us</h3>
-                <p className="text-blue-200/70 text-sm mt-1">For general inquiries, billing, and technical help</p>
-                <a href="mailto:hostmyservice@gmail.com" className="text-violet-300 hover:text-white transition-colors mt-2 block font-bold text-base">
+                <h3 className="text-base sm:text-lg font-bold font-display text-white">Email Us</h3>
+                <p className="text-blue-200/70 text-xs sm:text-sm mt-1">For general inquiries, billing, and technical help</p>
+                <a href="mailto:hostmyservice@gmail.com" className="text-violet-300 hover:text-white transition-colors mt-2 block font-bold text-sm sm:text-base break-all">
                   hostmyservice@gmail.com
                 </a>
               </div>
@@ -71,11 +71,11 @@ export default function ContactPage() {
         </div>
 
         {/* Message Form */}
-        <div className="glass p-8 rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
+        <div className="glass p-5 sm:p-8 rounded-2xl sm:rounded-[24px] border border-white/15 bg-white/10 shadow-2xl backdrop-blur-xl">
           <h3 className="text-xl font-bold font-display text-white mb-2">Send us a message</h3>
           <p className="text-xs text-blue-200/60 mb-6">Fill out the form below or call us at +91 84016 61887</p>
           <form className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label htmlFor="firstName" className="text-xs font-semibold text-blue-100">First Name</label>
                 <input type="text" id="firstName" className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-2.5 text-white placeholder-blue-200/40 focus:outline-none focus:border-[#00D2FF] text-sm" />

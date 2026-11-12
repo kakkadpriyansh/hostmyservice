@@ -58,10 +58,20 @@ export function Sidebar({ role }: SidebarProps) {
       {/* Mobile Toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 p-2.5 rounded-xl bg-[#061138]/80 text-white backdrop-blur-md border border-white/20 shadow-lg md:hidden hover:bg-white/20 transition-colors"
+        className="fixed top-3.5 left-4 z-50 p-2 rounded-xl bg-[#061138]/90 text-white backdrop-blur-md border border-white/20 shadow-lg md:hidden hover:bg-white/20 transition-colors"
+        aria-label="Toggle navigation"
       >
-        {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
+
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
+          aria-hidden="true"
+        />
+      )}
 
       {/* Sidebar Container */}
       <aside

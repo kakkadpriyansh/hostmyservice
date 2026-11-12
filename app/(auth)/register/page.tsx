@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="relative flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-[#07133B] overflow-hidden font-sans selection:bg-[#00D2FF] selection:text-[#07133B]">
+    <div className="relative flex min-h-screen flex-col justify-center py-10 sm:py-12 px-4 sm:px-6 lg:px-8 bg-[#07133B] overflow-hidden font-sans selection:bg-[#00D2FF] selection:text-[#07133B]">
       <AppBackground />
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up">

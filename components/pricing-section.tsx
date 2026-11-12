@@ -81,14 +81,13 @@ export function PricingSection({ plans }: PricingSectionProps) {
       />
 
       <div
-        className="relative z-10 mx-auto max-w-[1240px] px-6 lg:px-8"
-        style={{ paddingTop: "104px", paddingBottom: "112px" }}
+        className="relative z-10 mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28"
       >
         {/* Two-column layout */}
-        <div className="flex flex-wrap items-center gap-x-[72px] gap-y-16">
+        <div className="flex flex-wrap items-center gap-x-[72px] gap-y-12 sm:gap-y-16">
 
           {/* ── LEFT: heading + plan picker ── */}
-          <div className="flex-[1_1_440px] min-w-0">
+          <div className="flex-[1_1_440px] min-w-0 w-full">
             <span className="inline-flex items-center gap-2.5 px-[18px] py-2 rounded-full border-[1.5px] border-white/40 bg-white/10 text-sm font-semibold text-white">
               <span className="w-[9px] h-[9px] rounded-full bg-[#22D3EE] animate-pulse shrink-0" aria-hidden="true" />
               Pricing
@@ -97,7 +96,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
             <h2
               id="pricing-title"
               className="mt-6 font-display font-black text-white leading-[1.08] tracking-[-0.04em]"
-              style={{ fontSize: "clamp(44px, 5.6vw, 72px)" }}
+              style={{ fontSize: "clamp(36px, 5.6vw, 72px)" }}
             >
               <span className="block">Transparent</span>
               <span
@@ -108,13 +107,13 @@ export function PricingSection({ plans }: PricingSectionProps) {
               </span>
             </h2>
 
-            <p className="mt-6 max-w-[460px] text-[19px] leading-[1.6] text-[#D6DCFF]">
+            <p className="mt-4 sm:mt-6 max-w-[460px] text-base sm:text-[19px] leading-[1.6] text-[#D6DCFF]">
               Start small, scale infinitely. No hidden costs.
             </p>
 
             {/* Plan picker buttons */}
             <div
-              className="flex flex-col gap-3.5 mt-9"
+              className="flex flex-col gap-3 sm:gap-3.5 mt-7 sm:mt-9"
               role="group"
               aria-label="Choose a plan"
             >
@@ -127,14 +126,14 @@ export function PricingSection({ plans }: PricingSectionProps) {
                     type="button"
                     aria-pressed={selected}
                     onClick={() => setActiveIdx(idx)}
-                    className="flex items-center gap-[18px] w-full min-h-[92px] px-6 py-5 rounded-[20px] text-left transition-transform duration-150 hover:translate-x-[5px]"
+                    className="flex items-center gap-3 sm:gap-[18px] w-full min-h-[76px] sm:min-h-[92px] px-3.5 sm:px-6 py-3.5 sm:py-5 rounded-2xl sm:rounded-[20px] text-left transition-transform duration-150 hover:translate-x-1 sm:hover:translate-x-[5px]"
                     style={
                       selected
                         ? {
                             border: "2px solid #FFFFFF",
                             background: "#FFFFFF",
                             color: "#0B0D2B",
-                            boxShadow: "7px 7px 0 #22D3EE",
+                            boxShadow: "5px 5px 0 #22D3EE",
                           }
                         : {
                             border: "2px solid rgba(255,255,255,0.24)",
@@ -146,7 +145,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
                     {/* Radio ring */}
                     <span
                       aria-hidden="true"
-                      className="w-[26px] h-[26px] shrink-0 rounded-full flex items-center justify-center"
+                      className="w-5 h-5 sm:w-[26px] sm:h-[26px] shrink-0 rounded-full flex items-center justify-center"
                       style={{
                         border: selected
                           ? "2px solid #0B0D2B"
@@ -154,7 +153,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
                       }}
                     >
                       <span
-                        className="w-3 h-3 rounded-full"
+                        className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
                         style={{ background: selected ? "#0B0D2B" : "transparent" }}
                       />
                     </span>
@@ -162,12 +161,12 @@ export function PricingSection({ plans }: PricingSectionProps) {
                     {/* Name + desc */}
                     <span className="flex-1 min-w-0">
                       <span
-                        className="block font-display font-bold text-[24px] leading-[1.15] tracking-[-0.02em]"
+                        className="block font-display font-bold text-lg sm:text-[24px] leading-[1.15] tracking-[-0.02em]"
                       >
                         {plan.name}
                       </span>
                       <span
-                        className="block mt-1 text-sm leading-[1.45]"
+                        className="block mt-0.5 sm:mt-1 text-xs sm:text-sm leading-[1.45] line-clamp-1 sm:line-clamp-none"
                         style={{ color: selected ? "#44497A" : "#D2D8FF" }}
                       >
                         {plan.description || ""}
@@ -177,12 +176,12 @@ export function PricingSection({ plans }: PricingSectionProps) {
                     {/* Price */}
                     <span className="flex items-baseline gap-1 shrink-0">
                       <b
-                        className="font-display font-black text-[34px] leading-none tracking-[-0.03em]"
+                        className="font-display font-black text-xl sm:text-[34px] leading-none tracking-[-0.03em]"
                       >
                         ₹{mPrice}
                       </b>
                       <em
-                        className="not-italic text-sm font-semibold"
+                        className="not-italic text-xs sm:text-sm font-semibold"
                         style={{ color: selected ? "#44497A" : "#D2D8FF" }}
                       >
                         /mo
@@ -194,9 +193,9 @@ export function PricingSection({ plans }: PricingSectionProps) {
             </div>
 
             {/* Trust checkmarks */}
-            <div className="flex flex-wrap gap-x-7 gap-y-3 mt-8 text-[15px] font-semibold text-white">
+            <div className="flex flex-wrap gap-x-5 sm:gap-x-7 gap-y-2 sm:gap-y-3 mt-7 sm:mt-8 text-xs sm:text-[15px] font-semibold text-white">
               {["Free SSL on every plan", "DDoS protection on every plan"].map((item) => (
-                <span key={item} className="inline-flex items-center gap-2.5">
+                <span key={item} className="inline-flex items-center gap-2">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
                   </svg>
@@ -205,7 +204,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
               ))}
             </div>
 
-            <p className="mt-[18px] text-[16px] text-[#E3E7FF]">
+            <p className="mt-4 sm:mt-[18px] text-sm sm:text-[16px] text-[#E3E7FF]">
               Not sure which plan fits?{" "}
               <a
                 href="https://wa.me/918401661887"
@@ -219,11 +218,11 @@ export function PricingSection({ plans }: PricingSectionProps) {
           </div>
 
           {/* ── RIGHT: ticket card ── */}
-          <div className="flex-[1_1_500px] min-w-0 relative py-7">
+          <div className="flex-[1_1_420px] sm:flex-[1_1_500px] min-w-0 relative py-4 sm:py-7 w-full max-w-full">
             {/* Ghost cards behind */}
             <div
               aria-hidden="true"
-              className="absolute rounded-[30px] pointer-events-none"
+              className="hidden sm:block absolute rounded-[30px] pointer-events-none"
               style={{
                 left: "7%", right: "-2%", top: "14px", bottom: "6px",
                 border: "1px solid rgba(255,255,255,0.16)",
@@ -233,7 +232,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
             />
             <div
               aria-hidden="true"
-              className="absolute rounded-[30px] pointer-events-none"
+              className="hidden sm:block absolute rounded-[30px] pointer-events-none"
               style={{
                 left: "-2%", right: "7%", top: "40px", bottom: "30px",
                 border: "1px solid rgba(255,255,255,0.12)",
@@ -245,11 +244,8 @@ export function PricingSection({ plans }: PricingSectionProps) {
             {/* Big watermark number */}
             <div
               aria-hidden="true"
-              className="absolute font-display font-black leading-none tracking-[-0.06em] pointer-events-none select-none"
+              className="absolute font-display font-black leading-none tracking-[-0.06em] pointer-events-none select-none right-2 sm:right-4 -top-8 sm:-top-[92px] text-[130px] sm:text-[260px] opacity-70"
               style={{
-                right: "4px",
-                top: "-92px",
-                fontSize: "260px",
                 color: "transparent",
                 WebkitTextStroke: "2px rgba(255,255,255,0.16)",
               }}
@@ -259,7 +255,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
 
             {/* Ticket card */}
             <article
-              className="relative overflow-hidden rounded-[28px] p-10"
+              className="relative overflow-hidden rounded-2xl sm:rounded-[28px] p-5 sm:p-10"
               style={{
                 border: "1.5px solid rgba(255,255,255,0.22)",
                 background: "#0B0D2B",
@@ -285,13 +281,13 @@ export function PricingSection({ plans }: PricingSectionProps) {
                 {/* Top row: plan tag + Most Popular badge */}
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <span
-                    className="font-mono text-[13px] font-semibold tracking-[0.12em] uppercase text-[#22D3EE]"
+                    className="font-mono text-xs sm:text-[13px] font-semibold tracking-[0.12em] uppercase text-[#22D3EE]"
                     style={{ fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}
                   >
                     Plan 0{planNum} / 0{totalPlans}
                   </span>
                   {isPro && (
-                    <span className="inline-flex items-center gap-[7px] px-3.5 py-[7px] rounded-full bg-[#22D3EE] text-[#0B0D2B] text-[13px] font-black tracking-[0.02em]">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-[7px] rounded-full bg-[#22D3EE] text-[#0B0D2B] text-xs sm:text-[13px] font-black tracking-[0.02em]">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="#0B0D2B" aria-hidden="true">
                         <path d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.5l-6 3.4 1.3-6.7-5-4.7 6.8-.8L12 2.5z" />
                       </svg>
@@ -302,40 +298,39 @@ export function PricingSection({ plans }: PricingSectionProps) {
 
                 {/* Plan name */}
                 <h3
-                  className="mt-[22px] font-display font-black text-white leading-[1.05] tracking-[-0.035em]"
-                  style={{ fontSize: "46px" }}
+                  className="mt-4 sm:mt-[22px] font-display font-black text-white leading-[1.05] tracking-[-0.035em] text-3xl sm:text-[46px]"
                 >
                   {active.name}
                 </h3>
-                <p className="mt-2.5 text-[17px] leading-[1.55] text-[#C3CAF5]">
+                <p className="mt-2 text-sm sm:text-[17px] leading-[1.55] text-[#C3CAF5]">
                   {active.description}
                 </p>
 
                 {/* Price */}
-                <div className="flex items-start gap-2 mt-7 leading-none">
+                <div className="flex items-start gap-1 sm:gap-2 mt-5 sm:mt-7 leading-none">
                   <span
-                    className="mt-[14px] font-display font-bold text-[38px] text-white"
+                    className="mt-2 sm:mt-[14px] font-display font-bold text-2xl sm:text-[38px] text-white"
                   >
                     ₹
                   </span>
                   <span
-                    className="font-display font-black text-white tracking-[-0.05em]"
-                    style={{ fontSize: "104px", lineHeight: 1 }}
+                    className="font-display font-black text-white tracking-[-0.05em] text-6xl sm:text-7xl lg:text-[104px]"
+                    style={{ lineHeight: 1 }}
                   >
                     {monthlyPrice}
                   </span>
-                  <span className="self-end mb-[14px] text-[19px] font-semibold text-[#AEB6EC]">
+                  <span className="self-end mb-2 sm:mb-[14px] text-base sm:text-[19px] font-semibold text-[#AEB6EC]">
                     /month
                   </span>
                 </div>
 
                 {/* Chips */}
-                <div className="flex flex-wrap gap-2.5 mt-[18px]">
-                  <span className="inline-flex items-center px-[15px] py-[7px] rounded-full bg-white/[0.12] text-sm font-bold text-white">
+                <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-4 sm:mt-[18px]">
+                  <span className="inline-flex items-center px-3 sm:px-[15px] py-1 sm:py-[7px] rounded-full bg-white/[0.12] text-xs sm:text-sm font-bold text-white">
                     Billed ₹{active.price} yearly
                   </span>
                   <span
-                    className="inline-flex items-center px-[15px] py-[7px] rounded-full text-sm font-bold text-[#22D3EE]"
+                    className="inline-flex items-center px-3 sm:px-[15px] py-1 sm:py-[7px] rounded-full text-xs sm:text-sm font-bold text-[#22D3EE]"
                     style={{ border: "1.5px dashed #22D3EE" }}
                   >
                     ≈ ₹{dailyPrice} a day
@@ -344,7 +339,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
 
                 {/* Dashed divider */}
                 <div
-                  className="my-8"
+                  className="my-6 sm:my-8"
                   style={{ borderTop: "2px dashed rgba(255,255,255,0.24)" }}
                   aria-hidden="true"
                 />
@@ -353,19 +348,19 @@ export function PricingSection({ plans }: PricingSectionProps) {
                 <div className="text-xs font-bold tracking-[0.08em] uppercase text-[#AEB6EC]">
                   What&apos;s included
                 </div>
-                <ul className="flex flex-col gap-3.5 mt-4 text-[17px] font-medium text-white list-none p-0">
+                <ul className="flex flex-col gap-3 sm:gap-3.5 mt-3.5 sm:mt-4 text-sm sm:text-[17px] font-medium text-white list-none p-0">
                   {features.map((feature) => {
                     const isExtra = feature === "Priority Support";
                     return (
                       <li
                         key={feature}
-                        className={`flex items-center gap-3 ${isExtra ? "font-bold text-[#22D3EE]" : ""}`}
+                        className={`flex items-center gap-2.5 sm:gap-3 ${isExtra ? "font-bold text-[#22D3EE]" : ""}`}
                       >
                         <span
                           aria-hidden="true"
-                          className="w-[26px] h-[26px] shrink-0 rounded-full bg-[#22D3EE] flex items-center justify-center"
+                          className="w-5 h-5 sm:w-[26px] sm:h-[26px] shrink-0 rounded-full bg-[#22D3EE] flex items-center justify-center"
                         >
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0B0D2B" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0B0D2B" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M5 12.5l4.5 4.5L19 7.5" />
                           </svg>
                         </span>
@@ -378,7 +373,7 @@ export function PricingSection({ plans }: PricingSectionProps) {
                 {/* CTA */}
                 <Link
                   href="/register"
-                  className="flex items-center justify-center gap-2.5 min-h-[58px] mt-9 rounded-[14px] bg-[#22D3EE] text-[#0B0D2B] text-[18px] font-bold transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
+                  className="flex items-center justify-center gap-2.5 min-h-[50px] sm:min-h-[58px] mt-7 sm:mt-9 rounded-xl sm:rounded-[14px] bg-[#22D3EE] text-[#0B0D2B] text-base sm:text-[18px] font-bold transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
                   style={{ boxShadow: "none" }}
                   onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "6px 6px 0 #FFFFFF")}
                   onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}

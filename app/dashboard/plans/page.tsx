@@ -39,7 +39,7 @@ export default async function PlansPage() {
         </p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2">
+      <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {plans.map((plan: Plan) => {
           const monthly = Math.round(plan.price / 12);
           const daily = (plan.price / 365).toFixed(2);
@@ -47,23 +47,23 @@ export default async function PlansPage() {
           return (
             <div
               key={plan.id}
-              className="group relative flex flex-col rounded-[28px] border border-white/15 bg-[#0A1A4F]/95 p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#00D2FF]/60 hover:bg-[#0E2262] hover:-translate-y-1"
+              className="group relative flex flex-col rounded-2xl sm:rounded-[28px] border border-white/15 bg-[#0A1A4F]/95 p-6 sm:p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-[#00D2FF]/60 hover:bg-[#0E2262] hover:-translate-y-1"
             >
               <div className="mb-6">
                 <span className="inline-block px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-[#00D2FF] uppercase tracking-wider mb-3">
                   Hosting Plan
                 </span>
-                <h3 className="text-2xl font-display font-black text-white group-hover:text-[#00D2FF] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-display font-black text-white group-hover:text-[#00D2FF] transition-colors">
                   {plan.name}
                 </h3>
-                <p className="mt-2 text-sm text-blue-200/70 h-10 leading-relaxed">
+                <p className="mt-2 text-sm text-blue-200/70 min-h-[40px] leading-relaxed">
                   {plan.description}
                 </p>
               </div>
 
               {/* Price */}
               <div className="mb-2 flex items-baseline gap-x-1.5">
-                <span className="text-5xl font-display font-black tracking-tight text-white">
+                <span className="text-4xl sm:text-5xl font-display font-black tracking-tight text-white">
                   ₹{monthly}
                 </span>
                 <span className="text-sm font-bold text-blue-200/60">

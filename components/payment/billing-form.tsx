@@ -76,7 +76,7 @@ export function BillingForm({ onSuccess, initialData }: BillingFormProps) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs text-gray-400 uppercase font-bold mb-1">City</label>
             <input
@@ -99,7 +99,7 @@ export function BillingForm({ onSuccess, initialData }: BillingFormProps) {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs text-gray-400 uppercase font-bold mb-1">Postal Code</label>
             <input

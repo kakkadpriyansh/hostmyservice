@@ -50,18 +50,18 @@ export default async function DashboardOverview() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-display font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-display font-bold text-white">
             Welcome back, {session?.user?.name || "User"}
           </h1>
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-400">
             Here&apos;s what&apos;s happening with your projects today.
           </p>
         </div>
         <Link
           href="/dashboard/plans"
-          className="group flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)]"
+          className="group flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-black shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] w-full sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Deploy New Site

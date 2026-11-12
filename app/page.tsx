@@ -11,6 +11,7 @@ import prisma from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { PricingSection } from "@/components/pricing-section";
 import type { Plan } from "@prisma/client";
@@ -100,85 +101,20 @@ export default async function Home() {
       </div>
 
       {/* Navigation Header */}
-      <header className="relative z-50 w-full border-b border-white/10 bg-[#061138]/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <nav className="flex items-center justify-between py-4" aria-label="Main">
-            <Link href="/" className="inline-flex items-center gap-3.5 group">
-              <img
-                src="/icon.png"
-                alt="HostMyService Logo"
-                className="h-11 w-11 rounded-xl object-contain bg-white p-1 shadow-md border border-white/20 group-hover:scale-105 transition-transform"
-              />
-              <span className="font-display font-extrabold text-2xl tracking-tight text-white group-hover:text-sky-200 transition-colors">
-                HostMyService
-              </span>
-            </Link>
-
-            <div className="flex items-center gap-6 text-sm font-semibold">
-              <Link
-                href="#features"
-                className="hidden sm:inline-block text-blue-100/80 hover:text-white transition-colors"
-              >
-                Features
-              </Link>
-              <Link
-                href="#pricing"
-                className="hidden sm:inline-block text-blue-100/80 hover:text-white transition-colors"
-              >
-                Pricing
-              </Link>
-              <a
-                href="https://wa.me/918401661887"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden md:inline-flex items-center gap-1.5 text-blue-100/80 hover:text-white transition-colors"
-              >
-                <MessageCircle className="w-4 h-4 text-[#00D2FF]" />
-                WhatsApp 24/7
-              </a>
-
-              {session ? (
-                <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-[#061138] bg-white hover:bg-sky-50 border-2 border-[#061138] shadow-[4px_4px_0_#061138] hover:shadow-[6px_6px_0_#061138] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-                >
-                  Dashboard
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <Link
-                    href="/login"
-                    className="text-blue-100/80 hover:text-white transition-colors px-3 py-2"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-[#061138] bg-white hover:bg-sky-50 border-2 border-[#061138] shadow-[4px_4px_0_#061138] hover:shadow-[6px_6px_0_#061138] hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-                  >
-                    Get Started
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              )}
-            </div>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* Main Content */}
       <main className="relative z-10 flex-1">
         
         {/* HERO SECTION */}
-        <section aria-label="Hero" className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-10 pb-16 lg:pt-14 lg:pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <section aria-label="Hero" className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 pb-12 sm:pb-16 lg:pt-14 lg:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             
             {/* Left Column: ui.html inspired bold sticker typography & actions */}
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               
               {/* Live Pill Badge */}
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-md mb-6">
+              <div className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold text-white border-2 border-white/30 bg-white/10 backdrop-blur-md mb-6">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#00D2FF] animate-pulse" />
                 <span>v2.0 is live</span>
                 <span className="text-white/40">•</span>
@@ -186,23 +122,23 @@ export default async function Home() {
               </div>
 
               {/* Main Headline (Creative Bold Sticker Style in Blue & White) */}
-              <h1 className="font-display font-black text-5xl sm:text-6xl lg:text-[76px] leading-[0.96] tracking-tight text-white">
+              <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-[76px] leading-[0.98] sm:leading-[0.96] tracking-tight text-white break-words">
                 <span className="block">Go live.</span>
-                <span className="inline-block mt-3 px-4 sm:px-5 py-1 sm:py-1.5 rounded-2xl bg-white text-[#0047FF] border-[3px] border-[#061138] shadow-[8px_8px_0_#061138] -rotate-2">
+                <span className="inline-block mt-2 sm:mt-3 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-xl sm:rounded-2xl bg-white text-[#0047FF] border-[3px] border-[#061138] shadow-[5px_5px_0_#061138] sm:shadow-[8px_8px_0_#061138] -rotate-2">
                   Stay live.
                 </span>
               </h1>
 
               {/* Sub-headline */}
-              <p className="mt-7 text-lg sm:text-xl text-blue-100/90 leading-relaxed max-w-xl font-medium">
+              <p className="mt-5 sm:mt-7 text-base sm:text-xl text-blue-100/90 leading-relaxed max-w-xl font-medium">
                 Hosting for static sites, Node apps and databases, with real people on WhatsApp when you get stuck.
               </p>
 
               {/* Primary & WhatsApp Action Buttons (ui.html button energy) */}
-              <div className="flex flex-wrap items-center gap-4 mt-8 w-full">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 mt-8 w-full sm:w-auto">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center gap-2.5 min-h-[56px] px-8 rounded-2xl font-extrabold text-base sm:text-lg text-[#061138] bg-white hover:bg-sky-50 border-2 border-[#061138] shadow-[5px_5px_0_#061138] hover:shadow-[7px_7px_0_#061138] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_#061138] transition-all"
+                  className="inline-flex items-center justify-center gap-2.5 min-h-[52px] sm:min-h-[56px] px-6 sm:px-8 rounded-2xl font-extrabold text-base sm:text-lg text-[#061138] bg-white hover:bg-sky-50 border-2 border-[#061138] shadow-[4px_4px_0_#061138] sm:shadow-[5px_5px_0_#061138] hover:shadow-[7px_7px_0_#061138] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[2px_2px_0_#061138] transition-all text-center"
                 >
                   Start hosting
                   <ArrowRight className="w-5 h-5 text-[#0047FF]" />
@@ -212,7 +148,7 @@ export default async function Home() {
                   href="https://wa.me/918401661887"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 min-h-[56px] px-7 rounded-2xl font-bold text-base sm:text-lg text-white border-2 border-white hover:bg-white/15 transition-all"
+                  className="inline-flex items-center justify-center gap-2.5 min-h-[52px] sm:min-h-[56px] px-6 sm:px-7 rounded-2xl font-bold text-base sm:text-lg text-white border-2 border-white hover:bg-white/15 transition-all text-center"
                 >
                   <MessageCircle className="w-5 h-5 text-[#00D2FF]" />
                   Chat on WhatsApp
@@ -220,7 +156,7 @@ export default async function Home() {
               </div>
 
               {/* Trust Features Row (From ui.html in logo blue/white) */}
-              <div className="flex flex-wrap gap-x-6 gap-y-3 mt-7 text-sm sm:text-base font-semibold text-white">
+              <div className="flex flex-wrap gap-x-5 sm:gap-x-6 gap-y-2.5 sm:gap-y-3 mt-7 text-xs sm:text-base font-semibold text-white">
                 <span className="inline-flex items-center gap-2">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D2FF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12.5l4.5 4.5L19 7.5" />
@@ -244,10 +180,10 @@ export default async function Home() {
             </div>
 
             {/* Right Column: Creative Interactive Card (ui.html rotated card + rotating circular badge) */}
-            <div className="lg:col-span-5 relative mt-8 lg:mt-0 flex justify-center">
+            <div className="lg:col-span-5 relative mt-6 lg:mt-0 flex justify-center w-full max-w-full px-2 sm:px-0">
 
               {/* Spinning Circular Badge (REAL HUMANS • ON WHATSAPP • 24/7) */}
-              <div className="absolute -top-10 -right-3 sm:-right-6 z-30 w-32 h-32 pointer-events-none">
+              <div className="absolute -top-6 sm:-top-10 -right-2 sm:-right-6 z-30 w-24 h-24 sm:w-32 sm:h-32 pointer-events-none">
                 <svg
                   viewBox="0 0 150 150"
                   className="w-full h-full drop-shadow-lg"
@@ -268,38 +204,38 @@ export default async function Home() {
               </div>
 
               {/* Floating "Live" Sticker Badge */}
-              <div className="absolute top-4 -left-3 sm:-left-6 z-30">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border-2 border-[#061138] bg-white text-[#061138] font-mono text-xs font-bold tracking-wider uppercase shadow-[4px_4px_0_#061138] -rotate-6">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="absolute top-2 sm:top-4 -left-1 sm:-left-6 z-30 scale-90 sm:scale-100">
+                <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl border-2 border-[#061138] bg-white text-[#061138] font-mono text-[11px] sm:text-xs font-bold tracking-wider uppercase shadow-[3px_3px_0_#061138] sm:shadow-[4px_4px_0_#061138] -rotate-6">
+                  <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   Live
                 </div>
               </div>
 
               {/* Floating "Deployed in 1.8s" Toast (Bottom Left) */}
-              <div className="absolute -bottom-6 -left-3 sm:-left-6 z-30 animate-float-badge-2">
-                <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl border-2 border-[#061138] bg-[#061138] text-white shadow-[6px_6px_0_#00D2FF]">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#0047FF] text-white">
-                    <Zap className="w-4 h-4 fill-white" />
+              <div className="absolute -bottom-4 sm:-bottom-6 -left-1 sm:-left-6 z-30 scale-90 sm:scale-100 origin-bottom-left animate-float-badge-2">
+                <div className="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl border-2 border-[#061138] bg-[#061138] text-white shadow-[4px_4px_0_#00D2FF] sm:shadow-[6px_6px_0_#00D2FF]">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#0047FF] text-white">
+                    <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white" />
                   </div>
                   <div>
-                    <div className="text-sm font-extrabold leading-tight">Deployed</div>
-                    <div className="text-xs font-mono text-sky-200">1.8s · global edge</div>
+                    <div className="text-xs sm:text-sm font-extrabold leading-tight">Deployed</div>
+                    <div className="text-[10px] sm:text-xs font-mono text-sky-200">1.8s · global edge</div>
                   </div>
                 </div>
               </div>
 
               {/* Floating "SSL Active" Badge (Bottom Right) */}
-              <div className="absolute -bottom-5 -right-2 sm:-right-4 z-30 animate-float-badge-1">
-                <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-[#061138] bg-white text-[#061138] shadow-[4px_4px_0_#061138]">
-                  <div className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700">
-                    <Lock className="w-3 h-3 stroke-[2.5]" />
+              <div className="absolute -bottom-4 sm:-bottom-5 -right-1 sm:-right-4 z-30 scale-90 sm:scale-100 origin-bottom-right animate-float-badge-1">
+                <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl border-2 border-[#061138] bg-white text-[#061138] shadow-[3px_3px_0_#061138] sm:shadow-[4px_4px_0_#061138]">
+                  <div className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-emerald-100 text-emerald-700">
+                    <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[2.5]" />
                   </div>
-                  <span className="text-xs font-bold">SSL active</span>
+                  <span className="text-[11px] sm:text-xs font-bold">SSL active</span>
                 </div>
               </div>
 
               {/* Main Browser Mockup Card (Inspired by ui.html + cloud console in Blue & White) */}
-              <div className="relative w-full max-w-[500px] rounded-3xl border-[3px] border-[#061138] bg-white text-[#061138] shadow-[14px_14px_0_#061138] overflow-hidden rotate-[1.5deg] hover:rotate-0 transition-transform duration-300">
+              <div className="relative w-full max-w-[500px] rounded-2xl sm:rounded-3xl border-[3px] border-[#061138] bg-white text-[#061138] shadow-[8px_8px_0_#061138] sm:shadow-[14px_14px_0_#061138] overflow-hidden rotate-[0.5deg] sm:rotate-[1.5deg] hover:rotate-0 transition-transform duration-300">
                 
                 {/* Browser Chrome Header */}
                 <div className="flex items-center gap-3 px-4 py-3 border-b-[3px] border-[#061138] bg-[#E8EEFF]">
@@ -418,34 +354,34 @@ export default async function Home() {
           </div>
 
           {/* 4-Column Stats Row (From ui.html in Blue & White) */}
-          <div className="mt-14 pt-8 border-t-[3px] border-white/20">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              <div className="pt-4 border-t-[3px] border-white">
-                <div className="font-display text-4xl sm:text-5xl font-black tracking-tight text-white leading-none">
+          <div className="mt-10 sm:mt-14 pt-6 sm:pt-8 border-t-[3px] border-white/20">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              <div className="pt-3 sm:pt-4 border-t-[3px] border-white">
+                <div className="font-display text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
                   99.9%
                 </div>
-                <div className="mt-2 text-sm sm:text-base font-semibold text-blue-100">Uptime</div>
+                <div className="mt-1.5 sm:mt-2 text-xs sm:text-base font-semibold text-blue-100">Uptime</div>
               </div>
 
-              <div className="pt-4 border-t-[3px] border-white">
-                <div className="font-display text-4xl sm:text-5xl font-black tracking-tight text-white leading-none">
+              <div className="pt-3 sm:pt-4 border-t-[3px] border-white">
+                <div className="font-display text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
                   &lt; 2s
                 </div>
-                <div className="mt-2 text-sm sm:text-base font-semibold text-blue-100">Deploy time</div>
+                <div className="mt-1.5 sm:mt-2 text-xs sm:text-base font-semibold text-blue-100">Deploy time</div>
               </div>
 
-              <div className="pt-4 border-t-[3px] border-white">
-                <div className="font-display text-4xl sm:text-5xl font-black tracking-tight text-white leading-none">
+              <div className="pt-3 sm:pt-4 border-t-[3px] border-white">
+                <div className="font-display text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
                   200+
                 </div>
-                <div className="mt-2 text-sm sm:text-base font-semibold text-blue-100">Global edge locations</div>
+                <div className="mt-1.5 sm:mt-2 text-xs sm:text-base font-semibold text-blue-100">Global edge locations</div>
               </div>
 
-              <div className="pt-4 border-t-[3px] border-white">
-                <div className="font-display text-4xl sm:text-5xl font-black tracking-tight text-white leading-none">
+              <div className="pt-3 sm:pt-4 border-t-[3px] border-white">
+                <div className="font-display text-3xl sm:text-5xl font-black tracking-tight text-white leading-none">
                   24/7
                 </div>
-                <div className="mt-2 text-sm sm:text-base font-semibold text-blue-100">Support on WhatsApp</div>
+                <div className="mt-1.5 sm:mt-2 text-xs sm:text-base font-semibold text-blue-100">Support on WhatsApp</div>
               </div>
             </div>
           </div>
@@ -530,7 +466,7 @@ export default async function Home() {
         </div>
 
         {/* Features Section — Engineered for Performance */}
-        <section id="features" className="py-24 sm:py-32 relative overflow-hidden">
+        <section id="features" className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
           {/* dot grid + concentric circles matching HTML design */}
           <div aria-hidden="true" className="absolute inset-0 pointer-events-none"
             style={{
@@ -547,7 +483,7 @@ export default async function Home() {
             <circle cx="450" cy="450" r="140" />
           </svg>
 
-          <div className="mx-auto max-w-[1240px] px-6 lg:px-8 relative z-10">
+          <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8 relative z-10">
 
             {/* Section header — exact match */}
             <div className="flex justify-center mb-0">
@@ -558,26 +494,26 @@ export default async function Home() {
             </div>
 
             <h2 className="mt-[26px] text-center font-display font-black text-white leading-[1.12] tracking-[-0.04em]"
-              style={{ fontSize: "clamp(40px, 6vw, 76px)" }}>
+              style={{ fontSize: "clamp(36px, 6vw, 76px)" }}>
               Engineered for{" "}
               <span className="inline-block px-[0.16em] pb-[0.06em] rounded-[14px] bg-white text-[#1F3BFF] shadow-[6px_6px_0_#0B0D2B] -rotate-2">
                 Performance
               </span>
             </h2>
 
-            <p className="mt-[22px] mx-auto max-w-[560px] text-center text-[19px] leading-[1.6] text-[#D6DCFF]">
+            <p className="mt-[22px] mx-auto max-w-[560px] text-center text-base sm:text-[19px] leading-[1.6] text-[#D6DCFF]">
               We&apos;ve stripped away the bloat. What remains is pure speed and security.
             </p>
 
             {/* Cards layout — exact row structure from HTML */}
-            <div className="flex flex-col gap-6 mt-16">
+            <div className="flex flex-col gap-6 mt-12 sm:mt-16">
 
               {/* Row 1: Lightning Fast (wide) + Secure by Default */}
               <div className="flex flex-wrap gap-6">
 
                 {/* Lightning Fast — white card, flex:2, with edge network SVG */}
                 <article
-                  className="flex-[2_1_600px] min-w-0 flex flex-wrap gap-6 p-9 rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
+                  className="flex-[2_1_600px] min-w-0 flex flex-wrap gap-6 p-6 sm:p-9 rounded-2xl sm:rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
                   style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
                 >
                   <div className="flex-[1_1_240px] min-w-0 flex flex-col">
@@ -586,13 +522,13 @@ export default async function Home() {
                         <path d="M13 3L5 13.5h6L10 21l8-10.5h-6L13 3z" />
                       </svg>
                     </div>
-                    <h3 className="mt-[22px] font-display font-bold text-[30px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Lightning Fast</h3>
-                    <p className="mt-3 text-[16px] leading-[1.65] text-[#44497A]">
+                    <h3 className="mt-[22px] font-display font-bold text-2xl sm:text-[30px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Lightning Fast</h3>
+                    <p className="mt-3 text-[15px] sm:text-[16px] leading-[1.65] text-[#44497A]">
                       Deploy globally distributed static sites with low latency and high performance. Powered by our custom edge network.
                     </p>
                     <div className="flex flex-wrap gap-2.5 mt-auto pt-7">
-                      <span className="inline-flex items-center px-3.5 py-[7px] rounded-full bg-[#E3E9FF] text-[#1B2BB0] text-sm font-bold">Deploys in under 2s</span>
-                      <span className="inline-flex items-center px-3.5 py-[7px] rounded-full bg-[#E3E9FF] text-[#1B2BB0] text-sm font-bold">200+ edge locations</span>
+                      <span className="inline-flex items-center px-3.5 py-[7px] rounded-full bg-[#E3E9FF] text-[#1B2BB0] text-xs sm:text-sm font-bold">Deploys in under 2s</span>
+                      <span className="inline-flex items-center px-3.5 py-[7px] rounded-full bg-[#E3E9FF] text-[#1B2BB0] text-xs sm:text-sm font-bold">200+ edge locations</span>
                     </div>
                   </div>
                   {/* Edge network SVG diagram */}
@@ -623,7 +559,7 @@ export default async function Home() {
 
                 {/* Secure by Default — dark card */}
                 <article
-                  className="flex-[1_1_340px] min-w-0 flex flex-col p-9 rounded-[28px] border border-white/[0.16] bg-[#0B0D2B] text-white transition-transform duration-200 hover:-translate-y-1"
+                  className="flex-[1_1_340px] min-w-0 flex flex-col p-6 sm:p-9 rounded-2xl sm:rounded-[28px] border border-white/[0.16] bg-[#0B0D2B] text-white transition-transform duration-200 hover:-translate-y-1"
                   style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
                 >
                   <div aria-hidden="true" className="w-[52px] h-[52px] rounded-[14px] bg-[#22D3EE] flex items-center justify-center shrink-0">
@@ -632,8 +568,8 @@ export default async function Home() {
                       <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
                     </svg>
                   </div>
-                  <h3 className="mt-[22px] font-display font-bold text-[30px] tracking-[-0.025em] leading-[1.1]">Secure by Default</h3>
-                  <p className="mt-3 text-[16px] leading-[1.65] text-[#C3CAF5]">
+                  <h3 className="mt-[22px] font-display font-bold text-2xl sm:text-[30px] tracking-[-0.025em] leading-[1.1]">Secure by Default</h3>
+                  <p className="mt-3 text-[15px] sm:text-[16px] leading-[1.65] text-[#C3CAF5]">
                     Automatic SSL certificates, DDoS protection, and isolated build environments for every deployment.
                   </p>
                   <div aria-hidden="true" className="flex flex-col gap-2.5 mt-auto pt-7">
@@ -642,7 +578,7 @@ export default async function Home() {
                       { label: "DDoS protection", value: "On" },
                       { label: "Isolated builds", value: "Ready" },
                     ].map((item) => (
-                      <div key={item.label} className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-white/[0.14] bg-white/[0.07] text-sm font-semibold">
+                      <div key={item.label} className="flex items-center justify-between gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl border border-white/[0.14] bg-white/[0.07] text-xs sm:text-sm font-semibold">
                         <span>{item.label}</span>
                         <span className="inline-flex items-center gap-[7px] text-[#22D3EE]">
                           <span className="w-[7px] h-[7px] rounded-full bg-[#22D3EE] shrink-0" />
@@ -660,7 +596,7 @@ export default async function Home() {
 
                 {/* Custom Domains — white card */}
                 <article
-                  className="flex-[1_1_300px] min-w-0 flex flex-col p-8 rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
+                  className="flex-[1_1_300px] min-w-0 flex flex-col p-6 sm:p-8 rounded-2xl sm:rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
                   style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
                 >
                   <div aria-hidden="true" className="w-[52px] h-[52px] rounded-[14px] bg-[#0B0D2B] flex items-center justify-center shrink-0">
@@ -669,17 +605,17 @@ export default async function Home() {
                       <path d="M2.5 12h19M12 2.5a14 14 0 0 1 0 19M12 2.5a14 14 0 0 0 0 19" />
                     </svg>
                   </div>
-                  <h3 className="mt-[22px] font-display font-bold text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Custom Domains</h3>
-                  <p className="mt-3 text-[16px] leading-[1.65] text-[#44497A]">
+                  <h3 className="mt-[22px] font-display font-bold text-xl sm:text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Custom Domains</h3>
+                  <p className="mt-3 text-[15px] sm:text-[16px] leading-[1.65] text-[#44497A]">
                     Connect your own domain names easily with our automated DNS configuration and verification.
                   </p>
                   <div aria-hidden="true" className="mt-auto pt-7">
-                    <div className="p-4 rounded-[18px] bg-[#EEF2FF]">
+                    <div className="p-3.5 sm:p-4 rounded-[18px] bg-[#EEF2FF]">
                       <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border-2 border-[#0B0D2B] bg-white">
-                        <span className="font-mono text-[13px] font-semibold text-[#0B0D2B]">www.yourbrand.in</span>
+                        <span className="font-mono text-xs sm:text-[13px] font-semibold text-[#0B0D2B] truncate">www.yourbrand.in</span>
                         <span className="inline-flex items-center gap-[5px] px-[9px] py-[3px] rounded-full bg-[#E3F7EA] text-[#0E7A3E] text-xs font-bold shrink-0">Verified</span>
                       </div>
-                      <div className="flex flex-col gap-2 mt-3.5 text-[13px] font-semibold text-[#2C3170]">
+                      <div className="flex flex-col gap-2 mt-3.5 text-xs sm:text-[13px] font-semibold text-[#2C3170]">
                         <span className="flex items-center gap-2">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F3BFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>
                           DNS configured automatically
@@ -695,7 +631,7 @@ export default async function Home() {
 
                 {/* Instant Rollbacks — white card */}
                 <article
-                  className="flex-[1_1_300px] min-w-0 flex flex-col p-8 rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
+                  className="flex-[1_1_300px] min-w-0 flex flex-col p-6 sm:p-8 rounded-2xl sm:rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
                   style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
                 >
                   <div aria-hidden="true" className="w-[52px] h-[52px] rounded-[14px] bg-[#0B0D2B] flex items-center justify-center shrink-0">
@@ -703,27 +639,27 @@ export default async function Home() {
                       <path d="M9 14L4 9l5-5" /><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
                     </svg>
                   </div>
-                  <h3 className="mt-[22px] font-display font-bold text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Instant Rollbacks</h3>
-                  <p className="mt-3 text-[16px] leading-[1.65] text-[#44497A]">
+                  <h3 className="mt-[22px] font-display font-bold text-xl sm:text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Instant Rollbacks</h3>
+                  <p className="mt-3 text-[15px] sm:text-[16px] leading-[1.65] text-[#44497A]">
                     Every deploy is immutable. Roll back to any previous version in a single click.
                   </p>
                   <div aria-hidden="true" className="mt-auto pt-7">
-                    <div className="flex flex-col gap-2 p-4 rounded-[18px] bg-[#EEF2FF]">
-                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border-2 border-[#0B0D2B] bg-white text-[13px] font-bold">
+                    <div className="flex flex-col gap-2 p-3.5 sm:p-4 rounded-[18px] bg-[#EEF2FF]">
+                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border-2 border-[#0B0D2B] bg-white text-xs sm:text-[13px] font-bold">
                         <span className="inline-flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full bg-[#17A34A] shrink-0" />
                           Deploy #3
                         </span>
                         <span className="px-[9px] py-[3px] rounded-full bg-[#E3F7EA] text-[#0E7A3E] text-xs">Live</span>
                       </div>
-                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border border-[#C3CFFF] bg-white text-[13px] font-semibold text-[#2C3170]">
+                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border border-[#C3CFFF] bg-white text-xs sm:text-[13px] font-semibold text-[#2C3170]">
                         <span className="inline-flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full border-2 border-[#8EA3FF] shrink-0" />
                           Deploy #2
                         </span>
                         <span className="px-2.5 py-1 rounded-lg bg-[#1F3BFF] text-white text-xs font-bold">Roll back</span>
                       </div>
-                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border border-[#C3CFFF] bg-white text-[13px] font-semibold text-[#2C3170]">
+                      <div className="flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-xl border border-[#C3CFFF] bg-white text-xs sm:text-[13px] font-semibold text-[#2C3170]">
                         <span className="inline-flex items-center gap-2">
                           <span className="w-2 h-2 rounded-full border-2 border-[#8EA3FF] shrink-0" />
                           Deploy #1
@@ -736,7 +672,7 @@ export default async function Home() {
 
                 {/* Smart Compression — white card */}
                 <article
-                  className="flex-[1_1_300px] min-w-0 flex flex-col p-8 rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
+                  className="flex-[1_1_300px] min-w-0 flex flex-col p-6 sm:p-8 rounded-2xl sm:rounded-[28px] bg-white text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
                   style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
                 >
                   <div aria-hidden="true" className="w-[52px] h-[52px] rounded-[14px] bg-[#0B0D2B] flex items-center justify-center shrink-0">
@@ -745,17 +681,17 @@ export default async function Home() {
                       <path d="M20 20l-6-6" /><path d="M14 19v-5h5" />
                     </svg>
                   </div>
-                  <h3 className="mt-[22px] font-display font-bold text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Smart Compression</h3>
-                  <p className="mt-3 text-[16px] leading-[1.65] text-[#44497A]">
+                  <h3 className="mt-[22px] font-display font-bold text-xl sm:text-[26px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Smart Compression</h3>
+                  <p className="mt-3 text-[15px] sm:text-[16px] leading-[1.65] text-[#44497A]">
                     Assets are automatically optimized and compressed with Brotli/Gzip for maximum speed.
                   </p>
                   <div aria-hidden="true" className="mt-auto pt-7">
-                    <div className="p-4 rounded-[18px] bg-[#EEF2FF]">
+                    <div className="p-3.5 sm:p-4 rounded-[18px] bg-[#EEF2FF]">
                       <div className="text-[12px] font-bold tracking-[0.04em] uppercase text-[#5B6190]">Original</div>
                       <div className="h-4 mt-2 rounded-lg bg-[#B7C3F5]" />
                       <div className="mt-4 text-[12px] font-bold tracking-[0.04em] uppercase text-[#1B2BB0]">Brotli / Gzip</div>
                       <div className="h-4 mt-2 rounded-lg bg-[#1F3BFF]" style={{ width: "38%" }} />
-                      <div className="mt-4 text-[13px] font-semibold text-[#2C3170]">Smaller files, faster pages</div>
+                      <div className="mt-4 text-xs sm:text-[13px] font-semibold text-[#2C3170]">Smaller files, faster pages</div>
                     </div>
                   </div>
                 </article>
@@ -764,34 +700,34 @@ export default async function Home() {
 
               {/* Row 3: Enterprise Grade — full-width cyan card */}
               <article
-                className="flex flex-wrap items-center gap-7 px-10 py-9 rounded-[28px] bg-[#22D3EE] text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
+                className="flex flex-wrap items-center gap-6 sm:gap-7 px-6 py-7 sm:px-10 sm:py-9 rounded-2xl sm:rounded-[28px] bg-[#22D3EE] text-[#0B0D2B] transition-transform duration-200 hover:-translate-y-1"
                 style={{ boxShadow: "0 24px 60px rgba(3,8,50,0.45)" }}
               >
-                <div className="flex-[1_1_340px] min-w-0 flex items-start gap-5">
+                <div className="flex-[1_1_340px] min-w-0 flex items-start gap-4 sm:gap-5">
                   <div aria-hidden="true" className="w-[52px] h-[52px] shrink-0 rounded-[14px] bg-[#0B0D2B] flex items-center justify-center">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M12 3l7.5 3v5.5c0 4.5-3.2 8-7.5 9.5-4.3-1.5-7.5-5-7.5-9.5V6L12 3z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-display font-bold text-[30px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Enterprise Grade</h3>
-                    <p className="mt-2.5 text-[16px] leading-[1.65] text-[#0B0D2B]">
+                    <h3 className="font-display font-bold text-2xl sm:text-[30px] tracking-[-0.025em] leading-[1.1] text-[#0B0D2B]">Enterprise Grade</h3>
+                    <p className="mt-2 text-[15px] sm:text-[16px] leading-[1.65] text-[#0B0D2B]">
                       99.9% uptime SLA, 24/7 support, and dedicated infrastructure options available.
                     </p>
                   </div>
                 </div>
-                <div className="flex-[1_1_480px] min-w-0 flex flex-wrap">
-                  <div className="flex-[1_1_140px] pl-6 border-l-2 border-[#0B0D2B]/30">
-                    <div className="font-display font-black text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">99.9%</div>
-                    <div className="mt-1.5 text-sm font-bold text-[#0B0D2B]">Uptime SLA</div>
+                <div className="flex-[1_1_480px] min-w-0 grid grid-cols-3 gap-3 sm:flex sm:flex-wrap">
+                  <div className="sm:flex-[1_1_140px] pl-3 sm:pl-6 border-l-2 border-[#0B0D2B]/30">
+                    <div className="font-display font-black text-2xl sm:text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">99.9%</div>
+                    <div className="mt-1 text-xs sm:text-sm font-bold text-[#0B0D2B]">Uptime SLA</div>
                   </div>
-                  <div className="flex-[1_1_140px] pl-6 border-l-2 border-[#0B0D2B]/30">
-                    <div className="font-display font-black text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">24/7</div>
-                    <div className="mt-1.5 text-sm font-bold text-[#0B0D2B]">Support</div>
+                  <div className="sm:flex-[1_1_140px] pl-3 sm:pl-6 border-l-2 border-[#0B0D2B]/30">
+                    <div className="font-display font-black text-2xl sm:text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">24/7</div>
+                    <div className="mt-1 text-xs sm:text-sm font-bold text-[#0B0D2B]">Support</div>
                   </div>
-                  <div className="flex-[1_1_170px] pl-6 border-l-2 border-[#0B0D2B]/30">
-                    <div className="font-display font-black text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">Dedicated</div>
-                    <div className="mt-1.5 text-sm font-bold text-[#0B0D2B]">Infrastructure options</div>
+                  <div className="sm:flex-[1_1_170px] pl-3 sm:pl-6 border-l-2 border-[#0B0D2B]/30">
+                    <div className="font-display font-black text-2xl sm:text-[42px] tracking-[-0.03em] leading-none text-[#0B0D2B]">Dedicated</div>
+                    <div className="mt-1 text-xs sm:text-sm font-bold text-[#0B0D2B]">Infrastructure</div>
                   </div>
                 </div>
               </article>
@@ -799,10 +735,10 @@ export default async function Home() {
             </div>
 
             {/* Bottom CTA — exact match */}
-            <div className="flex justify-center mt-[52px]">
+            <div className="flex justify-center mt-10 sm:mt-[52px]">
               <Link
                 href="#pricing"
-                className="inline-flex items-center justify-center gap-2.5 min-h-[56px] px-[30px] rounded-[14px] border-2 border-[#0B0D2B] bg-white text-[#0B0D2B] text-[17px] font-bold transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 min-h-[52px] sm:min-h-[56px] px-6 sm:px-[30px] rounded-[14px] border-2 border-[#0B0D2B] bg-white text-[#0B0D2B] text-base sm:text-[17px] font-bold transition-all duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5"
                 style={{ boxShadow: "5px 5px 0 #0B0D2B" }}
               >
                 Compare plans
